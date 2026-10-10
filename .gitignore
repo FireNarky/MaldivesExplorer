@@ -13,3 +13,4 @@ test-results/
 *.log
 *.tmp
 .DS_Store
+.data/

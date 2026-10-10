@@ -1,0 +1,46 @@
+import { Button } from "@/components/ui/button";
+import { FieldError } from "@/components/ui/field-error";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { registerAccount } from "@/modules/identity/actions";
+
+const messages: Record<string, string> = {
+  invalid: "Check the name and use at least 12 characters.",
+  unavailable: "That email cannot be registered.",
+};
+
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const params = await searchParams;
+  const message = params.error ? messages[params.error] : undefined;
+  return (
+    <section className="grid max-w-[65ch] gap-6">
+      <h1>Create an account</h1>
+      {message ? <FieldError>{message}</FieldError> : null}
+      <form action={registerAccount} className="grid gap-4">
+        <div className="grid gap-2">
+          <Label htmlFor="name">Name</Label>
+          <Input id="name" name="name" autoComplete="name" required />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" name="email" type="email" autoComplete="username" required />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            required
+          />
+        </div>
+        <Button type="submit">Create account</Button>
+      </form>
+    </section>
+  );
+}

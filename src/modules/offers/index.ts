@@ -1,0 +1,1 @@
+export { moduleStatus } from "./service";
