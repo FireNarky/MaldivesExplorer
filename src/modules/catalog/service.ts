@@ -14,6 +14,7 @@ import {
   getRoom,
   getTransfer,
 } from "@/modules/catalog/repository";
+import { recordSlugRedirect } from "@/modules/redirects/service";
 import {
   amenityInput,
   audienceInput,
@@ -101,10 +102,12 @@ export async function saveResort(
   id?: string,
 ): Promise<string> {
   const parsed = resortInput.parse(input);
+  let previousSlug: string | undefined;
   if (id) {
     const current = await getResort(id);
     if (!current) throw new Error("That resort was not found.");
     if (!editableStatus(current.status)) throw new Error("Unpublish this record before editing.");
+    previousSlug = current.slug;
   }
   const island = await db.island.findUnique({
     where: { id: parsed.islandId },
@@ -149,6 +152,9 @@ export async function saveResort(
       const row = id
         ? await tx.resort.update({ where: { id }, data })
         : await tx.resort.create({ data: { ...data, createdById: actorId } });
+      if (previousSlug && previousSlug !== row.slug) {
+        await recordSlugRedirect(tx, `/resorts/${previousSlug}`, `/resorts/${row.slug}`);
+      }
       return { id: row.id, after: { slug: row.slug, status: row.status } };
     },
   });

@@ -7,6 +7,7 @@ import {
 } from "@/modules/publishing/service";
 import { editableStatus } from "@/modules/publishing/workflow";
 import { getAtoll, getIsland } from "@/modules/destinations/repository";
+import { recordSlugRedirect } from "@/modules/redirects/service";
 import {
   atollInput,
   coordinatePair,
@@ -39,10 +40,12 @@ function datesOf(record: {
 export async function saveAtoll(actorId: string, input: AtollInput, id?: string): Promise<string> {
   const parsed = atollInput.parse(input);
   const coordinates = coordinatePair(parsed.latitude, parsed.longitude);
+  let previousSlug: string | undefined;
   if (id) {
     const current = await getAtoll(id);
     if (!current) throw new Error("That atoll was not found.");
     if (!editableStatus(current.status)) throw new Error("Unpublish this record before editing.");
+    previousSlug = current.slug;
   }
   return changeDocument({
     actorId,
@@ -64,6 +67,9 @@ export async function saveAtoll(actorId: string, input: AtollInput, id?: string)
       const row = id
         ? await tx.atoll.update({ where: { id }, data })
         : await tx.atoll.create({ data: { ...data, createdById: actorId } });
+      if (previousSlug && previousSlug !== row.slug) {
+        await recordSlugRedirect(tx, `/atolls/${previousSlug}`, `/atolls/${row.slug}`);
+      }
       return { id: row.id, after: { slug: row.slug, status: row.status } };
     },
   });
@@ -109,10 +115,12 @@ export async function saveIsland(
 ): Promise<string> {
   const parsed = islandInput.parse(input);
   const coordinates = coordinatePair(parsed.latitude, parsed.longitude);
+  let previousSlug: string | undefined;
   if (id) {
     const current = await getIsland(id);
     if (!current) throw new Error("That island was not found.");
     if (!editableStatus(current.status)) throw new Error("Unpublish this record before editing.");
+    previousSlug = current.slug;
   }
   const atoll = await db.atoll.findUnique({ where: { id: parsed.atollId }, select: { id: true } });
   if (!atoll) throw new Error("Choose an atoll.");
@@ -141,6 +149,9 @@ export async function saveIsland(
       const row = id
         ? await tx.island.update({ where: { id }, data })
         : await tx.island.create({ data: { ...data, createdById: actorId } });
+      if (previousSlug && previousSlug !== row.slug) {
+        await recordSlugRedirect(tx, `/islands/${previousSlug}`, `/islands/${row.slug}`);
+      }
       return { id: row.id, after: { slug: row.slug, status: row.status } };
     },
   });

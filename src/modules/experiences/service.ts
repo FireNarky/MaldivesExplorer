@@ -6,6 +6,7 @@ import {
 } from "@/modules/publishing/service";
 import { canTransition, editableStatus, type StatusWrite } from "@/modules/publishing/workflow";
 import { getExperience, getExperienceCategory } from "@/modules/experiences/repository";
+import { recordSlugRedirect } from "@/modules/redirects/service";
 import {
   experienceCategoryInput,
   experienceInput,
@@ -124,10 +125,12 @@ export async function saveExperience(
   id?: string,
 ): Promise<string> {
   const parsed = experienceInput.parse(input);
+  let previousSlug: string | undefined;
   if (id) {
     const current = await getExperience(id);
     if (!current) throw new Error("That experience was not found.");
     if (!editableStatus(current.status)) throw new Error("Unpublish this record before editing.");
+    previousSlug = current.slug;
   }
   return changeDocument({
     actorId,
@@ -156,6 +159,9 @@ export async function saveExperience(
       const row = id
         ? await tx.experience.update({ where: { id }, data })
         : await tx.experience.create({ data: { ...data, createdById: actorId } });
+      if (previousSlug && previousSlug !== row.slug) {
+        await recordSlugRedirect(tx, `/experiences/${previousSlug}`, `/experiences/${row.slug}`);
+      }
       return { id: row.id, after: { slug: row.slug, status: row.status } };
     },
   });

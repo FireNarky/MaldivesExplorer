@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
 import { ErrorState } from "@/components/ui/error-state";
 import { EmptyState } from "@/components/ui/empty-state";
 import { logError } from "@/lib/observability/log";
+import { publicMetadata } from "@/lib/seo/metadata";
 import { listPublishedResorts } from "@/modules/catalog";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "Resorts",
-  robots: { index: false, follow: false },
-};
+  description: "Published resorts.",
+  path: "/resorts",
+});
 
 export default async function ResortsPage() {
   try {
@@ -22,6 +25,7 @@ export default async function ResortsPage() {
     }
     return (
       <section className="grid gap-6">
+        <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Resorts" }]} />
         <h1>Resorts</h1>
         <ul className="grid gap-4">
           {resorts.map((resort) => (

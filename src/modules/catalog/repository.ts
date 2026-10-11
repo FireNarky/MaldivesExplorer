@@ -46,7 +46,12 @@ export function getPublishedResort(slug: string) {
       seoTitle: true,
       seoDescription: true,
       island: {
-        select: { name: true, status: true, atoll: { select: { name: true, status: true } } },
+        select: {
+          name: true,
+          slug: true,
+          status: true,
+          atoll: { select: { name: true, slug: true, status: true } },
+        },
       },
       roomTypes: {
         where: publishedResort,

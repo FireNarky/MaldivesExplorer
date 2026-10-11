@@ -5,6 +5,7 @@ import {
   stampOrThrow,
 } from "@/modules/publishing/service";
 import { canTransition, editableStatus, type StatusWrite } from "@/modules/publishing/workflow";
+import { recordSlugRedirect } from "@/modules/redirects/service";
 import {
   getArticle,
   getBlock,
@@ -193,10 +194,12 @@ export async function saveArticle(
   if (parsed.reviewerId && parsed.reviewerId === parsed.authorId) {
     throw new Error("The reviewer must be a different author profile.");
   }
+  let previousSlug: string | undefined;
   if (id) {
     const current = await getArticle(id);
     if (!current) throw new Error("That article was not found.");
     if (!editableStatus(current.status)) throw new Error("Unpublish this record before editing.");
+    previousSlug = current.slug;
   }
   return changeDocument({
     actorId,
@@ -222,6 +225,9 @@ export async function saveArticle(
       const row = id
         ? await tx.article.update({ where: { id }, data: { ...data, revision: { increment: 1 } } })
         : await tx.article.create({ data: { ...data, createdById: actorId } });
+      if (previousSlug && previousSlug !== row.slug) {
+        await recordSlugRedirect(tx, `/guides/${previousSlug}`, `/guides/${row.slug}`);
+      }
       return { id: row.id, after: { slug: row.slug, status: row.status } };
     },
   });
@@ -311,10 +317,12 @@ export async function saveCollection(
   id?: string,
 ): Promise<string> {
   const parsed = collectionInput.parse(input);
+  let previousSlug: string | undefined;
   if (id) {
     const current = await getCollection(id);
     if (!current) throw new Error("That collection was not found.");
     if (!editableStatus(current.status)) throw new Error("Unpublish this record before editing.");
+    previousSlug = current.slug;
   }
   return changeDocument({
     actorId,
@@ -334,6 +342,9 @@ export async function saveCollection(
       const row = id
         ? await tx.collection.update({ where: { id }, data })
         : await tx.collection.create({ data: { ...data, createdById: actorId } });
+      if (previousSlug && previousSlug !== row.slug) {
+        await recordSlugRedirect(tx, `/collections/${previousSlug}`, `/collections/${row.slug}`);
+      }
       return { id: row.id, after: { slug: row.slug, status: row.status } };
     },
   });

@@ -1,7 +1,21 @@
+import type { Metadata } from "next";
+import { JsonLd } from "@/components/discovery/json-ld";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { logError } from "@/lib/observability/log";
+import { publicMetadata } from "@/lib/seo/metadata";
+import { siteOrigin } from "@/lib/seo/site";
+import { websiteSearchData } from "@/lib/seo/structured";
 import { listPublishedHomepageModules } from "@/modules/content";
+
+export const metadata: Metadata = {
+  ...publicMetadata({
+    title: "Maldives Explorer",
+    description: "Published places are listed on their own pages.",
+    path: "/",
+  }),
+  title: { absolute: "Maldives Explorer" },
+};
 
 function moduleText(config: unknown): string {
   if (!config || typeof config !== "object" || Array.isArray(config) || !("text" in config))
@@ -20,6 +34,7 @@ export default async function HomePage() {
   }
   return (
     <div className="grid gap-8">
+      <JsonLd data={websiteSearchData(siteOrigin())} />
       <section className="grid max-w-[65ch] gap-4">
         <h1>Maldives Explorer</h1>
         <p>Published places are listed on their own pages.</p>

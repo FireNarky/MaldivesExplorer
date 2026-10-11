@@ -59,6 +59,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             Media
           </Link>
         ) : null}
+        {content ? (
+          <Link href="/admin/redirects" className="text-lagoon-ink">
+            Redirects
+          </Link>
+        ) : null}
       </nav>
       {children}
     </div>
