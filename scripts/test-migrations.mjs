@@ -87,6 +87,7 @@ async function main() {
       : process.env.AUTH_SECRET && process.env.AUTH_SECRET.length >= 32
         ? process.env.AUTH_SECRET
         : "stage-1-migration-secret-32-characters",
+    MEDIA_STORAGE_PATH: path.join(tmpdir(), "maldives-stage2-media"),
     SEED_ADMIN_EMAIL: serve ? "browser-admin@example.com" : "migration-admin@example.com",
     SEED_ADMIN_PASSWORD: adminPassword,
   };
@@ -115,6 +116,7 @@ async function main() {
     await runNode(prismaCli, ["migrate", "deploy"], env);
     await runNode(tsxCli, ["prisma/seed.ts"], env);
     await runNode(tsxCli, ["scripts/exercise-foundation.ts"], env);
+    await runNode(tsxCli, ["scripts/exercise-catalog.ts"], env);
     await resetPublic(databaseUrl);
     await runNode(prismaCli, ["migrate", "deploy"], env);
     console.log("Migrations applied, exercised, dropped, and reapplied.");
@@ -132,6 +134,9 @@ async function main() {
       await new Promise((resolve) => setTimeout(resolve, 500));
       await rm(dataDir, { recursive: true, force: true }).catch(() => undefined);
     }
+    await rm(path.join(tmpdir(), "maldives-stage2-media"), { recursive: true, force: true }).catch(
+      () => undefined,
+    );
   }
 }
 

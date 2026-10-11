@@ -1,5 +1,5 @@
-export const moduleStatus = "scaffold" as const;
+import type { PermissionCode } from "@/lib/auth/permissions";
 
-export function permits(): false {
-  return false;
+export function canEditExperiences(permissions: readonly PermissionCode[]): boolean {
+  return permissions.includes("catalog.write");
 }
