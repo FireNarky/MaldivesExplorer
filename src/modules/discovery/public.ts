@@ -374,6 +374,9 @@ export async function listSitemapEntries(): Promise<SitemapEntry[]> {
     "/collections",
     "/faq",
     "/search",
+    "/wishlist",
+    "/compare",
+    "/recently-viewed",
   ].map((path) => ({ path, updatedAt: now }));
   const [atolls, islands, resorts, experiences, guides, collections] = await Promise.all([
     db.atoll.findMany({ where: published, select: { slug: true, updatedAt: true } }),

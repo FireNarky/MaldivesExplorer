@@ -5,6 +5,7 @@ import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { Prose } from "@/components/discovery/prose";
 import { RelatedList } from "@/components/discovery/related-list";
+import { ListingActions } from "@/components/shortlist/listing-actions";
 import { ErrorState } from "@/components/ui/error-state";
 import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
@@ -75,6 +76,7 @@ export default async function ExperiencePage({ params }: PageProps) {
           })}
         />
         <h1>{experience.name}</h1>
+        <ListingActions entityType="EXPERIENCE" entityId={experience.id} save />
         <p>{experience.summary}</p>
         {experience.category.status === "PUBLISHED" ? <p>{experience.category.name}</p> : null}
         <Prose text={experience.description} />

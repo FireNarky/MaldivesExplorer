@@ -5,6 +5,7 @@ import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { Prose } from "@/components/discovery/prose";
 import { RelatedList } from "@/components/discovery/related-list";
+import { ListingActions } from "@/components/shortlist/listing-actions";
 import { ErrorState } from "@/components/ui/error-state";
 import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
@@ -68,6 +69,7 @@ export default async function GuidePage({ params }: PageProps) {
           })}
         />
         <h1>{guide.title}</h1>
+        <ListingActions entityType="ARTICLE" entityId={guide.id} save />
         {authorName ? <p>By {authorName}</p> : null}
         <p>{guide.category.name}</p>
         <p>{guide.excerpt}</p>

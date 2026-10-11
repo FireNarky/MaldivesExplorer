@@ -5,6 +5,7 @@ import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { Coordinates, Prose } from "@/components/discovery/prose";
 import { RelatedList } from "@/components/discovery/related-list";
+import { ListingActions } from "@/components/shortlist/listing-actions";
 import { ErrorState } from "@/components/ui/error-state";
 import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
@@ -70,6 +71,7 @@ export default async function AtollPage({ params }: PageProps) {
           })}
         />
         <h1>{atoll.name}</h1>
+        <ListingActions entityType="ATOLL" entityId={atoll.id} />
         <p>{atoll.summary}</p>
         <Prose text={atoll.description} />
         <Coordinates latitude={atoll.latitude} longitude={atoll.longitude} />

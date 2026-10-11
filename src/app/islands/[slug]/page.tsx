@@ -6,6 +6,7 @@ import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { Coordinates, Prose } from "@/components/discovery/prose";
 import { RelatedList } from "@/components/discovery/related-list";
+import { ListingActions } from "@/components/shortlist/listing-actions";
 import { ErrorState } from "@/components/ui/error-state";
 import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
@@ -77,6 +78,7 @@ export default async function IslandPage({ params }: PageProps) {
           })}
         />
         <h1>{island.name}</h1>
+        <ListingActions entityType="ISLAND" entityId={island.id} />
         <p>{island.summary}</p>
         <p>{islandTypeLabel[island.islandType]}</p>
         {atollPublished ? (

@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
 import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { RelatedList } from "@/components/discovery/related-list";
+import { ListingActions } from "@/components/shortlist/listing-actions";
 import { ErrorState } from "@/components/ui/error-state";
 import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
@@ -68,6 +69,7 @@ export default async function ResortPage({ params }: PageProps) {
           })}
         />
         <h1>{resort.name}</h1>
+        <ListingActions entityType="RESORT" entityId={resort.id} save compare />
         <p>{resort.summary}</p>
         <p>{resort.description}</p>
         <p>Property type: {resort.propertyType}</p>

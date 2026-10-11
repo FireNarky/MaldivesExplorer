@@ -1,5 +1,3 @@
-export const moduleStatus = "scaffold" as const;
+export const moduleStatus = "implemented" as const;
 
-export function permits(): false {
-  return false;
-}
+export { canReadSavedItem, canWriteSavedItem } from "./rules";

@@ -4,6 +4,7 @@ import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { Prose } from "@/components/discovery/prose";
 import { RelatedList } from "@/components/discovery/related-list";
+import { ListingActions } from "@/components/shortlist/listing-actions";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { isNotFoundError } from "@/lib/http/navigation";
@@ -69,6 +70,7 @@ export default async function CollectionPage({ params }: PageProps) {
           })}
         />
         <h1>{collection.title}</h1>
+        <ListingActions entityType="COLLECTION" entityId={collection.id} />
         <p>{collection.summary}</p>
         <Prose text={collectionBodyText(collection.body)} />
         {items.length === 0 ? (

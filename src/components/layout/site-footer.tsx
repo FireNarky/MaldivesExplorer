@@ -24,6 +24,15 @@ export function SiteFooter() {
           <Link href="/search" className="text-base text-sand">
             Search
           </Link>
+          <Link href="/wishlist" className="text-base text-sand">
+            Saved
+          </Link>
+          <Link href="/compare" className="text-base text-sand">
+            Compare
+          </Link>
+          <Link href="/recently-viewed" className="text-base text-sand">
+            Recently viewed
+          </Link>
         </nav>
       </div>
     </footer>

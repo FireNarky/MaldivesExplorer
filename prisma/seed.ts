@@ -36,6 +36,7 @@ const settings: Record<string, unknown> = {
   "sla.firstResponseMinutes": 120,
   "planner.draftTtlDays": 30,
   "wishlist.maxAnonymous": 50,
+  "recentlyViewed.limit": 12,
   "export.maxRows": 5000,
   "public.pageSize": 24,
   "admin.pageSize": 50,
