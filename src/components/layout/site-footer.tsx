@@ -33,6 +33,9 @@ export function SiteFooter() {
           <Link href="/recently-viewed" className="text-base text-sand">
             Recently viewed
           </Link>
+          <Link href="/plan" className="text-base text-sand">
+            Plan a trip
+          </Link>
         </nav>
       </div>
     </footer>

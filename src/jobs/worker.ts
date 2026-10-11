@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { deliverEmail } from "@/jobs/handlers/email";
+import { confirmQueuedAcknowledgement } from "@/modules/communications/service";
 
 export type JobHandler = (payload: Prisma.JsonValue) => Promise<void>;
 
@@ -80,3 +81,4 @@ export async function runDueJobs(limit = 10): Promise<number> {
 }
 
 registerJobHandler("email.deliver", deliverEmail);
+registerJobHandler("enquiry.acknowledge", confirmQueuedAcknowledgement);

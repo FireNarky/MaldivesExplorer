@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { permanentRedirect, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { AnalyticsConsent } from "@/components/discovery/analytics-consent";
+import { LandingCapture } from "@/components/planner/landing-capture";
 import { CompareTray } from "@/components/shortlist/compare-tray";
 import { WishlistMerge } from "@/components/shortlist/device-sync";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -52,10 +53,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           Skip to content
         </a>
         <SiteHeader />
-        <main id="main" className="mx-auto w-full max-w-[90rem] flex-1 px-4 py-8 lg:px-8">
+        <main id="main" className="mx-auto w-full max-w-[90rem] flex-1 px-4 py-8 pb-28 lg:px-8">
           {children}
         </main>
         <CompareTray />
+        <LandingCapture />
         <WishlistMerge signedIn={Boolean(session?.user?.id)} />
         <AnalyticsConsent />
         <SiteFooter />

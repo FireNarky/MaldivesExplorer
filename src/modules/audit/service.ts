@@ -18,7 +18,7 @@ export async function writeAudit(
 ): Promise<string> {
   const row = await client.auditLog.create({
     data: {
-      actorId: entry.actorId ?? null,
+      actorId: entry.actorId || null,
       action: entry.action,
       entityType: entry.entityType,
       entityId: entry.entityId,

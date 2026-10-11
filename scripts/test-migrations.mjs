@@ -119,6 +119,7 @@ async function main() {
     await runNode(tsxCli, ["scripts/exercise-catalog.ts"], env);
     await runNode(tsxCli, ["scripts/exercise-discovery.ts"], env);
     await runNode(tsxCli, ["scripts/exercise-wishlist.ts"], env);
+    await runNode(tsxCli, ["scripts/exercise-enquiry.ts"], env);
     await resetPublic(databaseUrl);
     await runNode(prismaCli, ["migrate", "deploy"], env);
     console.log("Migrations applied, exercised, dropped, and reapplied.");

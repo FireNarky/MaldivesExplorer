@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
@@ -38,6 +39,9 @@ export default async function HomePage() {
       <section className="grid max-w-[65ch] gap-4">
         <h1>Maldives Explorer</h1>
         <p>Published places are listed on their own pages.</p>
+        <Link href="/plan" className="font-semibold text-lagoon-ink">
+          Plan a trip
+        </Link>
       </section>
       {failed ? (
         <ErrorState title="Homepage modules">

@@ -27,6 +27,9 @@ export async function SiteHeader() {
           <Link href="/wishlist" className="text-base font-semibold text-lagoon-ink">
             Saved
           </Link>
+          <Link href="/plan" className="text-base font-semibold text-lagoon-ink">
+            Plan a trip
+          </Link>
           <Link href="/search" className="text-base font-semibold text-lagoon-ink">
             Search
           </Link>
