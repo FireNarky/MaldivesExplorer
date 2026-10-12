@@ -10,6 +10,8 @@ import { createTotpSecret, totpFor } from "@/lib/auth/mfa";
 import { hashPassword, passwordError } from "@/lib/auth/password";
 import { signIn } from "@/auth";
 import { enqueueJob } from "@/jobs/worker";
+import { redeemClaim } from "@/modules/customers/service";
+import { claimToken, safeAccountPath } from "@/modules/customers/rules";
 import { isStaffUser } from "@/modules/identity/service";
 
 const attempts = new Map<string, number[]>();
@@ -65,8 +67,9 @@ export async function passwordSignIn(formData: FormData): Promise<void> {
     );
     redirect("/login/mfa");
   }
+  const destination = accountDestination(formData);
   try {
-    await signIn("credentials", { email, password, redirectTo: "/" });
+    await signIn("credentials", { email, password, redirectTo: destination });
   } catch (error) {
     if (error instanceof AuthError) redirect("/login?error=credentials");
     throw error;
@@ -95,15 +98,36 @@ export async function registerAccount(formData: FormData): Promise<void> {
   if (!name || passwordError(password)) redirect("/register?error=invalid");
   const existing = await db.user.findUnique({ where: { email }, select: { id: true } });
   if (existing) redirect("/register?error=unavailable");
+  const claim = claimToken(String(formData.get("claim") ?? ""));
   await db.user.create({
     data: { name, email, passwordHash: await hashPassword(password), status: "ACTIVE" },
   });
+  const user = await db.user.findUnique({ where: { email }, select: { id: true } });
+  let notice = "";
+  if (user && claim) {
+    try {
+      const result = await redeemClaim(user.id, claim);
+      notice = result.linked ? "linked" : "claim";
+    } catch {
+      notice = "claim";
+    }
+  }
   try {
-    await signIn("credentials", { email, password, redirectTo: "/" });
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: notice ? `/account?notice=${notice}` : "/account",
+    });
   } catch (error) {
     if (error instanceof AuthError) redirect("/login?error=credentials");
     throw error;
   }
+}
+
+function accountDestination(formData: FormData): string {
+  const claim = claimToken(String(formData.get("claim") ?? ""));
+  if (claim) return `/account?claim=${encodeURIComponent(claim)}`;
+  return safeAccountPath(String(formData.get("next") ?? "")) ?? "/";
 }
 
 export async function requestPasswordReset(formData: FormData): Promise<void> {

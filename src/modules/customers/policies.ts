@@ -1,5 +1,5 @@
-export const moduleStatus = "scaffold" as const;
+export const moduleStatus = "implemented" as const;
 
-export function permits(): false {
-  return false;
+export function canReadOwnCustomer(actorUserId: string, customerUserId: string | null): boolean {
+  return actorUserId.length > 0 && actorUserId === customerUserId;
 }

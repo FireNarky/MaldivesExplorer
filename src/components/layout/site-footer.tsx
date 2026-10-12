@@ -36,6 +36,9 @@ export function SiteFooter() {
           <Link href="/plan" className="text-base text-sand">
             Plan a trip
           </Link>
+          <Link href="/account" className="text-base text-sand">
+            Account
+          </Link>
         </nav>
       </div>
     </footer>

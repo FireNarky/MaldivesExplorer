@@ -41,6 +41,11 @@ export async function SiteHeader() {
             </Link>
           ) : null}
           {signedIn ? (
+            <Link href="/account" className="text-base font-semibold text-lagoon-ink">
+              Account
+            </Link>
+          ) : null}
+          {signedIn ? (
             <form
               action={async () => {
                 "use server";

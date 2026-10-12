@@ -189,20 +189,36 @@ export async function ensureCustomer(
     );
     return updated;
   }
-  const created = await tx.customer.create({
-    data: { userId, name: user.name, email: user.email },
-  });
-  await writeAudit(
-    {
-      actorId: userId,
-      action: "customer.create",
-      entityType: "customer",
-      entityId: created.id,
-      after: { userId },
-    },
-    tx,
+  try {
+    const created = await tx.customer.create({
+      data: { userId, name: user.name, email: user.email },
+    });
+    await writeAudit(
+      {
+        actorId: userId,
+        action: "customer.create",
+        entityType: "customer",
+        entityId: created.id,
+        after: { userId },
+      },
+      tx,
+    );
+    return created;
+  } catch (error) {
+    if (!isUniqueConflict(error) || !("$transaction" in tx)) throw error;
+    const existing = await tx.customer.findUnique({ where: { userId } });
+    if (existing?.userId === userId) return existing;
+    throw error;
+  }
+}
+
+function isUniqueConflict(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "P2002"
   );
-  return created;
 }
 
 function toDraft(row: {
