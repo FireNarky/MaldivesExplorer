@@ -29,7 +29,7 @@ export async function writeSearchEvent(input: {
   if (!shouldRecordSearch(input.consent) || input.query.length === 0) return false;
   await db.analyticsEvent.create({
     data: {
-      eventName: input.resultCount === 0 ? "search.no_results" : "search.query",
+      eventName: "search_submitted",
       anonymousKey: input.anonymousKey,
       userId: input.userId,
       properties: { query: input.query, resultCount: input.resultCount },

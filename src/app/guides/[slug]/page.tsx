@@ -11,6 +11,7 @@ import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { articleData } from "@/lib/seo/structured";
+import { notePublicView } from "@/modules/analytics/service";
 import { getPublishedGuide, listArticleRelations, listOwnerFaqs } from "@/modules/discovery";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -43,6 +44,7 @@ export default async function GuidePage({ params }: PageProps) {
   try {
     const guide = await getPublishedGuide(slug);
     if (!guide) notFound();
+    await notePublicView("guide", `/guides/${guide.slug}`);
     const [related, faqs] = await Promise.all([
       listArticleRelations(guide.id),
       listOwnerFaqs("ARTICLE", guide.id),

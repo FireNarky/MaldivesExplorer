@@ -6,13 +6,16 @@ import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
 import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { RelatedList } from "@/components/discovery/related-list";
+import { ReviewList } from "@/components/reviews/review-list";
 import { ListingActions } from "@/components/shortlist/listing-actions";
 import { ErrorState } from "@/components/ui/error-state";
 import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { lodgingData, type Crumb } from "@/lib/seo/structured";
+import { notePublicView } from "@/modules/analytics/service";
 import { getPublishedResort, listPublishedResortImages } from "@/modules/catalog";
+import { listPublishedForResort } from "@/modules/reviews/service";
 import {
   listOwnerFaqs,
   listPublishedExperiencesForResort,
@@ -44,12 +47,14 @@ export default async function ResortPage({ params }: PageProps) {
   try {
     const resort = await getPublishedResort(slug);
     if (!resort) notFound();
-    const [images, experiences, guides, faqs] = await Promise.all([
+    const [images, experiences, guides, faqs, reviews] = await Promise.all([
       listPublishedResortImages(resort.id),
       listPublishedExperiencesForResort(resort.id),
       listRelatedGuides("RESORT", resort.id),
       listOwnerFaqs("RESORT", resort.id),
+      listPublishedForResort(resort.id),
     ]);
+    await notePublicView("resort", `/resorts/${resort.slug}`);
     const crumbs: Crumb[] = [
       { name: "Home", href: "/" },
       { name: "Resorts", href: "/resorts" },
@@ -166,6 +171,12 @@ export default async function ResortPage({ params }: PageProps) {
                 <li key={item.audienceTagId}>{item.audienceTag.name}</li>
               ))}
             </ul>
+          </section>
+        ) : null}
+        {reviews.length > 0 ? (
+          <section className="grid gap-3">
+            <h2>Reviews</h2>
+            <ReviewList reviews={reviews} />
           </section>
         ) : null}
         <RelatedList title="Experiences" items={experiences} />

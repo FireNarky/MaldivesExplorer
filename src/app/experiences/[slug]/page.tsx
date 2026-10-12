@@ -11,6 +11,7 @@ import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { attractionData } from "@/lib/seo/structured";
+import { notePublicView } from "@/modules/analytics/service";
 import {
   getPublishedExperience,
   listOwnerFaqs,
@@ -51,6 +52,7 @@ export default async function ExperiencePage({ params }: PageProps) {
   try {
     const experience = await getPublishedExperience(slug);
     if (!experience) notFound();
+    await notePublicView("experience", `/experiences/${experience.slug}`);
     const [places, guides, faqs] = await Promise.all([
       listPublishedPlacesForExperience(experience.id),
       listRelatedGuides("EXPERIENCE", experience.id),

@@ -12,6 +12,7 @@ import { publicMetadata } from "@/lib/seo/metadata";
 import { siteOrigin } from "@/lib/seo/site";
 import { websiteSearchData } from "@/lib/seo/structured";
 import { searchPublished, writeSearchEvent } from "@/modules/search/service";
+import { recordProductEvent } from "@/modules/analytics/service";
 import {
   consentFromCookie,
   normalizeSearchQuery,
@@ -76,6 +77,19 @@ export default async function SearchPage({ searchParams }: PageProps) {
         });
       } catch (error) {
         logError(error instanceof Error ? error.message : "The search event could not be stored.");
+      }
+    }
+    if (kind !== "all") {
+      try {
+        await recordProductEvent({
+          name: "filter_applied",
+          consent: consentFromCookie(store.get("me_analytics")?.value),
+          anonymousKey: store.get("me_anon")?.value,
+          userId: (await auth().catch(() => null))?.user?.id,
+          properties: { kind },
+        });
+      } catch (error) {
+        logError(error instanceof Error ? error.message : "The filter event could not be stored.");
       }
     }
     const groups = grouped(hits);

@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { noteConsentEvent } from "@/modules/analytics/service";
 import { isNextRedirect } from "@/lib/http/navigation";
 import { PortalError, openAccount } from "@/modules/customers/service";
 import {
@@ -197,6 +198,7 @@ export async function respondToQuoteForm(formData: FormData): Promise<void> {
       message: text(formData, "message"),
       idempotencyKey: text(formData, "idempotencyKey"),
     });
+    await noteConsentEvent("quote_response", { responseType: text(formData, "responseType") });
   } catch (error) {
     fail(path, error, "The response could not be saved.");
   }

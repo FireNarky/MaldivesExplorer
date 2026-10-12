@@ -71,6 +71,21 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             Quotes
           </Link>
         ) : null}
+        {permissions.includes("review.moderate") || permissions.includes("review.publish") ? (
+          <Link href="/admin/reviews" className="text-lagoon-ink">
+            Reviews
+          </Link>
+        ) : null}
+        {permissions.includes("newsletter.read") || permissions.includes("newsletter.write") ? (
+          <Link href="/admin/newsletter" className="text-lagoon-ink">
+            Newsletter
+          </Link>
+        ) : null}
+        {operations ? (
+          <Link href="/admin/reports" className="text-lagoon-ink">
+            Reports
+          </Link>
+        ) : null}
         {operations ? (
           <Link href="/admin/enquiries/report" className="text-lagoon-ink">
             Enquiry operations

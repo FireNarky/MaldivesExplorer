@@ -6,6 +6,7 @@ import { ErrorState } from "@/components/ui/error-state";
 import { auth } from "@/auth";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
+import { noteConsentEvent } from "@/modules/analytics/service";
 import { plannerCatalog } from "@/modules/enquiries/service";
 import { listSavedItems } from "@/modules/wishlist/service";
 
@@ -19,6 +20,7 @@ export default async function PlanPage() {
   try {
     const [catalog, session] = await Promise.all([plannerCatalog(), auth().catch(() => null)]);
     const saved = session?.user?.id ? await listSavedItems(session.user.id).catch(() => []) : [];
+    await noteConsentEvent("planner_started", { path: "/plan" });
     return (
       <section className="grid gap-6">
         <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Plan a trip" }]} />

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { deliverEmail } from "@/jobs/handlers/email";
 import { confirmQueuedAcknowledgement } from "@/modules/communications/service";
 import { confirmPrivacyRequest } from "@/modules/customers/privacy-handler";
+import { confirmQueuedNewsletter } from "@/modules/newsletter/jobs";
 import { confirmQueuedQuote, expireQuoteJob } from "@/modules/quotes/jobs";
 
 export type JobHandler = (payload: Prisma.JsonValue) => Promise<void>;
@@ -88,3 +89,4 @@ registerJobHandler("privacy.export", confirmPrivacyRequest);
 registerJobHandler("privacy.deletion", confirmPrivacyRequest);
 registerJobHandler("quote.send", confirmQueuedQuote);
 registerJobHandler("quote.expire", expireQuoteJob);
+registerJobHandler("newsletter.confirm", confirmQueuedNewsletter);

@@ -6,6 +6,9 @@ import { Label } from "@/components/ui/label";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { updatePreferencesForm } from "@/modules/customers/actions";
 import { readProfile } from "@/modules/customers/service";
+import { accountNewsletterForm } from "@/modules/newsletter/actions";
+import { newsletterTopics, topicLabel } from "@/modules/newsletter/rules";
+import { readSubscriptionByEmail } from "@/modules/newsletter/service";
 
 export const metadata: Metadata = publicMetadata({
   title: "Preferences",
@@ -20,6 +23,7 @@ export default async function PreferencesPage({
 }) {
   const session = await auth().catch(() => null);
   const profile = await readProfile(session?.user?.id || "");
+  const subscription = await readSubscriptionByEmail(profile.email);
   const params = await searchParams;
   return (
     <section className="grid max-w-[65ch] gap-6">
@@ -40,6 +44,39 @@ export default async function PreferencesPage({
         </div>
         <Button type="submit">Save preferences</Button>
       </form>
+      <section className="grid gap-4">
+        <h2>Newsletter</h2>
+        {subscription ? (
+          <>
+            <p>{subscription.statusLabel}</p>
+            <form action={accountNewsletterForm} className="grid gap-4">
+              <fieldset className="grid gap-2">
+                <legend className="font-semibold">Topics</legend>
+                {newsletterTopics.map((topic) => (
+                  <label key={topic} className="flex min-h-11 items-center gap-3">
+                    <input
+                      type="checkbox"
+                      name="topics"
+                      value={topic}
+                      defaultChecked={subscription.topics.includes(topic)}
+                    />
+                    {topicLabel(topic)}
+                  </label>
+                ))}
+              </fieldset>
+              <Button type="submit">Save newsletter topics</Button>
+            </form>
+            <form action={accountNewsletterForm}>
+              <input type="hidden" name="intent" value="unsubscribe" />
+              <Button type="submit" variant="secondary">
+                Unsubscribe
+              </Button>
+            </form>
+          </>
+        ) : (
+          <p>This account email is not subscribed.</p>
+        )}
+      </section>
     </section>
   );
 }

@@ -11,6 +11,7 @@ import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { placeData } from "@/lib/seo/structured";
+import { notePublicView } from "@/modules/analytics/service";
 import {
   getPublishedAtoll,
   listOwnerFaqs,
@@ -44,6 +45,7 @@ export default async function AtollPage({ params }: PageProps) {
   try {
     const atoll = await getPublishedAtoll(slug);
     if (!atoll) notFound();
+    await notePublicView("atoll", `/atolls/${atoll.slug}`);
     const [islands, resorts, experiences, guides, faqs] = await Promise.all([
       listPublishedIslandsForAtoll(atoll.id),
       listPublishedResortsForAtoll(atoll.id),

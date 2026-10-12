@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { draftFrom } from "@/lib/planner/local";
 import { logError } from "@/lib/observability/log";
+import { recordProductEvent } from "@/modules/analytics/service";
 import { EnquiryError, submitEnquiry } from "@/modules/enquiries/service";
+import { consentFromCookie } from "@/modules/search/query";
 
 const hits = new Map<string, number[]>();
 
@@ -52,6 +54,26 @@ export async function POST(request: Request) {
       userId: session?.user?.id || null,
       ipHash,
       idempotencyKey: request.headers.get("idempotency-key") ?? "",
+    });
+    const consent = consentFromCookie(
+      request.headers
+        .get("cookie")
+        ?.split(";")
+        .map((part) => part.trim())
+        .find((part) => part.startsWith("me_analytics="))
+        ?.slice("me_analytics=".length),
+    );
+    await recordProductEvent({
+      name: "enquiry_submitted",
+      consent,
+      userId: session?.user?.id,
+      properties: { created: result.created },
+    });
+    await recordProductEvent({
+      name: "planner_step_completed",
+      consent,
+      userId: session?.user?.id,
+      properties: { step: "review" },
     });
     return NextResponse.json(
       { reference: result.reference, duplicate: result.duplicate, missing: result.missing },

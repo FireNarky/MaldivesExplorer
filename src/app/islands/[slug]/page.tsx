@@ -12,6 +12,7 @@ import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { placeData, type Crumb } from "@/lib/seo/structured";
+import { notePublicView } from "@/modules/analytics/service";
 import {
   getPublishedIsland,
   listOwnerFaqs,
@@ -51,6 +52,7 @@ export default async function IslandPage({ params }: PageProps) {
   try {
     const island = await getPublishedIsland(slug);
     if (!island) notFound();
+    await notePublicView("island", `/islands/${island.slug}`);
     const [resorts, experiences, guides, faqs] = await Promise.all([
       listPublishedResortsForIsland(island.id),
       listPublishedExperiencesForIsland(island.id),

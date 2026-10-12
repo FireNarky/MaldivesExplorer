@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { noteConsentEvent } from "@/modules/analytics/service";
 import {
   mergeSavedItems,
   removeSavedItem,
@@ -20,7 +21,9 @@ export async function toggleListingAction(entityType: string, entityId: string):
   if (!isWishlistType(entityType) || !isUuid(entityId)) {
     throw new Error("That listing was not found.");
   }
-  return toggleSavedItem(await userId(), entityType, entityId);
+  const saved = await toggleSavedItem(await userId(), entityType, entityId);
+  if (saved) await noteConsentEvent("saved_item_added", { kind: entityType });
+  return saved;
 }
 
 export async function removeListingAction(savedItemId: string): Promise<void> {

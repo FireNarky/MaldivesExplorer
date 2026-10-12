@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { SubscribeForm } from "@/components/newsletter/subscribe-form";
+import { currentNoticeVersion } from "@/modules/newsletter/service";
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const noticeVersion = await currentNoticeVersion().catch(() => "2026-10-10");
   return (
     <footer className="surface-inverse bg-ocean text-sand">
       <div className="mx-auto flex w-full max-w-[90rem] flex-col gap-4 px-4 py-8 lg:px-8">
@@ -39,7 +42,19 @@ export function SiteFooter() {
           <Link href="/account" className="text-base text-sand">
             Account
           </Link>
+          <Link href="/reviews" className="text-base text-sand">
+            Testimonials
+          </Link>
+          <Link href="/newsletter" className="text-base text-sand">
+            Newsletter
+          </Link>
         </nav>
+        <SubscribeForm
+          idPrefix="footer"
+          noticeVersion={noticeVersion}
+          returnPath="/newsletter"
+          showTopics={false}
+        />
       </div>
     </footer>
   );
