@@ -84,6 +84,9 @@ export type OwnQuote = {
   terms: string;
   expiresOn: string;
   enquiryReference: string;
+  canAccept: boolean;
+  canClarify: boolean;
+  pdfAvailable: boolean;
   responses: Array<{ label: string; message: string | null; createdAt: string }>;
 };
 
@@ -377,6 +380,9 @@ export async function readOwnQuote(
     terms: version.termsSnapshot,
     expiresOn: version.expiresAt.toISOString().slice(0, 10),
     enquiryReference: version.quote.enquiry.reference,
+    canAccept: version.status === "SENT" && version.expiresAt.getTime() > Date.now(),
+    canClarify: version.status === "SENT",
+    pdfAvailable: version.pdfMediaId !== null,
     responses: version.responses.map((response) => ({
       label:
         response.responseType === "ACCEPT"

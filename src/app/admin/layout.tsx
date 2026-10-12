@@ -37,6 +37,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const enquiries =
     permissions.includes("enquiry.read.assigned") || permissions.includes("enquiry.read.all");
   const operations = permissions.includes("report.read");
+  const quotes =
+    permissions.includes("quote.read") ||
+    permissions.includes("quote.write") ||
+    permissions.includes("quote.approve");
   return (
     <div className="grid gap-8">
       <nav aria-label="Staff" className="flex flex-wrap gap-x-4 gap-y-2">
@@ -60,6 +64,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         {enquiries ? (
           <Link href="/admin/enquiries" className="text-lagoon-ink">
             Enquiries
+          </Link>
+        ) : null}
+        {quotes ? (
+          <Link href="/admin/quotes" className="text-lagoon-ink">
+            Quotes
           </Link>
         ) : null}
         {operations ? (
