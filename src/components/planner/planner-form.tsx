@@ -10,6 +10,7 @@ import {
   writeAcknowledgement,
   writePlannerDraft,
 } from "@/lib/planner/local";
+import { TurnstileField } from "@/components/security/turnstile-field";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { Input } from "@/components/ui/input";
@@ -119,7 +120,14 @@ export function PlannerForm(props: PlannerFormProps) {
           "content-type": "application/json",
           "idempotency-key": draft.idempotencyKey,
         },
-        body: JSON.stringify({ ...draft, website }),
+        body: JSON.stringify({
+          ...draft,
+          website,
+          turnstileToken:
+            document.querySelector<HTMLTextAreaElement | HTMLInputElement>(
+              "[name='cf-turnstile-response']",
+            )?.value ?? "",
+        }),
       });
       const payload = (await response.json()) as {
         reference?: string;
@@ -234,6 +242,7 @@ export function PlannerForm(props: PlannerFormProps) {
           />
         </label>
       </div>
+      {current === "review" ? <TurnstileField /> : null}
       <div className="flex flex-wrap gap-3">
         {step > 0 ? (
           <Button type="button" variant="secondary" onClick={() => setStep((value) => value - 1)}>

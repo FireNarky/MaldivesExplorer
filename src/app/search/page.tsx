@@ -188,9 +188,12 @@ export default async function SearchPage({ searchParams }: PageProps) {
   } catch (error) {
     logError(error instanceof Error ? error.message : "Search could not be completed.");
     return (
-      <ErrorState title="Search">
-        <p>Search could not be completed.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Search</h1>
+        <ErrorState title="Search">
+          <p>Search could not be completed.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

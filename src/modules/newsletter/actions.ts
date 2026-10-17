@@ -43,7 +43,11 @@ export async function subscribeForm(formData: FormData): Promise<void> {
   const returnPath = text(formData, "returnPath") || "/newsletter";
   try {
     const hash = await ipHash();
-    if (newsletterLimited(hash)) throw new NewsletterError("Try again later.", 429);
+    if (await newsletterLimited(hash)) throw new NewsletterError("Try again later.", 429);
+    const { botProtection, turnstileToken } = await import("@/lib/bot/protection");
+    if (!(await botProtection().verify(turnstileToken(formData)))) {
+      throw new NewsletterError("The subscription could not be saved.", 400);
+    }
     const session = await auth().catch(() => null);
     const result = await subscribeNewsletter({
       email: text(formData, "email"),

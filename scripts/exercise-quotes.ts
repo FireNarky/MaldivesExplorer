@@ -219,17 +219,17 @@ async function main(): Promise<void> {
       where: { idempotencyKey: `quote.send:${acceptQuote.versionId}` },
       select: { status: true },
     });
-    if (pending?.status === "SUCCEEDED") break;
+    if (pending?.status === "FAILED" || pending?.status === "SUCCEEDED") break;
     await runDueJobs(20);
   }
   const sendJob = await db.job.findUniqueOrThrow({
     where: { idempotencyKey: `quote.send:${acceptQuote.versionId}` },
   });
-  assert(sendJob.status === "SUCCEEDED", "The quote send job did not finish.");
+  assert(sendJob.status === "FAILED", "The quote send job did not record the provider refusal.");
   const afterJob = await db.emailDelivery.findUniqueOrThrow({
     where: { idempotencyKey: `quote.sent:${acceptQuote.versionId}` },
   });
-  assert(afterJob.status === "QUEUED", "The send job delivered the email.");
+  assert(afterJob.status === "FAILED" && !afterJob.providerId, "The send job delivered the email.");
 
   assert(
     (await readOwnQuote(guestB.id, acceptQuote.versionId)) === null,

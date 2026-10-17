@@ -86,9 +86,12 @@ export default async function CollectionPage({ params }: PageProps) {
     if (isNotFoundError(error)) throw error;
     logError(error instanceof Error ? error.message : "The collection could not be loaded.");
     return (
-      <ErrorState title="Collection">
-        <p>The collection could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Collection</h1>
+        <ErrorState title="Collection">
+          <p>The collection could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

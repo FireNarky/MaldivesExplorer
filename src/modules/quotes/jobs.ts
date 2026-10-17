@@ -1,5 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
+import { dispatchDelivery } from "@/lib/email/dispatch";
+import { absoluteUrl } from "@/lib/seo/site";
 import { expireDueQuotes } from "@/modules/quotes/service";
 
 function versionId(payload: Prisma.JsonValue): string {
@@ -12,9 +14,19 @@ export async function confirmQueuedQuote(payload: Prisma.JsonValue): Promise<voi
   if (!id) throw new Error("The quote send job has no version.");
   const delivery = await db.emailDelivery.findUnique({
     where: { idempotencyKey: `quote.sent:${id}` },
-    select: { status: true },
+    select: { id: true, status: true },
   });
   if (!delivery) throw new Error("The quote email is not queued.");
+  if (delivery.status === "SENT") return;
+  const version = await db.quoteVersion.findUnique({
+    where: { id },
+    select: { quote: { select: { reference: true } } },
+  });
+  const reference = version?.quote.reference ?? "your quote";
+  await dispatchDelivery(delivery.id, async () => ({
+    subject: `Quote ${reference}`,
+    text: `Quote ${reference} is ready in your account at ${absoluteUrl("/account")}.`,
+  }));
 }
 
 export async function expireQuoteJob(payload: Prisma.JsonValue): Promise<void> {

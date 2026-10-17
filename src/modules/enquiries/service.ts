@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from "node:crypto";
+import { createHash } from "node:crypto";
 import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { writeAudit } from "@/modules/audit/service";
@@ -372,14 +372,11 @@ export async function submitEnquiry(
         },
         tx,
       );
-      const claimUrl = customer.userId
-        ? null
-        : `/register?claim=${await createClaimToken(tx, submission.email)}`;
       await queueEnquiryAcknowledgement(tx, {
         enquiryId: created.id,
         toEmail: submission.email,
         reference,
-        claimUrl,
+        claimRequired: !customer.userId,
       });
       await tx.idempotencyKey.create({
         data: {
@@ -495,19 +492,6 @@ async function matchCustomer(
     tx,
   );
   return created;
-}
-
-async function createClaimToken(tx: Prisma.TransactionClient, email: string): Promise<string> {
-  const token = randomBytes(32).toString("base64url");
-  const hashed = createHash("sha256").update(token).digest("hex");
-  await tx.verificationToken.create({
-    data: {
-      identifier: `claim:${email}`,
-      token: hashed,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    },
-  });
-  return token;
 }
 
 export async function plannerCatalog(): Promise<{

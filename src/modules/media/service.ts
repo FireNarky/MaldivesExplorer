@@ -190,6 +190,29 @@ export async function linkMedia(
   });
 }
 
+export async function deleteMediaAsset(actorId: string, id: string): Promise<void> {
+  if (!(await userHasPermission(actorId, "media.write"))) {
+    throw new Error("This account cannot store media.");
+  }
+  const current = await getMedia(id);
+  if (!current) throw new Error("That file was not found.");
+  if (current.status === "PUBLISHED") throw new Error("Unpublish this record before deleting it.");
+  await mediaStorage().delete(current.storageKey);
+  await db.$transaction(async (tx) => {
+    await tx.mediaAsset.delete({ where: { id } });
+    await writeAudit(
+      {
+        actorId,
+        action: "media.delete",
+        entityType: "media_asset",
+        entityId: id,
+        before: { storageKey: current.storageKey, mimeType: current.mimeType },
+      },
+      tx,
+    );
+  });
+}
+
 export async function readPublishedMedia(
   id: string,
 ): Promise<{ storageKey: string; mimeType: string } | null> {

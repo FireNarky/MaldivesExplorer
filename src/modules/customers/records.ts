@@ -14,8 +14,6 @@ import { openAccount, PortalError } from "@/modules/customers/service";
 const unavailable = "That record is not available.";
 const unpublished = "This listing is not currently published.";
 
-const messageHits = new Map<string, number[]>();
-
 export type EnquirySummary = {
   reference: string;
   statusLabel: string;
@@ -261,7 +259,7 @@ export async function postOwnMessage(
   const problem = messageBodyError(body);
   if (problem) throw new PortalError(problem, 400);
   const customer = await openAccount(userId);
-  if (messageLimited(customer.id)) throw new PortalError("Try again later.", 429);
+  if (await messageLimited(customer.id)) throw new PortalError("Try again later.", 429);
   const enquiry = await db.enquiry.findFirst({
     where: { reference, customerId: customer.id },
     select: { id: true, customerId: true },
@@ -452,10 +450,8 @@ async function publishedNames(
   return ids.map((id) => ({ name: found.get(id) ?? unpublished, href: null }));
 }
 
-function messageLimited(customerId: string): boolean {
-  const now = Date.now();
-  const recent = (messageHits.get(customerId) ?? []).filter((time) => now - time < 60 * 60 * 1000);
-  recent.push(now);
-  messageHits.set(customerId, recent);
-  return recent.length > 20;
+async function messageLimited(customerId: string): Promise<boolean> {
+  const { rateLimiter } = await import("@/lib/rate-limit/limiter");
+  const allowed = await rateLimiter().consume(`message:${customerId}`, 20, 60 * 60 * 1000);
+  return !allowed;
 }

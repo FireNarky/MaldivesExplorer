@@ -1,18 +1,9 @@
 import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { rateLimiter } from "@/lib/rate-limit/limiter";
 import { recordProductEvent } from "@/modules/analytics/service";
 import { consentFromCookie } from "@/modules/search/query";
-
-const hits = new Map<string, number[]>();
-
-function limited(key: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(key) ?? []).filter((time) => now - time < 60 * 60 * 1000);
-  recent.push(now);
-  hits.set(key, recent);
-  return recent.length > 60;
-}
 
 function cookieValue(header: string | null, name: string): string | undefined {
   if (!header) return undefined;
@@ -26,7 +17,9 @@ function cookieValue(header: string | null, name: string): string | undefined {
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   const ipHash = createHash("sha256").update(ip).digest("hex");
-  if (limited(ipHash)) return NextResponse.json({ message: "Try again later." }, { status: 429 });
+  if (!(await rateLimiter().consume(`analytics:${ipHash}`, 60, 60 * 60 * 1000))) {
+    return NextResponse.json({ message: "Try again later." }, { status: 429 });
+  }
   const body = (await request.json()) as { name?: unknown; properties?: unknown };
   const session = await auth().catch(() => null);
   const properties =

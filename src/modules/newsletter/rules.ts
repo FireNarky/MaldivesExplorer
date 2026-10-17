@@ -89,12 +89,8 @@ export function statusLabel(status: SubscriptionStatusName): string {
   return "Suppressed";
 }
 
-const hits = new Map<string, number[]>();
-
-export function newsletterLimited(key: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(key) ?? []).filter((time) => now - time < 60 * 60 * 1000);
-  recent.push(now);
-  hits.set(key, recent);
-  return recent.length > 20;
+export async function newsletterLimited(key: string): Promise<boolean> {
+  const { rateLimiter } = await import("@/lib/rate-limit/limiter");
+  const allowed = await rateLimiter().consume(`newsletter:${key}`, 20, 60 * 60 * 1000);
+  return !allowed;
 }

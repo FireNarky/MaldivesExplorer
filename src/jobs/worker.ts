@@ -1,5 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
+import { logError } from "@/lib/observability/log";
+import { scrubMessage } from "@/lib/observability/scrub";
 import { deliverEmail } from "@/jobs/handlers/email";
 import { confirmQueuedAcknowledgement } from "@/modules/communications/service";
 import { confirmPrivacyRequest } from "@/modules/customers/privacy-handler";
@@ -72,7 +74,8 @@ export async function runDueJobs(limit = 10): Promise<number> {
         data: { status: "SUCCEEDED", finishedAt: new Date(), lastError: null },
       });
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Job failed.";
+      const message = scrubMessage(error instanceof Error ? error.message : "Job failed.");
+      logError(message, job.id);
       await db.job.update({
         where: { id: job.id },
         data: { status: "FAILED", finishedAt: new Date(), lastError: message },

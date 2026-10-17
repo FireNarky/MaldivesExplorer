@@ -1,29 +1,16 @@
 import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { botProtection } from "@/lib/bot/protection";
 import { logError } from "@/lib/observability/log";
 import { NewsletterError, subscribeNewsletter } from "@/modules/newsletter/service";
 import { newsletterLimited } from "@/modules/newsletter/rules";
-
-async function turnstileFailed(token: string): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
-  if (!secret) return false;
-  if (!token) return true;
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ secret, response: token }),
-  });
-  if (!response.ok) return true;
-  const payload = (await response.json()) as { success?: boolean };
-  return payload.success !== true;
-}
 
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
     const ipHash = createHash("sha256").update(ip).digest("hex");
-    if (newsletterLimited(ipHash)) {
+    if (await newsletterLimited(ipHash)) {
       return NextResponse.json({ message: "Try again later." }, { status: 429 });
     }
     const body = (await request.json()) as {
@@ -34,7 +21,8 @@ export async function POST(request: Request) {
       website?: unknown;
       turnstileToken?: unknown;
     };
-    if (await turnstileFailed(typeof body.turnstileToken === "string" ? body.turnstileToken : "")) {
+    const token = typeof body.turnstileToken === "string" ? body.turnstileToken : null;
+    if (!(await botProtection().verify(token, ip))) {
       return NextResponse.json(
         { message: "The subscription could not be saved." },
         { status: 400 },

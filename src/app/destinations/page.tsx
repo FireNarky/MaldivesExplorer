@@ -32,9 +32,12 @@ export default async function DestinationsPage() {
   } catch (error) {
     logError(error instanceof Error ? error.message : "Destinations could not be loaded.");
     return (
-      <ErrorState title="Destinations">
-        <p>Destinations could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Destinations</h1>
+        <ErrorState title="Destinations">
+          <p>Destinations could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

@@ -380,23 +380,20 @@ async function main(): Promise<void> {
     );
   });
   assert(job, "The confirmation job was not queued.");
-  const token =
-    job.payload &&
-    typeof job.payload === "object" &&
-    !Array.isArray(job.payload) &&
-    "token" in job.payload &&
-    typeof job.payload.token === "string"
-      ? job.payload.token
-      : "";
-  assert(token.length > 10, "The confirmation job has no token.");
+  assert(!JSON.stringify(job.payload).includes("token"), "The confirmation job stored a token.");
+  process.env.EMAIL_PROVIDER = "capture";
   let finished = job;
   for (let attempt = 0; attempt < 30 && finished.status !== "SUCCEEDED"; attempt += 1) {
     await runDueJobs(5);
     finished = await db.job.findUniqueOrThrow({ where: { id: job.id } });
   }
+  delete process.env.EMAIL_PROVIDER;
   assert(finished.status === "SUCCEEDED", "The confirmation job did not succeed.");
-  const stillQueued = await db.emailDelivery.findUniqueOrThrow({ where: { id: delivery.id } });
-  assert(stillQueued.status === "QUEUED", "The job marked the email sent.");
+  const sent = await db.emailDelivery.findUniqueOrThrow({ where: { id: delivery.id } });
+  assert(sent.status === "SENT" && Boolean(sent.providerId), "The provider id was not stored.");
+  const { takeCapturedEmail } = await import("../src/lib/email/provider");
+  const token = takeCapturedEmail().match(/token=([A-Za-z0-9_-]+)/)?.[1] ?? "";
+  assert(token.length > 10, "The confirmation message had no token.");
   await confirmNewsletter(token);
   const confirmed = await db.subscription.findUniqueOrThrow({ where: { id: pending.id } });
   assert(confirmed.status === "CONFIRMED", "The token did not confirm the subscription.");

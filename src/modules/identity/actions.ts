@@ -3,8 +3,10 @@
 import { cookies } from "next/headers";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
-import { createHash, randomBytes } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
+import { botProtection, turnstileToken } from "@/lib/bot/protection";
+import { rateLimiter } from "@/lib/rate-limit/limiter";
 import { sealChallenge } from "@/lib/auth/challenge";
 import { createTotpSecret, totpFor } from "@/lib/auth/mfa";
 import { hashPassword, passwordError } from "@/lib/auth/password";
@@ -14,14 +16,13 @@ import { redeemClaim } from "@/modules/customers/service";
 import { claimToken, safeAccountPath } from "@/modules/customers/rules";
 import { isStaffUser } from "@/modules/identity/service";
 
-const attempts = new Map<string, number[]>();
+async function limited(key: string, limit = 5): Promise<boolean> {
+  const allowed = await rateLimiter().consume(key, limit, 15 * 60 * 1000);
+  return !allowed;
+}
 
-function limited(key: string): boolean {
-  const now = Date.now();
-  const recent = (attempts.get(key) ?? []).filter((time) => now - time < 15 * 60 * 1000);
-  recent.push(now);
-  attempts.set(key, recent);
-  return recent.length > 5;
+async function botAllows(formData: FormData): Promise<boolean> {
+  return botProtection().verify(turnstileToken(formData));
 }
 
 async function queueAuthMessage(template: string, userId: string): Promise<void> {
@@ -37,7 +38,8 @@ export async function passwordSignIn(formData: FormData): Promise<void> {
     .trim()
     .toLowerCase();
   const password = String(formData.get("password") ?? "");
-  if (limited(`password:${email}`)) redirect("/login?error=limited");
+  if (!(await botAllows(formData))) redirect("/login?error=check");
+  if (await limited(`password:${email}`)) redirect("/login?error=limited");
   const user = await db.user.findUnique({ where: { email } });
   const { verifyPassword } = await import("@/lib/auth/password");
   if (
@@ -81,6 +83,9 @@ export async function completeMfa(formData: FormData): Promise<void> {
   const jar = await cookies();
   const challenge = jar.get("mfa_challenge")?.value;
   if (!challenge) redirect("/login?error=challenge");
+  const { readChallenge } = await import("@/lib/auth/challenge");
+  const parsed = readChallenge(challenge);
+  if (await limited(`mfa:${parsed?.userId ?? "missing"}`)) redirect("/login/mfa?error=limited");
   try {
     await signIn("credentials", { challenge, totp: code, redirectTo: "/admin" });
   } catch (error) {
@@ -95,6 +100,8 @@ export async function registerAccount(formData: FormData): Promise<void> {
     .trim()
     .toLowerCase();
   const password = String(formData.get("password") ?? "");
+  if (!(await botAllows(formData))) redirect("/register?error=check");
+  if (await limited(`register:${email}`)) redirect("/register?error=limited");
   if (!name || passwordError(password)) redirect("/register?error=invalid");
   const existing = await db.user.findUnique({ where: { email }, select: { id: true } });
   if (existing) redirect("/register?error=unavailable");
@@ -134,17 +141,10 @@ export async function requestPasswordReset(formData: FormData): Promise<void> {
   const email = String(formData.get("email") ?? "")
     .trim()
     .toLowerCase();
+  if (!(await botAllows(formData))) redirect("/forgot-password?error=check");
+  if (await limited(`reset:${email}`)) redirect("/forgot-password?sent=1");
   const user = await db.user.findUnique({ where: { email } });
   if (user && user.status === "ACTIVE") {
-    const token = randomBytes(32).toString("base64url");
-    const hashed = createHash("sha256").update(token).digest("hex");
-    await db.verificationToken.create({
-      data: {
-        identifier: `reset:${user.email}`,
-        token: hashed,
-        expires: new Date(Date.now() + 30 * 60 * 1000),
-      },
-    });
     await queueAuthMessage("auth.reset-password", user.id);
   }
   redirect("/forgot-password?sent=1");
@@ -154,17 +154,10 @@ export async function requestMagicLink(formData: FormData): Promise<void> {
   const email = String(formData.get("email") ?? "")
     .trim()
     .toLowerCase();
+  if (!(await botAllows(formData))) redirect("/login?error=check");
+  if (await limited(`magic:${email}`)) redirect("/login?sent=1");
   const user = await db.user.findUnique({ where: { email } });
   if (user && user.status === "ACTIVE" && !(await isStaffUser(user.id))) {
-    const token = randomBytes(32).toString("base64url");
-    const hashed = createHash("sha256").update(token).digest("hex");
-    await db.verificationToken.create({
-      data: {
-        identifier: `magic:${user.email}`,
-        token: hashed,
-        expires: new Date(Date.now() + 15 * 60 * 1000),
-      },
-    });
     await queueAuthMessage("auth.magic-link", user.id);
   }
   redirect("/login?sent=1");

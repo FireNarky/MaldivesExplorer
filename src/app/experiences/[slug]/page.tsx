@@ -98,9 +98,12 @@ export default async function ExperiencePage({ params }: PageProps) {
     if (isNotFoundError(error)) throw error;
     logError(error instanceof Error ? error.message : "The experience could not be loaded.");
     return (
-      <ErrorState title="Experience">
-        <p>The experience could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Experience</h1>
+        <ErrorState title="Experience">
+          <p>The experience could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

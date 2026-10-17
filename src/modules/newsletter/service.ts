@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { writeAudit } from "@/modules/audit/service";
@@ -200,13 +200,12 @@ export async function subscribeNewsletter(input: {
         select: { id: true },
       });
       const status: SubscriptionStatusName = decision === "pending" ? "PENDING" : "CONFIRMED";
-      const token = status === "PENDING" ? randomBytes(32).toString("base64url") : null;
       const data = {
         email,
         status,
         preferences: preferences(input.topics),
         consentRecordId: consent.id,
-        confirmTokenHash: token ? hashToken(token) : null,
+        confirmTokenHash: null,
         subscribedAt: status === "CONFIRMED" ? new Date() : null,
         unsubscribedAt: null,
         source: input.source,
@@ -216,7 +215,7 @@ export async function subscribeNewsletter(input: {
       } else {
         await tx.subscription.create({ data: { id, ...data } });
       }
-      if (token) {
+      if (status === "PENDING") {
         const template = await tx.emailTemplate.findFirst({
           where: { code: "newsletter.confirm", locale: "en" },
           select: { id: true },
@@ -237,7 +236,7 @@ export async function subscribeNewsletter(input: {
           data: {
             type: "newsletter.confirm",
             idempotencyKey: `newsletter.confirm:${consent.id}`,
-            payload: { subscriptionId: id, token },
+            payload: { subscriptionId: id },
           },
         });
       }
@@ -284,6 +283,7 @@ export async function confirmNewsletter(token: string): Promise<SubscriptionStat
       where: { id: row.id },
       data: { status: "CONFIRMED", subscribedAt: new Date(), confirmTokenHash: null },
     });
+    await tx.verificationToken.deleteMany({ where: { token: hashed } });
     await writeAudit(
       {
         action: "newsletter.confirm",

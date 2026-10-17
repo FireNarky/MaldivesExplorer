@@ -35,9 +35,12 @@ export default async function FaqPage() {
   } catch (error) {
     logError(error instanceof Error ? error.message : "Questions could not be loaded.");
     return (
-      <ErrorState title="Questions">
-        <p>Questions could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Questions</h1>
+        <ErrorState title="Questions">
+          <p>Questions could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

@@ -122,9 +122,12 @@ export default async function ComparePage({ searchParams }: PageProps) {
   } catch (error) {
     logError(error instanceof Error ? error.message : "The comparison could not be loaded.");
     return (
-      <ErrorState title="Compare">
-        <p>The comparison could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Compare</h1>
+        <ErrorState title="Compare">
+          <p>The comparison could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

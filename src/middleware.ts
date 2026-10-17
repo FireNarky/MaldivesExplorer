@@ -5,6 +5,8 @@ const redirectStatuses = new Set([301, 302, 307, 308]);
 
 export async function middleware(request: NextRequest) {
   const headers = new Headers(request.headers);
+  const correlationId = headers.get("x-correlation-id") ?? crypto.randomUUID();
+  headers.set("x-correlation-id", correlationId);
   headers.set("x-pathname", request.nextUrl.pathname);
   headers.set("x-search", request.nextUrl.search);
   const path = request.nextUrl.pathname;
@@ -23,14 +25,18 @@ export async function middleware(request: NextRequest) {
           typeof status === "number" &&
           redirectStatuses.has(status)
         ) {
-          return NextResponse.redirect(new URL(body.to, request.url), status);
+          const redirect = NextResponse.redirect(new URL(body.to, request.url), status);
+          redirect.headers.set("x-correlation-id", correlationId);
+          return redirect;
         }
       }
     } catch {
       // A lookup failure leaves the requested page in place.
     }
   }
-  return NextResponse.next({ request: { headers } });
+  const response = NextResponse.next({ request: { headers } });
+  response.headers.set("x-correlation-id", correlationId);
+  return response;
 }
 
 export const config = {

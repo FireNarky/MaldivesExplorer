@@ -1993,6 +1993,15 @@ model FeatureFlag {
   @@map("feature_flags")
 }
 
+model RateLimitBucket {
+  bucketKey   String   @map("bucket_key")
+  windowStart DateTime @map("window_start") @db.Timestamptz(6)
+  hits        Int
+
+  @@id([bucketKey, windowStart])
+  @@map("rate_limit_buckets")
+}
+
 model Job {
   id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   type           String

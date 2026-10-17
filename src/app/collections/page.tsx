@@ -32,9 +32,12 @@ export default async function CollectionsPage() {
   } catch (error) {
     logError(error instanceof Error ? error.message : "Collections could not be loaded.");
     return (
-      <ErrorState title="Collections">
-        <p>Collections could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Collections</h1>
+        <ErrorState title="Collections">
+          <p>Collections could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }
