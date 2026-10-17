@@ -125,7 +125,18 @@ The dump file and the cluster were deleted after the check. A hosted backup sche
 
 ## CI
 
-`.github/workflows/ci.yml` already runs `npm ci`, format, lint, typecheck, unit tests, docs schema validation, production build, Playwright, and the migration job on PostgreSQL 16. The GitHub Actions run for this stage is recorded on the pull request created for this work. Repository settings are listed only when `gh` confirms them.
+Pull request: https://github.com/FireNarky/MaldivesExplorer/pull/8
+
+Workflow run: https://github.com/FireNarky/MaldivesExplorer/actions/runs/39055817920
+
+| Job | Result | Link |
+| --- | --- | --- |
+| verify | Passed in 3m 6s | https://github.com/FireNarky/MaldivesExplorer/actions/runs/39055817920/job/117463455310 |
+| migrations | Passed in 1m 50s | https://github.com/FireNarky/MaldivesExplorer/actions/runs/39055817920/job/117463455465 |
+
+The verify job runs `npm ci`, format, lint, typecheck, unit tests, docs schema validation, the production build, and Playwright. The migrations job runs the migration and exercise suite on PostgreSQL 16.
+
+Repository settings were read with `gh` on 17 October 2026. The repository is private. The branch-protection request for `master` returned HTTP 403, "Upgrade to GitHub Pro or make this repository public to enable this feature." Branch protection is not enabled. `security_and_analysis` was null, so secret scanning and push protection are not enabled. A required pull-request review is not configured.
 
 ## Accessibility smoke
 
@@ -164,7 +175,7 @@ The exercise scripts that passed cover publication and discovery data, search an
 4. Shared rate limiting is implemented but has no staging database to run in.
 5. PostCSS high advisories remain inside Next.js 15.5.27. Accepted as a known build-time risk. Not a production approval.
 6. D-012 retention and D-014 indexing remain open. Indexing stays disabled.
-7. Branch protection, required checks, secret scanning, and push protection are not stated as enabled here unless the pull-request check confirms them.
+7. Branch protection, required checks, secret scanning, and push protection are not enabled on this private repository. GitHub returned HTTP 403 for branch protection and a null security-analysis payload.
 
 ## D-010
 
