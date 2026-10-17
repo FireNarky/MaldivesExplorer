@@ -27,10 +27,7 @@ export default async function ReviewDetailPage({
   let review;
   let resorts;
   try {
-    [review, resorts] = await Promise.all([
-      readReview(session.user.id, id),
-      listReviewResorts(),
-    ]);
+    [review, resorts] = await Promise.all([readReview(session.user.id, id), listReviewResorts()]);
   } catch (error) {
     if (error instanceof ReviewError && error.status === 404) notFound();
     throw error;

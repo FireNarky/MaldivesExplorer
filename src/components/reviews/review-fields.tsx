@@ -1,6 +1,8 @@
 import { Label } from "@/components/ui/label";
+import { staffSourceLabel } from "@/modules/reviews/rules";
 
-const fieldClass = "min-h-11 w-full rounded-sm border border-border bg-white px-4 text-base text-ink";
+const fieldClass =
+  "min-h-11 w-full rounded-sm border border-border bg-white px-4 text-base text-ink";
 
 export function ReviewFields({
   resorts,
@@ -20,47 +22,61 @@ export function ReviewFields({
 }) {
   return (
     <>
-      <div className="grid gap-2">
-        <Label htmlFor="resortId">Resort</Label>
-        <select
-          id="resortId"
-          name="resortId"
-          defaultValue={values?.resortId ?? ""}
-          className={fieldClass}
-        >
-          <option value="">No resort</option>
-          {resorts.map((resort) => (
-            <option key={resort.id} value={resort.id}>
-              {resort.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="sourceType">Source</Label>
-        <select
-          id="sourceType"
-          name="sourceType"
-          defaultValue={values?.sourceType ?? "EDITORIAL"}
-          className={fieldClass}
-        >
-          <option value="EDITORIAL">Editorial</option>
-          <option value="FIRST_PARTY">First-party</option>
-          <option value="IMPORTED">Imported</option>
-        </select>
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="sourceReference">Source reference</Label>
-        <input
-          id="sourceReference"
-          name="sourceReference"
-          defaultValue={values?.sourceReference ?? ""}
-          className={fieldClass}
-        />
-        <p className="text-sm text-muted">
-          Use a won enquiry reference, a written permission note, or the imported source.
-        </p>
-      </div>
+      {values ? (
+        <>
+          <p>
+            Resort: {resorts.find((resort) => resort.id === values.resortId)?.name ?? "No resort"}
+          </p>
+          <p>
+            Source:{" "}
+            {staffSourceLabel(
+              values.sourceType === "FIRST_PARTY" ||
+                values.sourceType === "EDITORIAL" ||
+                values.sourceType === "IMPORTED"
+                ? values.sourceType
+                : "EDITORIAL",
+            )}
+          </p>
+          <p>Source reference: {values.sourceReference || "None"}</p>
+          <input type="hidden" name="resortId" value={values.resortId} />
+          <input type="hidden" name="sourceType" value={values.sourceType} />
+          <input type="hidden" name="sourceReference" value={values.sourceReference} />
+        </>
+      ) : (
+        <>
+          <div className="grid gap-2">
+            <Label htmlFor="resortId">Resort</Label>
+            <select id="resortId" name="resortId" defaultValue="" className={fieldClass}>
+              <option value="">No resort</option>
+              {resorts.map((resort) => (
+                <option key={resort.id} value={resort.id}>
+                  {resort.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="sourceType">Source</Label>
+            <select
+              id="sourceType"
+              name="sourceType"
+              defaultValue="EDITORIAL"
+              className={fieldClass}
+            >
+              <option value="EDITORIAL">Editorial</option>
+              <option value="FIRST_PARTY">First-party</option>
+              <option value="IMPORTED">Imported</option>
+            </select>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="sourceReference">Source reference</Label>
+            <input id="sourceReference" name="sourceReference" className={fieldClass} />
+            <p className="text-sm text-muted">
+              Use a won enquiry reference, a written permission note, or the imported source.
+            </p>
+          </div>
+        </>
+      )}
       <div className="grid gap-2">
         <Label htmlFor="displayName">Display name</Label>
         <input
@@ -101,7 +117,13 @@ export function ReviewFields({
         />
       </div>
       <label className="flex min-h-11 items-start gap-3">
-        <input type="checkbox" name="consent" value="yes" defaultChecked={values?.consentGranted ?? false} required />
+        <input
+          type="checkbox"
+          name="consent"
+          value="yes"
+          defaultChecked={values?.consentGranted ?? false}
+          required
+        />
         <span>Permission to publish this text is recorded.</span>
       </label>
     </>

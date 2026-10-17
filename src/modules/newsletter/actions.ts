@@ -52,7 +52,8 @@ export async function subscribeForm(formData: FormData): Promise<void> {
       topics: formData.getAll("topics").map(String),
       source: "newsletter-form",
       ipHash: hash,
-      idempotencyKey: text(formData, "idempotencyKey") || randomUUID().replace(/-/g, "").slice(0, 24),
+      idempotencyKey:
+        text(formData, "idempotencyKey") || randomUUID().replace(/-/g, "").slice(0, 24),
       actorId: session?.user?.id || null,
       website: text(formData, "website"),
       replaceTopics: formData.get("replaceTopics") === "yes",
@@ -126,7 +127,11 @@ async function staffId(): Promise<string> {
 export async function importNewsletterForm(formData: FormData): Promise<void> {
   const userId = await staffId();
   try {
-    await importSubscriptions(userId, text(formData, "emails"), formData.get("attestation") === "yes");
+    await importSubscriptions(
+      userId,
+      text(formData, "emails"),
+      formData.get("attestation") === "yes",
+    );
   } catch (error) {
     fail("/admin/newsletter", error);
   }

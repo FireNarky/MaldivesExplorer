@@ -12,10 +12,13 @@ export function isModerationStatus(value: string): value is ModerationStatusName
   return (moderationStatuses as readonly string[]).includes(value);
 }
 
-export function publicReviewLabel(source: ReviewSourceName): string {
+export function publicReviewLabel(
+  source: ReviewSourceName,
+  verification: "VERIFIED" | "UNVERIFIED" | "REJECTED" = "UNVERIFIED",
+): string {
   if (source === "IMPORTED") return "Imported rating";
-  if (source === "EDITORIAL") return "Editorial";
-  return "First-party review";
+  if (source === "FIRST_PARTY" && verification === "VERIFIED") return "First-party review";
+  return "Editorial";
 }
 
 export function presentedAsFirstParty(source: ReviewSourceName): boolean {

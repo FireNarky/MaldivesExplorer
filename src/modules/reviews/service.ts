@@ -152,7 +152,7 @@ function toPublic(row: ReviewRow): PublicReview {
     body: row.body,
     rating: ratingNumber === null || Number.isNaN(ratingNumber) ? null : ratingNumber.toFixed(1),
     ratingBasis: row.ratingBasis,
-    label: publicReviewLabel(row.sourceType),
+    label: publicReviewLabel(row.sourceType, row.verificationStatus),
     resortName: resortPublished ? (row.resort?.name ?? null) : null,
     resortHref: resortPublished && row.resort ? `/resorts/${row.resort.slug}` : null,
   };
@@ -199,7 +199,13 @@ export async function listReviews(userId: string): Promise<
   const rows = await db.review.findMany({
     orderBy: { updatedAt: "desc" },
     take: 50,
-    select: { id: true, displayName: true, sourceType: true, moderationStatus: true, featured: true },
+    select: {
+      id: true,
+      displayName: true,
+      sourceType: true,
+      moderationStatus: true,
+      featured: true,
+    },
   });
   return rows.map((row) => ({
     id: row.id,
@@ -353,20 +359,22 @@ export async function updateReview(userId: string, id: string, input: ReviewInpu
   const value = await parsed(input);
   try {
     await db.$transaction(async (tx) => {
-      const current = await tx.review.findUnique({ where: { id }, select: { id: true } });
+      const current = await tx.review.findUnique({ where: { id } });
       if (!current) throw new ReviewError(unavailable, 404);
+      if (
+        value.sourceType !== current.sourceType ||
+        (value.sourceReference || null) !== current.sourceReference ||
+        value.resortId !== current.resortId
+      ) {
+        throw new ReviewError("The source of a review stays as it was recorded.", 409);
+      }
       await tx.review.update({
         where: { id },
         data: {
-          resortId: value.resortId,
-          sourceType: value.sourceType,
-          sourceReference: value.sourceReference || null,
           displayName: value.displayName,
           rating: value.rating,
           ratingBasis: value.ratingBasis || null,
           body: value.body,
-          verificationStatus: value.verification,
-          consentStatus: "GRANTED",
           moderationStatus: "PENDING",
           featured: false,
           publishedAt: null,
@@ -378,7 +386,11 @@ export async function updateReview(userId: string, id: string, input: ReviewInpu
           action: "review.update",
           entityType: "review",
           entityId: id,
-          after: { sourceType: value.sourceType, moderationStatus: "PENDING" },
+          after: {
+            sourceType: current.sourceType,
+            verificationStatus: current.verificationStatus,
+            moderationStatus: "PENDING",
+          },
         },
         tx,
       );
@@ -506,9 +518,19 @@ export async function featureReview(userId: string, id: string, featured: boolea
   }
 }
 
+const publicReviewWhere = {
+  moderationStatus: "APPROVED" as const,
+  publishedAt: { not: null },
+  OR: [
+    { sourceType: "EDITORIAL" as const },
+    { sourceType: "IMPORTED" as const },
+    { sourceType: "FIRST_PARTY" as const, verificationStatus: "VERIFIED" as const },
+  ],
+};
+
 async function publishedRows(where: Prisma.ReviewWhereInput): Promise<PublicReview[]> {
   const rows = await db.review.findMany({
-    where: { ...where, moderationStatus: "APPROVED", publishedAt: { not: null } },
+    where: { ...where, ...publicReviewWhere },
     orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
     take: 50,
     select: publicSelect,

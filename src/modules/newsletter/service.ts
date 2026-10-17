@@ -139,6 +139,7 @@ export async function subscribeNewsletter(input: {
       const decision = subscribeDecision({
         doubleOptIn: optIn,
         existing: existing?.status ?? null,
+        explicitMarketingConsent: input.consent,
       });
       if (decision === "blocked") {
         throw new NewsletterError("This address cannot be subscribed.", 409);
@@ -190,7 +191,7 @@ export async function subscribeNewsletter(input: {
         data: {
           subjectType: "SUBSCRIPTION",
           subjectId: id,
-          purpose: "NEWSLETTER",
+          purpose: "MARKETING",
           status: "GRANTED",
           noticeVersion: notice,
           source: input.source,
@@ -272,7 +273,8 @@ export async function confirmNewsletter(token: string): Promise<SubscriptionStat
   const hashed = hashToken(token);
   const row = await db.subscription.findUnique({ where: { confirmTokenHash: hashed } });
   if (!row) throw new NewsletterError("This confirmation link is not valid.", 404);
-  if (row.status === "SUPPRESSED") throw new NewsletterError("This address cannot be subscribed.", 409);
+  if (row.status === "SUPPRESSED")
+    throw new NewsletterError("This address cannot be subscribed.", 409);
   if (row.status === "UNSUBSCRIBED") {
     throw new NewsletterError("Subscribe again to restart this address.", 409);
   }
@@ -295,6 +297,27 @@ export async function confirmNewsletter(token: string): Promise<SubscriptionStat
   return "CONFIRMED";
 }
 
+async function recordMarketingWithdrawal(
+  tx: Prisma.TransactionClient,
+  subscriptionId: string,
+  source: string,
+): Promise<string> {
+  const notice = await currentNoticeVersion();
+  const consent = await tx.consentRecord.create({
+    data: {
+      subjectType: "SUBSCRIPTION",
+      subjectId: subscriptionId,
+      purpose: "MARKETING",
+      status: "WITHDRAWN",
+      noticeVersion: notice,
+      source,
+      withdrawnAt: new Date(),
+    },
+    select: { id: true },
+  });
+  return consent.id;
+}
+
 export async function unsubscribeNewsletter(id: string): Promise<void> {
   const row = await db.subscription.findUnique({
     where: { id },
@@ -303,20 +326,22 @@ export async function unsubscribeNewsletter(id: string): Promise<void> {
   if (!row) throw new NewsletterError("This link is not valid.", 404);
   if (row.status === "SUPPRESSED" || row.status === "UNSUBSCRIBED") return;
   await db.$transaction(async (tx) => {
+    const withdrawalId = await recordMarketingWithdrawal(tx, id, "unsubscribe");
     await tx.subscription.update({
       where: { id },
-      data: { status: "UNSUBSCRIBED", unsubscribedAt: new Date(), confirmTokenHash: null },
-    });
-    await tx.consentRecord.update({
-      where: { id: row.consentRecordId },
-      data: { status: "WITHDRAWN", withdrawnAt: new Date() },
+      data: {
+        status: "UNSUBSCRIBED",
+        unsubscribedAt: new Date(),
+        confirmTokenHash: null,
+        consentRecordId: withdrawalId,
+      },
     });
     await writeAudit(
       {
         action: "newsletter.unsubscribe",
         entityType: "subscription",
         entityId: id,
-        after: { status: "UNSUBSCRIBED" },
+        after: { status: "UNSUBSCRIBED", consentRecordId: withdrawalId },
       },
       tx,
     );
@@ -404,7 +429,8 @@ export async function listSubscriptions(userId: string): Promise<
     topics: topicsFromPreferences(row.preferences)
       .map((topic) => topic)
       .join(", "),
-    consentGranted: row.consentRecord.status === "GRANTED" && row.consentRecord.withdrawnAt === null,
+    consentGranted:
+      row.consentRecord.status === "GRANTED" && row.consentRecord.withdrawnAt === null,
   }));
 }
 
@@ -477,17 +503,15 @@ export async function suppressSubscription(userId: string, id: string): Promise<
   if (!row) throw new NewsletterError(unavailable, 404);
   if (row.status === "SUPPRESSED") return;
   await db.$transaction(async (tx) => {
+    const withdrawalId = await recordMarketingWithdrawal(tx, id, "staff-suppress");
     await tx.subscription.update({
       where: { id },
       data: {
         status: "SUPPRESSED",
-        unsubscribedAt: new Date(),
+        unsubscribedAt: row.status === "UNSUBSCRIBED" ? undefined : new Date(),
         confirmTokenHash: null,
+        consentRecordId: withdrawalId,
       },
-    });
-    await tx.consentRecord.update({
-      where: { id: row.consentRecordId },
-      data: { status: "WITHDRAWN", withdrawnAt: new Date() },
     });
     await writeAudit(
       {
@@ -496,7 +520,7 @@ export async function suppressSubscription(userId: string, id: string): Promise<
         entityType: "subscription",
         entityId: id,
         before: { status: row.status },
-        after: { status: "SUPPRESSED" },
+        after: { status: "SUPPRESSED", consentRecordId: withdrawalId },
       },
       tx,
     );
@@ -506,7 +530,8 @@ export async function suppressSubscription(userId: string, id: string): Promise<
 export async function exportSubscriptions(userId: string): Promise<string> {
   await requireNewsletter(userId, true);
   const capSetting = await db.systemSetting.findUnique({ where: { key: "export.maxRows" } });
-  const cap = typeof capSetting?.value === "number" && capSetting.value > 0 ? capSetting.value : 5000;
+  const cap =
+    typeof capSetting?.value === "number" && capSetting.value > 0 ? capSetting.value : 5000;
   const rows = await db.subscription.findMany({
     orderBy: { createdAt: "desc" },
     take: Math.min(cap, 5000),

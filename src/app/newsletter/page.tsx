@@ -20,7 +20,10 @@ export default async function NewsletterPage({
   return (
     <article className="grid max-w-[65ch] gap-6">
       <h1>Newsletter</h1>
-      <p>Notes are occasional. Consent is stored with the address, and unsubscribe stops further mail.</p>
+      <p>
+        Notes are occasional. Consent is stored with the address, and unsubscribe stops further
+        mail.
+      </p>
       {query.error ? <FieldError>{query.error}</FieldError> : null}
       {query.notice ? <p role="status">Saved.</p> : null}
       <SubscribeForm

@@ -63,18 +63,22 @@ export async function POST(request: Request) {
         .find((part) => part.startsWith("me_analytics="))
         ?.slice("me_analytics=".length),
     );
-    await recordProductEvent({
-      name: "enquiry_submitted",
-      consent,
-      userId: session?.user?.id,
-      properties: { created: result.created },
-    });
-    await recordProductEvent({
-      name: "planner_step_completed",
-      consent,
-      userId: session?.user?.id,
-      properties: { step: "review" },
-    });
+    try {
+      await recordProductEvent({
+        name: "enquiry_submitted",
+        consent,
+        userId: session?.user?.id,
+        properties: { created: result.created },
+      });
+      await recordProductEvent({
+        name: "planner_step_completed",
+        consent,
+        userId: session?.user?.id,
+        properties: { step: "review" },
+      });
+    } catch (error) {
+      logError(error instanceof Error ? error.message : "The plan event could not be stored.");
+    }
     return NextResponse.json(
       { reference: result.reference, duplicate: result.duplicate, missing: result.missing },
       { status: result.created ? 201 : 200 },

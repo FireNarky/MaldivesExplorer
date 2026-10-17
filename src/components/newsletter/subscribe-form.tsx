@@ -4,7 +4,8 @@ import { Label } from "@/components/ui/label";
 import { subscribeForm } from "@/modules/newsletter/actions";
 import { newsletterTopics, topicLabel } from "@/modules/newsletter/rules";
 
-const fieldClass = "min-h-11 w-full rounded-sm border border-border bg-white px-4 text-base text-ink";
+const fieldClass =
+  "min-h-11 w-full rounded-sm border border-border bg-white px-4 text-base text-ink";
 
 export function SubscribeForm({
   idPrefix,

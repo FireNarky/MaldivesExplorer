@@ -21,11 +21,14 @@ export default async function AnalyticsPage() {
         </Link>
       </p>
       <h1>Analytics</h1>
-      <p>Counts below use events stored with analytics consent, except the view share.</p>
+      <p>
+        Counts below use events stored with analytics consent, except the view share. A missing
+        measurement stays unavailable.
+      </p>
       <dl className="grid gap-4">
         <div>
           <dt className="font-semibold">Consented view share</dt>
-          <dd>{report.viewShare}</dd>
+          <dd>{report.viewShare ?? "Not available"}</dd>
           <dd className="text-sm text-muted">{report.viewFormula}</dd>
         </div>
         <div>
@@ -45,34 +48,27 @@ export default async function AnalyticsPage() {
         </div>
         <div>
           <dt className="font-semibold">Planner completion</dt>
-          <dd>{report.planner}</dd>
+          <dd>{report.planner ?? "Not available"}</dd>
           <dd className="text-sm text-muted">{report.plannerFormula}</dd>
         </div>
-        <div>
-          <dt className="font-semibold">Quote interest</dt>
-          <dd>{report.quotesViewed}</dd>
-          <dd className="text-sm text-muted">{report.quoteFormula}</dd>
-        </div>
-        {report.content.map((item) => (
-          <div key={item.kind}>
-            <dt className="font-semibold">{item.kind} views</dt>
-            <dd>{item.count}</dd>
+        {report.content.length === 0 ? (
+          <div>
+            <dt className="font-semibold">Content views</dt>
+            <dd>No consented entity views with a kind are stored.</dd>
           </div>
-        ))}
+        ) : (
+          report.content.map((item) => (
+            <div key={item.kind}>
+              <dt className="font-semibold">{item.kind} views</dt>
+              <dd>{item.count}</dd>
+            </div>
+          ))
+        )}
         <div>
           <dt className="font-semibold">Content formula</dt>
           <dd className="text-sm text-muted">{report.contentFormula}</dd>
         </div>
       </dl>
-      <section className="grid gap-2">
-        <h2>Search queries</h2>
-        {report.queries.length === 0 ? <p>No consented searches are stored.</p> : null}
-        <ul>
-          {report.queries.map((query) => (
-            <li key={query}>{query}</li>
-          ))}
-        </ul>
-      </section>
     </section>
   );
 }

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { logError } from "@/lib/observability/log";
-import { NewsletterError, subscriptionIdFromToken, unsubscribeNewsletter } from "@/modules/newsletter/service";
+import {
+  NewsletterError,
+  subscriptionIdFromToken,
+  unsubscribeNewsletter,
+} from "@/modules/newsletter/service";
 
 export async function POST(request: Request) {
   try {
@@ -15,6 +19,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: error.message }, { status: error.status });
     }
     logError(error instanceof Error ? error.message : "The subscription could not be updated.");
-    return NextResponse.json({ message: "The subscription could not be updated." }, { status: 500 });
+    return NextResponse.json(
+      { message: "The subscription could not be updated." },
+      { status: 500 },
+    );
   }
 }

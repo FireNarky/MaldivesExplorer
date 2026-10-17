@@ -35,14 +35,19 @@ export async function POST(request: Request) {
       turnstileToken?: unknown;
     };
     if (await turnstileFailed(typeof body.turnstileToken === "string" ? body.turnstileToken : "")) {
-      return NextResponse.json({ message: "The subscription could not be saved." }, { status: 400 });
+      return NextResponse.json(
+        { message: "The subscription could not be saved." },
+        { status: 400 },
+      );
     }
     const session = await auth().catch(() => null);
     const result = await subscribeNewsletter({
       email: typeof body.email === "string" ? body.email : "",
       consent: body.consent === true,
       noticeVersion: typeof body.noticeVersion === "string" ? body.noticeVersion : "",
-      topics: Array.isArray(body.topics) ? body.topics.filter((item): item is string => typeof item === "string") : [],
+      topics: Array.isArray(body.topics)
+        ? body.topics.filter((item): item is string => typeof item === "string")
+        : [],
       source: "newsletter-form",
       ipHash,
       idempotencyKey: request.headers.get("idempotency-key") ?? "",

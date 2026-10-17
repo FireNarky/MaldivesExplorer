@@ -28,7 +28,8 @@ export default async function ComparePage({ searchParams }: PageProps) {
     .filter(Boolean);
   try {
     const columns = await loadCompareColumns(ids);
-    if (columns.length >= 2) await noteConsentEvent("comparison_started", { count: columns.length });
+    if (columns.length >= 2)
+      await noteConsentEvent("comparison_started", { count: columns.length });
     if (columns.length === 0) {
       return (
         <section className="grid gap-6">

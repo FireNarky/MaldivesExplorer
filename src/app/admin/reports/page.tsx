@@ -5,7 +5,12 @@ import { AnalyticsError, operationalReport } from "@/modules/analytics/service";
 import { statusLabel, type SubscriptionStatusName } from "@/modules/newsletter/rules";
 
 function subscriberLabel(status: string): string {
-  if (status === "PENDING" || status === "CONFIRMED" || status === "UNSUBSCRIBED" || status === "SUPPRESSED") {
+  if (
+    status === "PENDING" ||
+    status === "CONFIRMED" ||
+    status === "UNSUBSCRIBED" ||
+    status === "SUPPRESSED"
+  ) {
     return statusLabel(status as SubscriptionStatusName);
   }
   return status;
@@ -37,17 +42,17 @@ export default async function ReportsPage() {
       <dl className="grid gap-4">
         <div>
           <dt className="font-semibold">Lead response</dt>
-          <dd>{report.response}</dd>
+          <dd>{report.response ?? "Not available"}</dd>
           <dd className="text-sm text-muted">{report.responseFormula}</dd>
         </div>
         <div>
           <dt className="font-semibold">Quote send</dt>
-          <dd>{report.send}</dd>
+          <dd>{report.send ?? "Not available"}</dd>
           <dd className="text-sm text-muted">{report.sendFormula}</dd>
         </div>
         <div>
           <dt className="font-semibold">Quote acceptance</dt>
-          <dd>{report.acceptance}</dd>
+          <dd>{report.acceptance ?? "Not available"}</dd>
           <dd className="text-sm text-muted">{report.acceptanceFormula}</dd>
         </div>
         {report.quotes.map((item) => (

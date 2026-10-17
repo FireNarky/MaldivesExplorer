@@ -6,7 +6,6 @@ import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { Label } from "@/components/ui/label";
-import { noteConsentEvent } from "@/modules/analytics/service";
 import { readOwnQuote } from "@/modules/customers/records";
 import { respondToQuoteForm } from "@/modules/quotes/actions";
 
@@ -31,7 +30,6 @@ export default async function QuotePage({ params, searchParams }: Context) {
   const query = await searchParams;
   const quote = await readOwnQuote(session?.user?.id || "", id);
   if (!quote) notFound();
-  await noteConsentEvent("quote_viewed", { kind: "quote" });
   const acceptKey = randomUUID();
   const declineKey = randomUUID();
   const clarifyKey = randomUUID();

@@ -6,11 +6,11 @@ import {
   acceptanceRate,
   consentedViewShare,
   isProductEvent,
+  metricFormulas,
   plannerCompletion,
   responseRate,
   safeProperties,
   sendRate,
-  type ProductEventName,
 } from "@/modules/analytics/rules";
 import { consentFromCookie, type SearchConsent } from "@/modules/search/query";
 
@@ -76,6 +76,8 @@ export async function noteConsentEvent(
     return;
   }
 }
+
+export async function notePublicView(kind: string, path: string): Promise<void> {
   try {
     const store = await headers();
     const jar = await cookies();
@@ -110,11 +112,11 @@ async function requireReport(userId: string): Promise<void> {
 }
 
 export type OperationalReport = {
-  response: string;
+  response: string | null;
   responseFormula: string;
-  send: string;
+  send: string | null;
   sendFormula: string;
-  acceptance: string;
+  acceptance: string | null;
   acceptanceFormula: string;
   quotes: Array<{ label: string; count: number }>;
   guides: number;
@@ -157,136 +159,93 @@ export async function operationalReport(userId: string): Promise<OperationalRepo
   ]);
   return {
     response: responseRate(answered, received),
-    responseFormula: "Response rate = enquiries with a first response ÷ enquiries received.",
+    responseFormula: metricFormulas.responseRate,
     send: sendRate(sentQuotes, quoteCount),
-    sendFormula: "Send rate = quotes with a sent version ÷ quotes.",
+    sendFormula: metricFormulas.sendRate,
     acceptance: acceptanceRate(acceptedQuotes, sentQuotes),
-    acceptanceFormula: "Acceptance rate = quotes with an accepted version ÷ quotes with a sent version.",
+    acceptanceFormula: metricFormulas.acceptanceRate,
     quotes: versions.map((row) => ({
       label: versionLabels[row.status] ?? row.status,
       count: row._count._all,
     })),
     guides,
     staleGuides,
-    staleFormula: "Stale guides = published guides whose review date is before now.",
+    staleFormula: metricFormulas.staleGuides,
     subscribers: subscriptions.map((row) => ({ label: row.status, count: row._count._all })),
-    subscriberFormula: "Confirmed subscribers = subscriptions whose status is confirmed.",
+    subscriberFormula: metricFormulas.confirmedSubscribers,
     failedJobs,
-    failedFormula: "Failed jobs = jobs whose status is failed.",
+    failedFormula: metricFormulas.failedJobs,
   };
 }
 
 export type AnalyticsReport = {
-  viewShare: string;
+  viewShare: string | null;
   viewFormula: string;
   searchDemand: number;
   searchFormula: string;
   emptySearches: number;
   emptyFormula: string;
-  queries: string[];
   shortlist: number;
   shortlistFormula: string;
-  planner: string;
+  planner: string | null;
   plannerFormula: string;
-  quotesViewed: number;
-  quoteFormula: string;
   content: Array<{ kind: string; count: number }>;
   contentFormula: string;
 };
 
 export async function analyticsReport(userId: string): Promise<AnalyticsReport> {
   await requireReport(userId);
-  const [grantedEvents, views, searches, plannerEvents, contentEvents] = await Promise.all([
-    db.analyticsEvent.groupBy({
-      by: ["eventName"],
-      where: { consentState: "GRANTED" },
-      _count: { _all: true },
-    }),
-    db.analyticsEvent.groupBy({
-      by: ["consentState"],
-      where: { eventName: "entity_viewed" },
-      _count: { _all: true },
-    }),
-    db.analyticsEvent.findMany({
-      where: { eventName: "search_submitted", consentState: "GRANTED" },
-      select: { properties: true },
-      orderBy: { occurredAt: "desc" },
-      take: 500,
-    }),
-    db.analyticsEvent.findMany({
+  const [
+    grantedViews,
+    totalViews,
+    searchDemand,
+    emptySearches,
+    shortlist,
+    started,
+    completed,
+    content,
+  ] = await Promise.all([
+    db.analyticsEvent.count({ where: { eventName: "entity_viewed", consentState: "GRANTED" } }),
+    db.analyticsEvent.count({ where: { eventName: "entity_viewed" } }),
+    db.analyticsEvent.count({ where: { eventName: "search_submitted", consentState: "GRANTED" } }),
+    db.analyticsEvent.count({
       where: {
+        eventName: "search_submitted",
         consentState: "GRANTED",
-        eventName: { in: ["planner_started", "planner_step_completed"] },
+        properties: { path: ["resultCount"], equals: 0 },
       },
-      select: { eventName: true, properties: true },
-      take: 500,
     }),
-    db.analyticsEvent.findMany({
-      where: { eventName: "entity_viewed", consentState: "GRANTED" },
-      select: { properties: true },
-      take: 500,
+    db.analyticsEvent.count({ where: { eventName: "saved_item_added", consentState: "GRANTED" } }),
+    db.analyticsEvent.count({ where: { eventName: "planner_started", consentState: "GRANTED" } }),
+    db.analyticsEvent.count({
+      where: {
+        eventName: "planner_step_completed",
+        consentState: "GRANTED",
+        properties: { path: ["step"], equals: "review" },
+      },
     }),
+    db.$queryRaw<Array<{ kind: string; count: number }>>`
+        SELECT properties->>'kind' AS kind, count(*)::int AS count
+        FROM analytics_events
+        WHERE event_name = 'entity_viewed'
+          AND consent_state = 'GRANTED'
+          AND jsonb_typeof(properties->'kind') = 'string'
+        GROUP BY 1
+        ORDER BY 2 DESC
+      `,
   ]);
-  const count = (name: ProductEventName) =>
-    grantedEvents.find((row) => row.eventName === name)?._count._all ?? 0;
-  const grantedViews = views.find((row) => row.consentState === "GRANTED")?._count._all ?? 0;
-  const totalViews = views.reduce((sum, row) => sum + row._count._all, 0);
-  const queryCounts = new Map<string, number>();
-  let emptySearches = 0;
-  for (const row of searches) {
-    const properties = row.properties;
-    if (!properties || typeof properties !== "object" || Array.isArray(properties)) continue;
-    const resultCount = "resultCount" in properties ? Number(properties.resultCount) : 1;
-    if (resultCount === 0) emptySearches += 1;
-    const query = "query" in properties && typeof properties.query === "string" ? properties.query : "";
-    if (!query || query.includes("@")) continue;
-    queryCounts.set(query, (queryCounts.get(query) ?? 0) + 1);
-  }
-  const started = plannerEvents.filter((row) => row.eventName === "planner_started").length;
-  const completed = plannerEvents.filter((row) => {
-    if (row.eventName !== "planner_step_completed") return false;
-    const properties = row.properties;
-    return (
-      properties &&
-      typeof properties === "object" &&
-      !Array.isArray(properties) &&
-      "step" in properties &&
-      properties.step === "review"
-    );
-  }).length;
-  const kinds = new Map<string, number>();
-  for (const row of contentEvents) {
-    const properties = row.properties;
-    const kind =
-      properties &&
-      typeof properties === "object" &&
-      !Array.isArray(properties) &&
-      "kind" in properties &&
-      typeof properties.kind === "string"
-        ? properties.kind
-        : "other";
-    kinds.set(kind, (kinds.get(kind) ?? 0) + 1);
-  }
   return {
     viewShare: consentedViewShare(grantedViews, totalViews),
-    viewFormula:
-      "Consented view share = entity views with analytics consent granted ÷ all stored entity views.",
-    searchDemand: count("search_submitted"),
-    searchFormula: "Search demand = consented search_submitted events.",
+    viewFormula: metricFormulas.viewShare,
+    searchDemand,
+    searchFormula: metricFormulas.searchDemand,
     emptySearches,
-    emptyFormula: "Empty searches = consented searches whose published result count is 0.",
-    queries: [...queryCounts.entries()]
-      .sort((left, right) => right[1] - left[1])
-      .slice(0, 10)
-      .map(([query, total]) => `${query} (${total})`),
-    shortlist: count("saved_item_added"),
-    shortlistFormula: "Shortlist use = consented saved_item_added events.",
+    emptyFormula: metricFormulas.emptySearches,
+    shortlist,
+    shortlistFormula: metricFormulas.shortlistUse,
     planner: plannerCompletion(completed, started),
-    plannerFormula:
-      "Planner completion = consented review steps ÷ consented planner starts.",
-    quotesViewed: count("quote_viewed"),
-    quoteFormula: "Quote interest = consented quote_viewed events.",
-    content: [...kinds.entries()].map(([kind, total]) => ({ kind, count: total })),
-    contentFormula: "Content performance = consented entity views grouped by kind.",
+    plannerFormula: metricFormulas.plannerCompletion,
+    content,
+    contentFormula: metricFormulas.contentPerformance,
   };
 }

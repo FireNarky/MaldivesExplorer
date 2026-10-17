@@ -46,7 +46,9 @@ export function topicLabel(topic: NewsletterTopic): string {
 export function subscribeDecision(input: {
   doubleOptIn: boolean;
   existing: SubscriptionStatusName | null;
+  explicitMarketingConsent: boolean;
 }): "blocked" | "pending" | "confirmed" | "preferences" {
+  if (!input.explicitMarketingConsent) return "blocked";
   if (input.existing === "SUPPRESSED") return "blocked";
   if (input.existing === "CONFIRMED") return "preferences";
   if (input.existing === "PENDING") return "pending";
