@@ -15,7 +15,10 @@ export default async function MfaPage({
     <section className="grid max-w-[65ch] gap-6">
       <h1>Staff verification</h1>
       <p>Enter the 6-digit code from an authenticator.</p>
-      {params.error ? <FieldError>That code was not accepted.</FieldError> : null}
+      {params.error === "limited" ? <FieldError>Try again later.</FieldError> : null}
+      {params.error && params.error !== "limited" ? (
+        <FieldError>That code was not accepted.</FieldError>
+      ) : null}
       {uri ? (
         <p className="break-all">
           Add this authenticator key: <span className="font-semibold">{uri}</span>

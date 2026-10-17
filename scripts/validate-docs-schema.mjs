@@ -18,6 +18,11 @@ writeFileSync(schema, `${match[1].trim()}\n`);
 const result = spawnSync("npx", ["--no-install", "prisma", "validate", "--schema", schema], {
   stdio: "inherit",
   shell: process.platform === "win32",
+  env: {
+    ...process.env,
+    DATABASE_URL:
+      process.env.DATABASE_URL || "postgresql://postgres:password@127.0.0.1:5432/maldives_docs",
+  },
 });
 
 rmSync(dir, { recursive: true, force: true });

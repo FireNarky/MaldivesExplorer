@@ -189,9 +189,12 @@ export default async function ResortPage({ params }: PageProps) {
     if (isNotFoundError(error)) throw error;
     logError(error instanceof Error ? error.message : "The resort could not be loaded.");
     return (
-      <ErrorState title="Resort">
-        <p>The resort could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Resort</h1>
+        <ErrorState title="Resort">
+          <p>The resort could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

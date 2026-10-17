@@ -1,5 +1,13 @@
 import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
+import { dispatchDelivery } from "@/lib/email/dispatch";
+import {
+  hashVerificationToken,
+  mintRawToken,
+  retireVerificationHash,
+  storeVerificationHash,
+} from "@/lib/email/tokens";
+import { absoluteUrl } from "@/lib/seo/site";
 
 export const moduleStatus = "implemented" as const;
 
@@ -9,7 +17,7 @@ export async function queueEnquiryAcknowledgement(
     enquiryId: string;
     toEmail: string;
     reference: string;
-    claimUrl: string | null;
+    claimRequired: boolean;
   },
 ): Promise<void> {
   const idempotencyKey = `enquiry.received:${input.enquiryId}`;
@@ -36,23 +44,52 @@ export async function queueEnquiryAcknowledgement(
       payload: {
         template: "enquiry.received",
         enquiryId: input.enquiryId,
-        toEmail: input.toEmail,
         reference: input.reference,
-        claimUrl: input.claimUrl,
+        claimRequired: input.claimRequired,
       },
     },
   });
 }
 
+function payloadRecord(payload: unknown): Record<string, unknown> | null {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return null;
+  return payload as Record<string, unknown>;
+}
+
 export async function confirmQueuedAcknowledgement(payload: unknown): Promise<void> {
-  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
-    throw new Error("The acknowledgement job has no enquiry.");
-  }
-  const enquiryId =
-    "enquiryId" in payload && typeof payload.enquiryId === "string" ? payload.enquiryId : "";
+  const record = payloadRecord(payload);
+  const enquiryId = typeof record?.enquiryId === "string" ? record.enquiryId : "";
+  const reference = typeof record?.reference === "string" ? record.reference : "";
+  const claimRequired = record?.claimRequired === true;
+  if (!enquiryId) throw new Error("The acknowledgement job has no enquiry.");
   const delivery = await db.emailDelivery.findFirst({
     where: { relatedType: "enquiry", relatedId: enquiryId, templateCode: "enquiry.received" },
-    select: { id: true, status: true },
+    select: { id: true },
   });
   if (!delivery) throw new Error("The acknowledgement is not queued.");
+  await dispatchDelivery(delivery.id, async () => {
+    let claimLine = "";
+    let hash = "";
+    if (claimRequired) {
+      const enquiry = await db.enquiry.findUnique({
+        where: { id: enquiryId },
+        select: { customer: { select: { email: true, userId: true } } },
+      });
+      if (enquiry && !enquiry.customer.userId) {
+        const raw = mintRawToken();
+        hash = hashVerificationToken(raw);
+        await storeVerificationHash({
+          identifier: `claim:${enquiry.customer.email}`,
+          hash,
+          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        });
+        claimLine = ` Link this plan from ${absoluteUrl(`/register?claim=${raw}`)}.`;
+      }
+    }
+    return {
+      subject: `Plan ${reference} received`,
+      text: `We received plan ${reference}.${claimLine}`,
+      releaseSecret: hash ? () => retireVerificationHash(hash) : undefined,
+    };
+  });
 }

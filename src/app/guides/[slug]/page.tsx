@@ -86,9 +86,12 @@ export default async function GuidePage({ params }: PageProps) {
     if (isNotFoundError(error)) throw error;
     logError(error instanceof Error ? error.message : "The guide could not be loaded.");
     return (
-      <ErrorState title="Guide">
-        <p>The guide could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Guide</h1>
+        <ErrorState title="Guide">
+          <p>The guide could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

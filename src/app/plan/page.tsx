@@ -48,12 +48,15 @@ export default async function PlanPage() {
   } catch (error) {
     logError(error instanceof Error ? error.message : "The planner could not be loaded.");
     return (
-      <ErrorState title="Plan a trip">
-        <p>The planner could not be loaded.</p>
-        <Link href="/resorts" className="text-lagoon-ink">
-          Resorts
-        </Link>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Plan a trip</h1>
+        <ErrorState title="Plan a trip">
+          <p>The planner could not be loaded.</p>
+          <Link href="/resorts" className="text-lagoon-ink">
+            Resorts
+          </Link>
+        </ErrorState>
+      </section>
     );
   }
 }

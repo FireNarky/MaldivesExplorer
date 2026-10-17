@@ -142,9 +142,12 @@ export default async function OfferPage({ params }: PageProps) {
     if (isNotFoundError(error)) throw error;
     logError(error instanceof Error ? error.message : "This offer could not be loaded.");
     return (
-      <ErrorState title="Offer">
-        <p>This offer could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Offer</h1>
+        <ErrorState title="Offer">
+          <p>This offer could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

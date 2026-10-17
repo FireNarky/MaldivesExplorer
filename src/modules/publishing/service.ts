@@ -85,20 +85,159 @@ export function stampOrThrow(
   return publicationStamp(current, next, { scheduledAt });
 }
 
+export const publicationSchedulerActor = "system:publication-scheduler";
+
+async function promoteRows(
+  entityType: string,
+  rows: Array<{ id: string; scheduledAt: Date | null }>,
+  update: (tx: Prisma.TransactionClient, id: string, publishedAt: Date) => Promise<number>,
+  now: Date,
+): Promise<void> {
+  for (const row of rows) {
+    await db.$transaction(async (tx) => {
+      const count = await update(tx, row.id, now);
+      if (count !== 1) return;
+      await writeAudit(
+        {
+          action: "publication.promote",
+          entityType,
+          entityId: row.id,
+          before: { status: "SCHEDULED", scheduledAt: row.scheduledAt?.toISOString() ?? null },
+          after: {
+            status: "PUBLISHED",
+            publishedAt: now.toISOString(),
+            actor: publicationSchedulerActor,
+          },
+        },
+        tx,
+      );
+    });
+  }
+}
+
 export async function promoteDuePublications(now = new Date()): Promise<void> {
-  const due = { status: "SCHEDULED" as const, scheduledAt: { lte: now } };
-  const data = { status: "PUBLISHED" as const, publishedAt: now };
-  await Promise.all([
-    db.atoll.updateMany({ where: due, data }),
-    db.island.updateMany({ where: due, data }),
-    db.resort.updateMany({ where: due, data }),
-    db.experience.updateMany({ where: due, data }),
-    db.article.updateMany({ where: due, data }),
-    db.collection.updateMany({ where: due, data }),
-    db.offer.updateMany({ where: due, data }),
-    db.faq.updateMany({ where: due, data }),
-    db.homepageModule.updateMany({ where: due, data }),
-  ]);
+  const where = { status: "SCHEDULED" as const, scheduledAt: { lte: now } };
+  const select = { id: true, scheduledAt: true };
+  const [atolls, islands, resorts, experiences, articles, collections, offers, faqs, modules] =
+    await Promise.all([
+      db.atoll.findMany({ where, select }),
+      db.island.findMany({ where, select }),
+      db.resort.findMany({ where, select }),
+      db.experience.findMany({ where, select }),
+      db.article.findMany({ where, select }),
+      db.collection.findMany({ where, select }),
+      db.offer.findMany({ where, select }),
+      db.faq.findMany({ where, select }),
+      db.homepageModule.findMany({ where, select }),
+    ]);
+  await promoteRows(
+    "atoll",
+    atolls,
+    async (tx, id) =>
+      (
+        await tx.atoll.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
+  await promoteRows(
+    "island",
+    islands,
+    async (tx, id) =>
+      (
+        await tx.island.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
+  await promoteRows(
+    "resort",
+    resorts,
+    async (tx, id) =>
+      (
+        await tx.resort.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
+  await promoteRows(
+    "experience",
+    experiences,
+    async (tx, id) =>
+      (
+        await tx.experience.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
+  await promoteRows(
+    "article",
+    articles,
+    async (tx, id) =>
+      (
+        await tx.article.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
+  await promoteRows(
+    "collection",
+    collections,
+    async (tx, id) =>
+      (
+        await tx.collection.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
+  await promoteRows(
+    "offer",
+    offers,
+    async (tx, id) =>
+      (
+        await tx.offer.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
+  await promoteRows(
+    "faq",
+    faqs,
+    async (tx, id) =>
+      (
+        await tx.faq.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
+  await promoteRows(
+    "homepage_module",
+    modules,
+    async (tx, id) =>
+      (
+        await tx.homepageModule.updateMany({
+          where: { id, ...where },
+          data: { status: "PUBLISHED", publishedAt: now },
+        })
+      ).count,
+    now,
+  );
 }
 
 export const moduleStatus = "implemented" as const;

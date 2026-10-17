@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { TurnstileField } from "@/components/security/turnstile-field";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { subscribeForm } from "@/modules/newsletter/actions";
@@ -48,6 +49,7 @@ export function SubscribeForm({
         <input type="checkbox" name="consent" value="yes" required />
         <span>I agree to receive the Maldives Explorer newsletter. I can unsubscribe later.</span>
       </label>
+      <TurnstileField />
       <Button type="submit">Subscribe</Button>
     </form>
   );

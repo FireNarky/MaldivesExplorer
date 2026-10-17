@@ -32,9 +32,12 @@ export default async function ExperiencesPage() {
   } catch (error) {
     logError(error instanceof Error ? error.message : "Experiences could not be loaded.");
     return (
-      <ErrorState title="Experiences">
-        <p>Experiences could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Experiences</h1>
+        <ErrorState title="Experiences">
+          <p>Experiences could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

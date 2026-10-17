@@ -88,9 +88,12 @@ export default async function AtollPage({ params }: PageProps) {
     if (isNotFoundError(error)) throw error;
     logError(error instanceof Error ? error.message : "The atoll could not be loaded.");
     return (
-      <ErrorState title="Atoll">
-        <p>The atoll could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Atoll</h1>
+        <ErrorState title="Atoll">
+          <p>The atoll could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

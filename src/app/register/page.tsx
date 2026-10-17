@@ -3,12 +3,15 @@ import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TurnstileField } from "@/components/security/turnstile-field";
 import { registerAccount } from "@/modules/identity/actions";
 import { claimToken } from "@/modules/customers/rules";
 
 const messages: Record<string, string> = {
   invalid: "Check the name and use at least 12 characters.",
   unavailable: "That email cannot be registered.",
+  check: "The check could not be confirmed.",
+  limited: "Try again later.",
 };
 
 export default async function RegisterPage({
@@ -44,6 +47,7 @@ export default async function RegisterPage({
             required
           />
         </div>
+        <TurnstileField />
         <Button type="submit">Create account</Button>
       </form>
       <p>

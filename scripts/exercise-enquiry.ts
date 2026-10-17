@@ -125,15 +125,26 @@ async function main(): Promise<void> {
     where: { idempotencyKey: `enquiry.received:${enquiry.id}` },
   });
   const payload = job.payload;
+  const payloadText = JSON.stringify(payload);
   if (
     !payload ||
     typeof payload !== "object" ||
     Array.isArray(payload) ||
-    !("claimUrl" in payload) ||
-    typeof payload.claimUrl !== "string" ||
-    !payload.claimUrl.startsWith("/register?claim=")
+    payload.claimRequired !== true ||
+    payloadText.includes("claim=") ||
+    "claimUrl" in payload
   ) {
-    throw new Error("The claim link was not queued.");
+    throw new Error("The acknowledgement job stored a claim token.");
+  }
+  const storedClaim = await db.verificationToken.count({
+    where: { identifier: "claim:enquiry-guest@example.com" },
+  });
+  if (storedClaim !== 0) throw new Error("A claim token was stored before delivery.");
+  const audits = await db.auditLog.findMany({
+    where: { entityType: "enquiry", entityId: enquiry.id },
+  });
+  if (JSON.stringify(audits).includes("claim=")) {
+    throw new Error("An audit row stored a claim token.");
   }
   const replay = await submitEnquiry(
     plan("enquiry-guest@example.com", firstKey, [published.id, hidden.id, missing]),
@@ -160,10 +171,15 @@ async function main(): Promise<void> {
   );
   const completed = await runDueJobs(5);
   if (completed < 2) throw new Error("The acknowledgement jobs did not run.");
-  const stillQueued = await db.emailDelivery.findFirst({
-    where: { id: delivery.id, status: "QUEUED" },
+  const afterJob = await db.emailDelivery.findUniqueOrThrow({ where: { id: delivery.id } });
+  if (afterJob.status === "SENT" || afterJob.providerId) {
+    throw new Error("The queued message was marked sent without a provider.");
+  }
+  if (afterJob.status !== "FAILED") throw new Error("The provider refusal was not recorded.");
+  const claimAfter = await db.verificationToken.count({
+    where: { identifier: "claim:enquiry-guest@example.com" },
   });
-  if (!stillQueued) throw new Error("The queued message was marked sent without a provider.");
+  if (claimAfter !== 0) throw new Error("A refused delivery left a claim token.");
   await expectIntegrity();
   console.log("Enquiry exercise passed.");
   await db.$disconnect();

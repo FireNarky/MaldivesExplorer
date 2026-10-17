@@ -106,9 +106,12 @@ export default async function IslandPage({ params }: PageProps) {
     if (isNotFoundError(error)) throw error;
     logError(error instanceof Error ? error.message : "The island could not be loaded.");
     return (
-      <ErrorState title="Island">
-        <p>The island could not be loaded.</p>
-      </ErrorState>
+      <section className="grid gap-6">
+        <h1>Island</h1>
+        <ErrorState title="Island">
+          <p>The island could not be loaded.</p>
+        </ErrorState>
+      </section>
     );
   }
 }

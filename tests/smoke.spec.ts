@@ -41,6 +41,16 @@ test("the first tab stop is the skip link", async ({ page }) => {
   await expect(page.locator("#main")).toBeInViewport();
 });
 
+test("a 390px viewport does not overflow", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1, name: "Maldives Explorer" })).toBeVisible();
+  const overflows = await page.evaluate(
+    () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+  );
+  expect(overflows).toBe(false);
+});
+
 test("health returns only public fields", async ({ request }) => {
   const response = await request.get("/api/health");
   expect(response.ok()).toBe(true);
@@ -50,4 +60,5 @@ test("health returns only public fields", async ({ request }) => {
   expect(body.application).toBe("Maldives Explorer");
   expect(body.environment).toBe("local");
   expect(body.version).toBe("0.1.0");
+  expect(JSON.stringify(body)).not.toContain("claim=");
 });

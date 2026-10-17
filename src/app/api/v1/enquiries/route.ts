@@ -1,48 +1,27 @@
 import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
+import { botProtection } from "@/lib/bot/protection";
 import { draftFrom } from "@/lib/planner/local";
 import { logError } from "@/lib/observability/log";
+import { rateLimiter } from "@/lib/rate-limit/limiter";
 import { recordProductEvent } from "@/modules/analytics/service";
 import { EnquiryError, submitEnquiry } from "@/modules/enquiries/service";
 import { consentFromCookie } from "@/modules/search/query";
-
-const hits = new Map<string, number[]>();
-
-function limited(key: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(key) ?? []).filter((time) => now - time < 60 * 60 * 1000);
-  recent.push(now);
-  hits.set(key, recent);
-  return recent.length > 20;
-}
-
-async function turnstileFailed(token: string): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
-  if (!secret) return false;
-  if (!token) return true;
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    headers: { "content-type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ secret, response: token }),
-  });
-  if (!response.ok) return true;
-  const payload = (await response.json()) as { success?: boolean };
-  return payload.success !== true;
-}
 
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
     const ipHash = createHash("sha256").update(ip).digest("hex");
-    if (limited(ipHash)) {
+    if (!(await rateLimiter().consume(`enquiry:${ipHash}`, 20, 60 * 60 * 1000))) {
       return NextResponse.json({ message: "Try again later." }, { status: 429 });
     }
     const body = (await request.json()) as { website?: unknown; turnstileToken?: unknown };
     if (typeof body.website === "string" && body.website.trim()) {
       return NextResponse.json({ message: "The plan could not be submitted." }, { status: 400 });
     }
-    if (await turnstileFailed(typeof body.turnstileToken === "string" ? body.turnstileToken : "")) {
+    const token = typeof body.turnstileToken === "string" ? body.turnstileToken : null;
+    if (!(await botProtection().verify(token, ip))) {
       return NextResponse.json({ message: "The plan could not be submitted." }, { status: 400 });
     }
     const draft = draftFrom(body);

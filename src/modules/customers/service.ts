@@ -196,7 +196,9 @@ export async function redeemClaim(userId: string, rawToken: string): Promise<{ l
     });
     if (!user) return { linked: false };
     const row = await tx.verificationToken.findUnique({ where: { token: hashed } });
-    if (!row || !row.identifier.startsWith("claim:") || row.expires.getTime() <= Date.now()) {
+    if (!row || !row.identifier.startsWith("claim:")) return { linked: false };
+    if (row.expires.getTime() <= Date.now()) {
+      await tx.verificationToken.delete({ where: { token: hashed } });
       return { linked: false };
     }
     const email = row.identifier.slice("claim:".length).toLowerCase();
