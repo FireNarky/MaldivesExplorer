@@ -18,6 +18,9 @@ export async function SiteFooter() {
           <Link href="/guides" className="text-base text-sand">
             Guides
           </Link>
+          <Link href="/offers" className="text-base text-sand">
+            Offers
+          </Link>
           <Link href="/collections" className="text-base text-sand">
             Collections
           </Link>

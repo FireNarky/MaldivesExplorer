@@ -1,5 +1,6 @@
 export const searchKinds = [
   "resorts",
+  "offers",
   "atolls",
   "islands",
   "experiences",
@@ -71,6 +72,32 @@ export const guideSearchSql = `
     AND search_vector @@ websearch_to_tsquery('english', $1)
   ORDER BY rank DESC
   LIMIT 8
+`;
+
+export const offerSearchSql = `
+  SELECT offers.id, offers.title AS name, offers.slug, offers.summary
+  FROM offers
+  JOIN resorts ON resorts.id = offers.resort_id
+  WHERE offers.status = 'PUBLISHED'
+    AND resorts.status = 'PUBLISHED'
+    AND offers.valid_from <= CURRENT_DATE
+    AND offers.valid_until >= CURRENT_DATE
+    AND (offers.title ILIKE $1 ESCAPE '\\' OR offers.summary ILIKE $1 ESCAPE '\\')
+  ORDER BY offers.title ASC
+  LIMIT 8
+`;
+
+export const offerSuggestSql = `
+  SELECT offers.title AS name, offers.slug
+  FROM offers
+  JOIN resorts ON resorts.id = offers.resort_id
+  WHERE offers.status = 'PUBLISHED'
+    AND resorts.status = 'PUBLISHED'
+    AND offers.valid_from <= CURRENT_DATE
+    AND offers.valid_until >= CURRENT_DATE
+    AND similarity(offers.title, $1) > 0.2
+  ORDER BY similarity(offers.title, $1) DESC
+  LIMIT 5
 `;
 
 export const collectionSearchSql = `

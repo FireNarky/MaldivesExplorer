@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { canExportEnquiries, canReadEnquiry, canUpdateEnquiry } from "@/modules/crm/policies";
 import {
   businessMinutesBetween,
+  csvCell,
   exportRowCap,
   parseQueueViews,
   pickLeastLoaded,
@@ -131,6 +132,7 @@ describe("enquiry queue rules", () => {
       terminal_reason: "",
     };
     expect(toCsv([row])).toContain('"Guest ""A"""');
+    expect(csvCell("=cmd")).toBe("'=cmd");
     expect(toCsv([row])).not.toContain("requirements");
     const views = upsertQueueView(
       parseQueueViews([{ name: "Open", q: "", status: "NEW", assignment: "mine" }]),

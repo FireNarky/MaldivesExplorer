@@ -148,7 +148,13 @@ export function listResortOptions() {
 }
 
 export function listVocabulary(
-  set: "ROOM_CATEGORY" | "VENUE_TYPE" | "TRANSFER_TYPE" | "PRICE_BAND",
+  set:
+    | "ROOM_CATEGORY"
+    | "VENUE_TYPE"
+    | "TRANSFER_TYPE"
+    | "PRICE_BAND"
+    | "OCCUPANCY_BASIS"
+    | "MEAL_PLAN",
 ) {
   return db.vocabularyItem.findMany({
     where: { set, active: true },

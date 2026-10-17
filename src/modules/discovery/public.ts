@@ -1,5 +1,6 @@
 import type { ContentEntityType, FaqOwnerType, Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
+import { listOfferSitemap } from "@/modules/offers/service";
 import type { PublicFaq, PublicLink, SitemapEntry } from "@/modules/discovery/types";
 
 function coordinate(value: Prisma.Decimal | null): string | null {
@@ -369,6 +370,7 @@ export async function listSitemapEntries(): Promise<SitemapEntry[]> {
     "/",
     "/destinations",
     "/resorts",
+    "/offers",
     "/experiences",
     "/guides",
     "/collections",
@@ -379,10 +381,11 @@ export async function listSitemapEntries(): Promise<SitemapEntry[]> {
     "/recently-viewed",
     "/plan",
   ].map((path) => ({ path, updatedAt: now }));
-  const [atolls, islands, resorts, experiences, guides, collections] = await Promise.all([
+  const [atolls, islands, resorts, offers, experiences, guides, collections] = await Promise.all([
     db.atoll.findMany({ where: published, select: { slug: true, updatedAt: true } }),
     db.island.findMany({ where: published, select: { slug: true, updatedAt: true } }),
     db.resort.findMany({ where: published, select: { slug: true, updatedAt: true } }),
+    listOfferSitemap(),
     db.experience.findMany({ where: published, select: { slug: true, updatedAt: true } }),
     db.article.findMany({ where: published, select: { slug: true, updatedAt: true } }),
     db.collection.findMany({ where: published, select: { slug: true, updatedAt: true } }),
@@ -392,6 +395,7 @@ export async function listSitemapEntries(): Promise<SitemapEntry[]> {
     ...atolls.map((row) => ({ path: `/atolls/${row.slug}`, updatedAt: row.updatedAt })),
     ...islands.map((row) => ({ path: `/islands/${row.slug}`, updatedAt: row.updatedAt })),
     ...resorts.map((row) => ({ path: `/resorts/${row.slug}`, updatedAt: row.updatedAt })),
+    ...offers.map((row) => ({ path: `/offers/${row.slug}`, updatedAt: row.updatedAt })),
     ...experiences.map((row) => ({
       path: `/experiences/${row.slug}`,
       updatedAt: row.updatedAt,

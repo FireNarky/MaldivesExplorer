@@ -147,7 +147,7 @@ export function windowsOverlap(
 }
 
 export function classifyTravelerAge(age: number): "INFANT" | "CHILD" | null {
-  if (!Number.isInteger(age) || age < 0 || age > 17) return null;
+  if (!Number.isInteger(age) || age < 0 || age > 11) return null;
   if (age <= 1) return "INFANT";
   return "CHILD";
 }
@@ -222,7 +222,8 @@ export function stepIssues(step: PlannerStep, draft: PlannerDraft): Record<strin
     draft.childAges.forEach((value, index) => {
       const age = Number(value);
       if (classifyTravelerAge(age) === null) {
-        issues[`childAges.${index}`] = "Enter an age from 0 through 17.";
+        issues[`childAges.${index}`] =
+          "Enter an age from 0 through 11. Ages 12 and over count as adults.";
       }
     });
     if (draft.childAges.length > 12) issues.childAges = "A plan can list 12 children.";

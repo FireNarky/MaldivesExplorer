@@ -42,13 +42,15 @@ describe("trip plan rules", () => {
     expect(gaps.score).toBe(2);
   });
 
-  it("rejects a child age outside 0 through 17 and classifies infants", () => {
+  it("rejects a child age outside 0 through 11 and classifies infants", () => {
     const draft = readyDraft();
-    draft.childAges = ["18"];
-    expect(stepIssues("party", draft)["childAges.0"]).toBe("Enter an age from 0 through 17.");
+    draft.childAges = ["12"];
+    expect(stepIssues("party", draft)["childAges.0"]).toBe(
+      "Enter an age from 0 through 11. Ages 12 and over count as adults.",
+    );
     expect(classifyTravelerAge(1)).toBe("INFANT");
     expect(classifyTravelerAge(8)).toBe("CHILD");
-    expect(classifyTravelerAge(18)).toBeNull();
+    expect(classifyTravelerAge(12)).toBeNull();
   });
 
   it("flags an overlapping window and still accepts the second plan shape", () => {

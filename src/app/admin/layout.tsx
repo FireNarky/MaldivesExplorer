@@ -14,6 +14,7 @@ const catalogLinks = [
   ["audiences", "Audiences"],
   ["experience-categories", "Experience categories"],
   ["experiences", "Experiences"],
+  ["offers", "Offers"],
 ] as const;
 
 const contentLinks = [

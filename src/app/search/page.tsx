@@ -25,6 +25,7 @@ import {
 
 const kindLabel: Record<SearchKind, string> = {
   resorts: "Resorts",
+  offers: "Offers",
   atolls: "Atolls",
   islands: "Islands",
   experiences: "Experiences",
@@ -47,6 +48,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 function grouped(hits: SearchHit[]): Record<SearchKind, SearchHit[]> {
   const groups = {
     resorts: [],
+    offers: [],
     atolls: [],
     islands: [],
     experiences: [],

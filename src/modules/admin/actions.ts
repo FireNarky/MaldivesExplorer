@@ -32,6 +32,8 @@ import {
   roomInput,
   transferInput,
 } from "@/modules/catalog/schemas";
+import { offerInput } from "@/modules/offers/rules";
+import { saveOffer, transitionOffer } from "@/modules/offers/service";
 import {
   saveExperience,
   saveExperienceCategory,
@@ -411,6 +413,33 @@ async function saveBySection(
         }),
         id,
       );
+    case "offers":
+      return saveOffer(
+        userId,
+        offerInput.parse({
+          resortId: value("resortId"),
+          roomTypeId: value("roomTypeId"),
+          title: value("title"),
+          slug: value("slug"),
+          summary: value("summary"),
+          currency: value("currency"),
+          fromPrice: value("fromPrice"),
+          occupancyBasisId: value("occupancyBasisId"),
+          mealPlanId: value("mealPlanId"),
+          transferIncluded: value("transferIncluded"),
+          validFrom: value("validFrom"),
+          validUntil: value("validUntil"),
+          stayFrom: value("stayFrom"),
+          stayUntil: value("stayUntil"),
+          minNights: value("minNights"),
+          terms: value("terms"),
+          inclusions: value("inclusions"),
+          exclusions: value("exclusions"),
+          seoTitle: value("seoTitle"),
+          seoDescription: value("seoDescription"),
+        }),
+        id,
+      );
     default:
       throw new Error("That catalog section is not available.");
   }
@@ -438,6 +467,8 @@ async function transitionBySection(
       return transitionExperienceCategory(userId, id, next);
     case "experiences":
       return transitionExperience(userId, id, next, when);
+    case "offers":
+      return transitionOffer(userId, id, next, when);
     default:
       throw new Error("This record has no publication status.");
   }

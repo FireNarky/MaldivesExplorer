@@ -85,4 +85,20 @@ export function stampOrThrow(
   return publicationStamp(current, next, { scheduledAt });
 }
 
+export async function promoteDuePublications(now = new Date()): Promise<void> {
+  const due = { status: "SCHEDULED" as const, scheduledAt: { lte: now } };
+  const data = { status: "PUBLISHED" as const, publishedAt: now };
+  await Promise.all([
+    db.atoll.updateMany({ where: due, data }),
+    db.island.updateMany({ where: due, data }),
+    db.resort.updateMany({ where: due, data }),
+    db.experience.updateMany({ where: due, data }),
+    db.article.updateMany({ where: due, data }),
+    db.collection.updateMany({ where: due, data }),
+    db.offer.updateMany({ where: due, data }),
+    db.faq.updateMany({ where: due, data }),
+    db.homepageModule.updateMany({ where: due, data }),
+  ]);
+}
+
 export const moduleStatus = "implemented" as const;

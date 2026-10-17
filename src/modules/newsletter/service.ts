@@ -546,7 +546,10 @@ export async function exportSubscriptions(userId: string): Promise<string> {
       row.consentRecord.status,
       row.consentRecord.noticeVersion,
     ]
-      .map((value) => `"${value.replaceAll('"', '""')}"`)
+      .map((value) => {
+        const safe = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+        return `"${safe.replaceAll('"', '""')}"`;
+      })
       .join(","),
   );
   await writeAudit({

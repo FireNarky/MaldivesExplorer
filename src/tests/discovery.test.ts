@@ -33,7 +33,7 @@ describe("discovery search contracts", () => {
     expect(normalizeSearchQuery("  reef   house  ")).toBe("reef house");
     expect(normalizeSearchQuery("a".repeat(90))).toHaveLength(80);
     expect(parseSearchKind("guides")).toBe("guides");
-    expect(parseSearchKind("offers")).toBe("all");
+    expect(parseSearchKind("offers")).toBe("offers");
     expect(containsPattern("100%")).toBe("%100\\%%");
   });
 

@@ -422,8 +422,9 @@ export function requiredText(
 }
 
 export function csvCell(value: string): string {
-  if (/[",\n\r]/.test(value)) return `"${value.replaceAll('"', '""')}"`;
-  return value;
+  const safe = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+  if (/[",\n\r]/.test(safe)) return `"${safe.replaceAll('"', '""')}"`;
+  return safe;
 }
 
 export function toCsv(rows: readonly ExportRow[]): string {

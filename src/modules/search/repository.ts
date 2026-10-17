@@ -5,6 +5,8 @@ import {
   atollSuggestSql,
   collectionSearchSql,
   containsPattern,
+  offerSearchSql,
+  offerSuggestSql,
   experienceSearchSql,
   experienceSuggestSql,
   guideSearchSql,
@@ -47,6 +49,13 @@ export async function searchPublishedRecords(
   const groups: Array<Promise<SearchHit[]>> = [];
   if (kind === "all" || kind === "resorts") {
     groups.push(ranked(resortSearchSql, query, "resorts", (slug) => `/resorts/${slug}`));
+  }
+  if (kind === "all" || kind === "offers") {
+    groups.push(
+      db
+        .$queryRawUnsafe<RankedName[]>(offerSearchSql, containsPattern(query))
+        .then((rows) => rows.map((row) => hit(row, row.name, `/offers/${row.slug}`, "offers"))),
+    );
   }
   if (kind === "all" || kind === "atolls") {
     groups.push(ranked(atollSearchSql, query, "atolls", (slug) => `/atolls/${slug}`));
@@ -102,8 +111,9 @@ async function suggestNames(
 }
 
 export async function suggestPublishedRecords(query: string): Promise<SearchSuggestion[]> {
-  const [resorts, atolls, islands, experiences, guides] = await Promise.all([
+  const [resorts, offers, atolls, islands, experiences, guides] = await Promise.all([
     suggestNames(resortSuggestSql, query, "resorts", (slug) => `/resorts/${slug}`),
+    suggestNames(offerSuggestSql, query, "offers", (slug) => `/offers/${slug}`),
     suggestNames(atollSuggestSql, query, "atolls", (slug) => `/atolls/${slug}`),
     suggestNames(islandSuggestSql, query, "islands", (slug) => `/islands/${slug}`),
     suggestNames(experienceSuggestSql, query, "experiences", (slug) => `/experiences/${slug}`),
@@ -115,5 +125,5 @@ export async function suggestPublishedRecords(query: string): Promise<SearchSugg
       })),
     ),
   ]);
-  return [...resorts, ...atolls, ...islands, ...experiences, ...guides].slice(0, 8);
+  return [...resorts, ...offers, ...atolls, ...islands, ...experiences, ...guides].slice(0, 8);
 }

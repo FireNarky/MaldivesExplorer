@@ -373,7 +373,9 @@ function PartyStep({
         <legend className="font-semibold">
           Child ages <span className="font-normal">Optional</span>
         </legend>
-        <p>Ages from 0 through 17. An age of 0 or 1 is an infant.</p>
+        <p>
+          Ages from 0 through 11. An age of 0 or 1 is an infant. Ages 12 and over count as adults.
+        </p>
         {draft.childAges.map((age, index) => (
           <Field
             key={`child-${index}`}

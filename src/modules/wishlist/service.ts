@@ -66,11 +66,23 @@ async function publishedTarget(
       ? { id: row.id, name: row.title, href: `/guides/${row.slug}`, summary: row.excerpt }
       : null;
   }
+  const today = new Date();
+  const todayUtc = new Date(
+    Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
+  );
   const row = await db.offer.findFirst({
-    where: { id: entityId, status: "PUBLISHED" },
-    select: { id: true, title: true, summary: true },
+    where: {
+      id: entityId,
+      status: "PUBLISHED",
+      validFrom: { lte: todayUtc },
+      validUntil: { gte: todayUtc },
+      resort: { status: "PUBLISHED" },
+    },
+    select: { id: true, title: true, slug: true, summary: true },
   });
-  return row ? { id: row.id, name: row.title, href: null, summary: row.summary } : null;
+  return row
+    ? { id: row.id, name: row.title, href: `/offers/${row.slug}`, summary: row.summary }
+    : null;
 }
 
 export type PublicCard = {

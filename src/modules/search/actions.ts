@@ -39,6 +39,7 @@ export async function runSearch(formData: FormData): Promise<void> {
   if (query.length > 0) params.set("q", query);
   if (
     kind === "resorts" ||
+    kind === "offers" ||
     kind === "atolls" ||
     kind === "islands" ||
     kind === "experiences" ||

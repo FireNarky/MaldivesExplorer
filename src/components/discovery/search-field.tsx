@@ -9,6 +9,7 @@ import type { SearchSuggestion } from "@/modules/search/query";
 
 const kindLabel: Record<SearchSuggestion["kind"], string> = {
   resorts: "Resort",
+  offers: "Offer",
   atolls: "Atoll",
   islands: "Island",
   experiences: "Experience",

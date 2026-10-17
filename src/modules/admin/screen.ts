@@ -26,6 +26,8 @@ import {
   listTransfers,
   listVocabulary,
 } from "@/modules/catalog";
+import { getOffer, listOffers } from "@/modules/offers/service";
+import { formatDateOnly } from "@/modules/offers/rules";
 import {
   getExperience,
   getExperienceCategory,
@@ -151,6 +153,13 @@ export async function catalogRows(section: string): Promise<ListRow[]> {
         label: row.name,
         status: row.status,
         meta: row.category.name,
+      }));
+    case "offers":
+      return (await listOffers()).map((row) => ({
+        id: row.id,
+        label: row.title,
+        status: row.status,
+        meta: row.resort.name,
       }));
     default:
       return [];
@@ -410,6 +419,35 @@ export async function catalogFields(
         ],
       };
     }
+    case "offers": {
+      const row = await getOffer(id);
+      if (!row) return { fields: [] };
+      return {
+        status: row.status,
+        fields: await offerEditorFields({
+          resortId: row.resortId,
+          roomTypeId: row.roomTypeId ?? "",
+          title: row.title,
+          slug: row.slug,
+          summary: row.summary,
+          currency: row.currency.trim(),
+          fromPrice: decimalValue(row.fromPrice),
+          occupancyBasisId: row.occupancyBasisId,
+          mealPlanId: row.mealPlanId,
+          transferIncluded: row.transferIncluded ? "true" : "false",
+          validFrom: formatDateOnly(row.validFrom),
+          validUntil: formatDateOnly(row.validUntil),
+          stayFrom: row.stayFrom ? formatDateOnly(row.stayFrom) : "",
+          stayUntil: row.stayUntil ? formatDateOnly(row.stayUntil) : "",
+          minNights: row.minNights ? String(row.minNights) : "",
+          terms: row.terms,
+          inclusions: row.inclusions.map((item) => item.text).join("\n"),
+          exclusions: row.exclusions.map((item) => item.text).join("\n"),
+          seoTitle: row.seoTitle ?? "",
+          seoDescription: row.seoDescription ?? "",
+        }),
+      };
+    }
     default:
       return { fields: [] };
   }
@@ -573,6 +611,8 @@ async function blankCatalogFields(section: string): Promise<EditorField[]> {
         text("seoTitle", "SEO title"),
         area("seoDescription", "SEO description"),
       ];
+    case "offers":
+      return offerEditorFields();
     default:
       return [];
   }
@@ -1053,6 +1093,68 @@ function enumOptions(values: string[]): Array<{ value: string; label: string }> 
   return values.map((value) => ({ value, label: value }));
 }
 
+async function offerEditorFields(values?: {
+  resortId: string;
+  roomTypeId: string;
+  title: string;
+  slug: string;
+  summary: string;
+  currency: string;
+  fromPrice: string;
+  occupancyBasisId: string;
+  mealPlanId: string;
+  transferIncluded: string;
+  validFrom: string;
+  validUntil: string;
+  stayFrom: string;
+  stayUntil: string;
+  minNights: string;
+  terms: string;
+  inclusions: string;
+  exclusions: string;
+  seoTitle: string;
+  seoDescription: string;
+}): Promise<EditorField[]> {
+  const rooms = (await listRooms()).map((room) => ({
+    value: room.id,
+    label: `${room.name} · ${room.resort.name}`,
+  }));
+  return [
+    choice("resortId", "Resort", values?.resortId ?? "", await options(listResortOptions), true),
+    choice("roomTypeId", "Room", values?.roomTypeId ?? "", rooms),
+    text("title", "Title", values?.title ?? "", true),
+    text("slug", "Slug", values?.slug ?? "", true),
+    area("summary", "Summary", values?.summary ?? "", true),
+    text("currency", "Currency", values?.currency ?? "", true),
+    text("fromPrice", "Staff price", values?.fromPrice ?? "", true),
+    choice(
+      "occupancyBasisId",
+      "Occupancy basis",
+      values?.occupancyBasisId ?? "",
+      await options(listVocabulary.bind(null, "OCCUPANCY_BASIS")),
+      true,
+    ),
+    choice(
+      "mealPlanId",
+      "Meal plan",
+      values?.mealPlanId ?? "",
+      await options(listVocabulary.bind(null, "MEAL_PLAN")),
+      true,
+    ),
+    choice("transferIncluded", "Transfer included", values?.transferIncluded ?? "", yesNo, true),
+    text("validFrom", "Valid from", values?.validFrom ?? "", true),
+    text("validUntil", "Valid until", values?.validUntil ?? "", true),
+    text("stayFrom", "Stay from", values?.stayFrom ?? ""),
+    text("stayUntil", "Stay until", values?.stayUntil ?? ""),
+    text("minNights", "Minimum nights", values?.minNights ?? ""),
+    area("terms", "Terms", values?.terms ?? "", true),
+    area("inclusions", "Inclusions", values?.inclusions ?? ""),
+    area("exclusions", "Exclusions", values?.exclusions ?? ""),
+    text("seoTitle", "SEO title", values?.seoTitle ?? ""),
+    area("seoDescription", "SEO description", values?.seoDescription ?? ""),
+  ];
+}
+
 async function options(
   load: () => Promise<Array<{ id: string; name?: string; label?: string }>>,
 ): Promise<Array<{ value: string; label: string }>> {
@@ -1071,6 +1173,7 @@ export const catalogSectionTitles: Record<string, string> = {
   audiences: "Audience tags",
   "experience-categories": "Experience categories",
   experiences: "Experiences",
+  offers: "Offers",
 };
 
 export const catalogSectionSingular: Record<string, string> = {
@@ -1084,6 +1187,7 @@ export const catalogSectionSingular: Record<string, string> = {
   audiences: "audience tag",
   "experience-categories": "experience category",
   experiences: "experience",
+  offers: "offer",
 };
 
 export const contentSectionTitles: Record<string, string> = {
