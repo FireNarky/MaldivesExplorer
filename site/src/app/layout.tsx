@@ -40,7 +40,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   await promoteDuePublications().catch(() => undefined);
   const session = await auth().catch(() => null);
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${display.variable} ${sans.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var m=localStorage.getItem("mdv-mode")||"system";var p=localStorage.getItem("mdv-palette")||"ocean";var d=m==="dark"||(m==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);var r=document.documentElement;if(d){r.classList.add("dark");r.setAttribute("data-theme","dark")}else{r.classList.remove("dark");r.removeAttribute("data-theme")}r.setAttribute("data-palette",p)}catch(e){}})()`,
+          }}
+        />
+      </head>
       <body className="flex min-h-screen flex-col font-sans antialiased">
         <a href="#main" className="skip-link">
           Skip to content

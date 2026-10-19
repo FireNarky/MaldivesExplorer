@@ -156,6 +156,153 @@ html[data-palette="palm"] {
   --shadow-2: 0 12px 32px rgb(18 55 42 / 10%), 0 4px 8px rgb(18 55 42 / 4%);
 }
 
+html[data-palette="twilight"] {
+  --color-ocean: #2e1065;
+  --color-lagoon: #a855f7;
+  --color-lagoon-ink: #7e22ce;
+  --color-lagoon-ink-hover: #6b21a8;
+  --color-mist: #f3e8ff;
+  --color-coral: #ec4899;
+  --color-coral-hover: #db2777;
+  --color-sand: #faf5ff;
+  --color-ink: #220b4d;
+  --color-muted: #6b5b7b;
+  --color-border: #9f8bb3;
+  --color-border-subtle: #e9d5ff;
+  --color-focus: #7e22ce;
+  --shadow-1: 0 2px 8px rgb(46 16 101 / 6%), 0 1px 2px rgb(46 16 101 / 4%);
+  --shadow-2: 0 12px 32px rgb(46 16 101 / 10%), 0 4px 8px rgb(46 16 101 / 4%);
+}
+
+html[data-palette="bioluminescence"] {
+  --color-ocean: #042f2e;
+  --color-lagoon: #14b8a6;
+  --color-lagoon-ink: #0f766e;
+  --color-lagoon-ink-hover: #115e59;
+  --color-mist: #ccfbf1;
+  --color-coral: #06b6d4;
+  --color-coral-hover: #0891b2;
+  --color-sand: #f0fdfa;
+  --color-ink: #042f2e;
+  --color-muted: #537574;
+  --color-border: #7aa5a3;
+  --color-border-subtle: #ccfbf1;
+  --color-focus: #0f766e;
+  --shadow-1: 0 2px 8px rgb(4 47 46 / 6%), 0 1px 2px rgb(4 47 46 / 4%);
+  --shadow-2: 0 12px 32px rgb(4 47 46 / 10%), 0 4px 8px rgb(4 47 46 / 4%);
+}
+
+/* ==========================================================================
+   Dark Mode Base Tokens (applied via .dark or [data-theme="dark"])
+   ========================================================================== */
+html.dark,
+html[data-theme="dark"] {
+  --color-sand: #071318;
+  --color-ink: #edf4f7;
+  --color-white: #0e2029;
+  --color-muted: #8ea3ab;
+  --color-border: #223a46;
+  --color-border-subtle: #162932;
+  --color-focus: #22d3ee;
+  --color-success-surface: #0a2618;
+  --color-warning-surface: #2b1d03;
+  --color-danger-surface: #2e0d0d;
+  --color-info-surface: #0a232d;
+  --shadow-1: 0 2px 8px rgb(0 0 0 / 30%), 0 1px 2px rgb(0 0 0 / 20%);
+  --shadow-2: 0 12px 32px rgb(0 0 0 / 45%), 0 4px 8px rgb(0 0 0 / 25%);
+  --shadow-3: 0 20px 48px rgb(0 0 0 / 55%), 0 6px 12px rgb(0 0 0 / 35%);
+}
+
+/* Dark Mode Palette Variants */
+html.dark[data-palette="ocean"],
+html[data-theme="dark"][data-palette="ocean"],
+html.dark:not([data-palette]) {
+  --color-ocean: #67e8f9;
+  --color-lagoon: #22d3ee;
+  --color-lagoon-ink: #0891b2;
+  --color-lagoon-ink-hover: #06b6d4;
+  --color-mist: #10323e;
+  --color-coral: #fb7185;
+  --color-coral-hover: #f43f5e;
+}
+
+html.dark[data-palette="sunset"],
+html[data-theme="dark"][data-palette="sunset"] {
+  --color-ocean: #fed7aa;
+  --color-lagoon: #38bdf8;
+  --color-lagoon-ink: #0284c7;
+  --color-lagoon-ink-hover: #0369a1;
+  --color-mist: #202b40;
+  --color-coral: #fb923c;
+  --color-coral-hover: #ea580c;
+}
+
+html.dark[data-palette="midnight"],
+html[data-theme="dark"][data-palette="midnight"] {
+  --color-ocean: #fef08a;
+  --color-lagoon: #818cf8;
+  --color-lagoon-ink: #6366f1;
+  --color-lagoon-ink-hover: #4f46e5;
+  --color-mist: #1b213b;
+  --color-coral: #e2b45f;
+  --color-coral-hover: #ca8a04;
+}
+
+html.dark[data-palette="daylight"],
+html[data-theme="dark"][data-palette="daylight"] {
+  --color-ocean: #a5f3fc;
+  --color-lagoon: #22d3ee;
+  --color-lagoon-ink: #0891b2;
+  --color-lagoon-ink-hover: #0e7490;
+  --color-mist: #103844;
+  --color-coral: #ff7a5c;
+  --color-coral-hover: #ea580c;
+}
+
+html.dark[data-palette="reef"],
+html[data-theme="dark"][data-palette="reef"] {
+  --color-ocean: #99f6e4;
+  --color-lagoon: #2dd4bf;
+  --color-lagoon-ink: #0d9488;
+  --color-lagoon-ink-hover: #0f766e;
+  --color-mist: #123637;
+  --color-coral: #f472b6;
+  --color-coral-hover: #db2777;
+}
+
+html.dark[data-palette="palm"],
+html[data-theme="dark"][data-palette="palm"] {
+  --color-ocean: #a7f3d0;
+  --color-lagoon: #34d399;
+  --color-lagoon-ink: #059669;
+  --color-lagoon-ink-hover: #047857;
+  --color-mist: #143527;
+  --color-coral: #facc15;
+  --color-coral-hover: #eab308;
+}
+
+html.dark[data-palette="twilight"],
+html[data-theme="dark"][data-palette="twilight"] {
+  --color-ocean: #e9d5ff;
+  --color-lagoon: #c084fc;
+  --color-lagoon-ink: #a855f7;
+  --color-lagoon-ink-hover: #9333ea;
+  --color-mist: #28193d;
+  --color-coral: #f472b6;
+  --color-coral-hover: #ec4899;
+}
+
+html.dark[data-palette="bioluminescence"],
+html[data-theme="dark"][data-palette="bioluminescence"] {
+  --color-ocean: #5eead4;
+  --color-lagoon: #2dd4bf;
+  --color-lagoon-ink: #06b6d4;
+  --color-lagoon-ink-hover: #0891b2;
+  --color-mist: #0c3332;
+  --color-coral: #38bdf8;
+  --color-coral-hover: #0ea5e9;
+}
+
 @theme inline {
   --color-ocean: var(--color-ocean);
   --color-lagoon: var(--color-lagoon);

@@ -1,9 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, Palette, X } from "lucide-react";
+import { Check, Laptop, Moon, Palette, Sun, X } from "lucide-react";
 
-export type PaletteId = "ocean" | "sunset" | "midnight" | "daylight" | "reef" | "palm";
+export type PaletteId =
+  | "ocean"
+  | "sunset"
+  | "midnight"
+  | "daylight"
+  | "reef"
+  | "palm"
+  | "twilight"
+  | "bioluminescence";
+
+export type ThemeMode = "light" | "dark" | "system";
 
 interface PaletteOption {
   id: PaletteId;
@@ -12,6 +22,8 @@ interface PaletteOption {
   ocean: string;
   accent: string;
   sand: string;
+  darkOcean: string;
+  darkAccent: string;
 }
 
 const PALETTES: PaletteOption[] = [
@@ -22,6 +34,8 @@ const PALETTES: PaletteOption[] = [
     ocean: "#083b4c",
     accent: "#ff6f59",
     sand: "#faf8f3",
+    darkOcean: "#67e8f9",
+    darkAccent: "#fb7185",
   },
   {
     id: "sunset",
@@ -30,6 +44,8 @@ const PALETTES: PaletteOption[] = [
     ocean: "#1b2a4e",
     accent: "#ffa14a",
     sand: "#fcf7ef",
+    darkOcean: "#fed7aa",
+    darkAccent: "#fb923c",
   },
   {
     id: "midnight",
@@ -38,6 +54,8 @@ const PALETTES: PaletteOption[] = [
     ocean: "#0b1f33",
     accent: "#e2b45f",
     sand: "#f6f7f8",
+    darkOcean: "#fef08a",
+    darkAccent: "#818cf8",
   },
   {
     id: "daylight",
@@ -46,6 +64,8 @@ const PALETTES: PaletteOption[] = [
     ocean: "#0a4a5c",
     accent: "#ff7a5c",
     sand: "#fbfcfb",
+    darkOcean: "#a5f3fc",
+    darkAccent: "#22d3ee",
   },
   {
     id: "reef",
@@ -54,6 +74,8 @@ const PALETTES: PaletteOption[] = [
     ocean: "#0a3d3f",
     accent: "#ff7f9c",
     sand: "#faf8f4",
+    darkOcean: "#99f6e4",
+    darkAccent: "#f472b6",
   },
   {
     id: "palm",
@@ -62,73 +84,192 @@ const PALETTES: PaletteOption[] = [
     ocean: "#12372a",
     accent: "#ffc233",
     sand: "#f9f7ee",
+    darkOcean: "#a7f3d0",
+    darkAccent: "#34d399",
+  },
+  {
+    id: "twilight",
+    name: "Twilight Atoll",
+    tagline: "Island Dusk & Violet Horizon",
+    ocean: "#2e1065",
+    accent: "#a855f7",
+    sand: "#faf5ff",
+    darkOcean: "#e9d5ff",
+    darkAccent: "#c084fc",
+  },
+  {
+    id: "bioluminescence",
+    name: "Bioluminescent Bay",
+    tagline: "Deep Ocean & Electric Cyan",
+    ocean: "#042f2e",
+    accent: "#14b8a6",
+    sand: "#f0fdfa",
+    darkOcean: "#5eead4",
+    darkAccent: "#2dd4bf",
   },
 ];
 
+function getResolvedMode(mode: ThemeMode): "light" | "dark" {
+  if (typeof window === "undefined") return "light";
+  if (mode === "dark") return "dark";
+  if (mode === "light") return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function applyTheme(mode: ThemeMode, palette: PaletteId) {
+  if (typeof window === "undefined") return;
+  const root = document.documentElement;
+  const isDark = getResolvedMode(mode) === "dark";
+
+  if (isDark) {
+    root.classList.add("dark");
+    root.setAttribute("data-theme", "dark");
+  } else {
+    root.classList.remove("dark");
+    root.removeAttribute("data-theme");
+  }
+
+  root.setAttribute("data-palette", palette);
+}
+
 export function PaletteSwitcher() {
   const [activePalette, setActivePalette] = useState<PaletteId>("ocean");
+  const [mode, setMode] = useState<ThemeMode>("system");
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const saved = localStorage.getItem("mdv-palette") as PaletteId | null;
-    if (saved && PALETTES.some((p) => p.id === saved)) {
-      setActivePalette(saved);
-      document.documentElement.setAttribute("data-palette", saved);
-    }
+    try {
+      const savedPalette = localStorage.getItem("mdv-palette") as PaletteId | null;
+      const savedMode = localStorage.getItem("mdv-mode") as ThemeMode | null;
+
+      const p = savedPalette && PALETTES.some((item) => item.id === savedPalette) ? savedPalette : "ocean";
+      const m = savedMode && ["light", "dark", "system"].includes(savedMode) ? savedMode : "system";
+
+      setActivePalette(p);
+      setMode(m);
+      applyTheme(m, p);
+    } catch {}
+
+    const mql = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleMedia = () => {
+      const currentMode = (localStorage.getItem("mdv-mode") as ThemeMode) || "system";
+      if (currentMode === "system") {
+        const curPalette = (localStorage.getItem("mdv-palette") as PaletteId) || "ocean";
+        applyTheme("system", curPalette);
+      }
+    };
+    mql.addEventListener("change", handleMedia);
+    return () => mql.removeEventListener("change", handleMedia);
   }, []);
 
-  const handleSelect = (id: PaletteId) => {
+  const handleSelectPalette = (id: PaletteId) => {
     setActivePalette(id);
-    document.documentElement.setAttribute("data-palette", id);
+    applyTheme(mode, id);
     try {
       localStorage.setItem("mdv-palette", id);
-    } catch {
-      // storage unavailable
-    }
+    } catch {}
+  };
+
+  const handleSelectMode = (newMode: ThemeMode) => {
+    setMode(newMode);
+    applyTheme(newMode, activePalette);
+    try {
+      localStorage.setItem("mdv-mode", newMode);
+    } catch {}
+  };
+
+  const handleToggleMode = () => {
+    const resolved = getResolvedMode(mode);
+    const nextMode = resolved === "dark" ? "light" : "dark";
+    handleSelectMode(nextMode);
   };
 
   if (!mounted) return null;
 
   const current = PALETTES.find((p) => p.id === activePalette) ?? PALETTES[0]!;
+  const isDark = getResolvedMode(mode) === "dark";
 
   return (
-    <aside aria-label="Design Palette Switcher" className="fixed bottom-20 right-3 z-40 sm:right-6 lg:bottom-6">
+    <aside aria-label="Design Palette & Theme Switcher" className="fixed bottom-20 right-3 z-40 sm:right-6 lg:bottom-6">
       {isOpen ? (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Select website color palette"
-          className="animate-in fade-in slide-in-from-bottom-2 mb-3 max-h-[75vh] w-[calc(100vw-2rem)] max-w-xs overflow-y-auto rounded-2xl border border-border-subtle bg-white p-4 shadow-3 backdrop-blur-md sm:w-80"
+          aria-label="Select website theme and palette"
+          className="animate-in fade-in slide-in-from-bottom-2 mb-3 max-h-[82vh] w-[calc(100vw-2rem)] max-w-sm overflow-y-auto rounded-2xl border border-border-subtle bg-white p-4 shadow-3 backdrop-blur-md sm:w-88"
         >
           <div className="mb-3 flex items-center justify-between border-b border-border-subtle pb-2">
             <div className="flex items-center gap-2">
               <Palette size={18} className="text-lagoon-ink" aria-hidden="true" />
-              <span className="text-sm font-bold text-ocean">Design Palettes</span>
+              <span className="text-sm font-bold text-ocean">Theme &amp; Palettes</span>
             </div>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="rounded-full p-1 text-muted hover:bg-mist hover:text-ink"
+              className="rounded-full p-1 text-muted hover:bg-mist hover:text-ink transition"
               aria-label="Close palette selector"
             >
               <X size={16} aria-hidden="true" />
             </button>
           </div>
 
-          <p className="mb-3 text-xs text-muted">
-            All 6 design directions pass WCAG AA contrast standards. Click to preview live:
+          {/* Mode Switcher */}
+          <div className="mb-4">
+            <p className="mb-1.5 text-xs font-semibold text-muted">Display Mode</p>
+            <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-border-subtle bg-sand/60 p-1">
+              <button
+                type="button"
+                onClick={() => handleSelectMode("light")}
+                className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
+                  mode === "light"
+                    ? "bg-white text-ink shadow-sm"
+                    : "text-muted hover:text-ink"
+                }`}
+              >
+                <Sun size={13} className="text-amber-500" />
+                Light
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSelectMode("dark")}
+                className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
+                  mode === "dark"
+                    ? "bg-white text-ink shadow-sm"
+                    : "text-muted hover:text-ink"
+                }`}
+              >
+                <Moon size={13} className="text-indigo-400" />
+                Dark
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSelectMode("system")}
+                className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
+                  mode === "system"
+                    ? "bg-white text-ink shadow-sm"
+                    : "text-muted hover:text-ink"
+                }`}
+              >
+                <Laptop size={13} />
+                System
+              </button>
+            </div>
+          </div>
+
+          <p className="mb-2 text-xs font-semibold text-muted">
+            Maldives Color Palettes (WCAG AA compliant)
           </p>
 
-          <div className="grid gap-2">
+          <div className="grid gap-1.5">
             {PALETTES.map((palette) => {
               const isSelected = activePalette === palette.id;
               return (
                 <button
                   key={palette.id}
                   type="button"
-                  onClick={() => handleSelect(palette.id)}
+                  onClick={() => handleSelectPalette(palette.id)}
                   className={`flex w-full items-center justify-between rounded-xl p-2.5 text-left transition-all ${
                     isSelected
                       ? "border border-lagoon-ink bg-mist/60 ring-1 ring-lagoon-ink"
@@ -139,18 +280,18 @@ export function PaletteSwitcher() {
                     <div className="flex -space-x-1">
                       <span
                         className="inline-block h-5 w-5 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: palette.ocean }}
-                        title="Primary ocean"
+                        style={{ backgroundColor: isDark ? palette.darkOcean : palette.ocean }}
+                        title="Primary color"
                       />
                       <span
                         className="inline-block h-5 w-5 rounded-full border border-white shadow-sm"
-                        style={{ backgroundColor: palette.accent }}
+                        style={{ backgroundColor: isDark ? palette.darkAccent : palette.accent }}
                         title="Accent action"
                       />
                       <span
                         className="inline-block h-5 w-5 rounded-full border border-white shadow-sm"
                         style={{ backgroundColor: palette.sand }}
-                        title="Background sand"
+                        title="Background tone"
                       />
                     </div>
                     <div>
@@ -168,20 +309,36 @@ export function PaletteSwitcher() {
         </div>
       ) : null}
 
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-        className="group flex items-center gap-2.5 rounded-full border border-border/80 bg-white/95 px-4 py-2.5 text-sm font-semibold text-ocean shadow-2 backdrop-blur hover:border-ocean hover:bg-white active:scale-95 transition-all"
-      >
-        <span
-          className="inline-block h-3.5 w-3.5 rounded-full shadow-sm ring-1 ring-black/10"
-          style={{ backgroundColor: current.accent }}
-        />
-        <span className="hidden sm:inline">{current.name}</span>
-        <span className="text-xs text-muted font-normal">Theme</span>
-        <Palette size={16} className="text-lagoon-ink transition-transform group-hover:rotate-12" aria-hidden="true" />
-      </button>
+      <div className="flex items-center gap-1.5">
+        <button
+          type="button"
+          onClick={handleToggleMode}
+          title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
+          className="flex size-10 items-center justify-center rounded-full border border-border/80 bg-white/95 text-ink shadow-2 backdrop-blur transition hover:border-ocean hover:bg-white active:scale-95"
+          aria-label="Toggle dark and light mode"
+        >
+          {isDark ? (
+            <Sun size={17} className="text-amber-400 rotate-0 transition-transform hover:rotate-45" />
+          ) : (
+            <Moon size={17} className="text-slate-700 -rotate-12 transition-transform" />
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+          className="group flex items-center gap-2 rounded-full border border-border/80 bg-white/95 px-3.5 py-2.5 text-sm font-semibold text-ocean shadow-2 backdrop-blur hover:border-ocean hover:bg-white active:scale-95 transition-all"
+        >
+          <span
+            className="inline-block h-3.5 w-3.5 rounded-full shadow-sm ring-1 ring-black/10"
+            style={{ backgroundColor: isDark ? current.darkAccent : current.accent }}
+          />
+          <span className="hidden sm:inline">{current.name}</span>
+          <span className="text-xs text-muted font-normal">Theme</span>
+          <Palette size={15} className="text-lagoon-ink transition-transform group-hover:rotate-12" aria-hidden="true" />
+        </button>
+      </div>
     </aside>
   );
 }
