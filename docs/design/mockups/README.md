@@ -6,6 +6,20 @@ Open any `.html` file in a browser to see it move. Each page has a **Palette** p
 
 **Motion in the HTML files:** drifting waves, swaying palms, a breathing sun and slow clouds in the hero; staggered hero entrance; scroll reveals; card and tile lift on hover with a slow image zoom; heart button pop; sliding nav underline; sticky nav shadow on scroll; working FAQ accordion. All motion switches off for visitors who prefer reduced motion. The PNGs are rendered with motion off.
 
+## Navigation menu
+
+Open any `home.html` or `resort.html` and use the header.
+
+| Mega menu | Mobile drawer | Search |
+| --- | --- | --- |
+| [![Mega menu](menu/mega-destinations.png)](menu/mega-destinations.png) | [![Mobile drawer](menu/mobile-drawer.png)](menu/mobile-drawer.png) | [![Search overlay](menu/search-overlay.png)](menu/search-overlay.png) |
+
+- **Desktop:** Destinations, Resorts, Experiences and Guides open a mega menu on hover or click. Each has a short intro, two grouped link columns with icons and one-line descriptions, and a promo card. Moving between items switches panels instantly, and a scrim dims the page.
+- **Keyboard:** Down arrow opens a panel and moves into it, left and right arrows move between items, Escape closes and returns focus.
+- **Mobile:** hamburger opens a slide-in drawer with accordion sections, large tap targets, a search field and a Plan my trip button. Focus is trapped and the page behind does not scroll.
+- **Search:** press `/` or Ctrl/Cmd+K, or click the search pill, for a command-style overlay with quick links.
+- Menu entries, atoll names and the one-line descriptions are sample content for review. Final names and copy follow the approved catalogue.
+
 ## Ocean & Coral
 Current brand
 
