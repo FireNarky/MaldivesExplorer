@@ -1,13 +1,13 @@
 export function siteOrigin(source: Record<string, string | undefined> = process.env): string {
-  const authUrl = source.AUTH_URL?.trim();
-  if (authUrl) {
+  const configured = (source.AUTH_URL || source.NEXT_PUBLIC_APP_URL || source.SITE_URL)?.trim();
+  if (configured) {
     try {
-      return new URL(authUrl).origin;
+      return new URL(configured).origin;
     } catch {
-      return "http://127.0.0.1:3000";
+      return "https://xplorer.itnvend.com";
     }
   }
-  return "http://127.0.0.1:3000";
+  return "https://xplorer.itnvend.com";
 }
 
 export function absoluteUrl(path: string, origin = siteOrigin()): string {

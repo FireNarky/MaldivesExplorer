@@ -12,6 +12,7 @@ export {
   listAudiences,
   listDining,
   listIslandOptions,
+  listLeadResortImages,
   listPublishedResortImages,
   listPublishedResorts,
   listResortOptions,

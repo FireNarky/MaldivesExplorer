@@ -27,7 +27,7 @@ export function listPublishedResorts() {
       seoTitle: true,
       seoDescription: true,
       island: {
-        select: { name: true, status: true, atoll: { select: { name: true, status: true } } },
+        select: { name: true, status: true, atoll: { select: { name: true, slug: true, status: true } } },
       },
     },
   });
@@ -137,6 +137,26 @@ export function listPublishedResortImages(resortId: string) {
     orderBy: { sortOrder: "asc" },
     select: { media: { select: { id: true, altText: true } } },
   });
+}
+
+export async function listLeadResortImages(resortIds: string[]) {
+  if (resortIds.length === 0) return new Map<string, { id: string; altText: string }>();
+  const links = await db.mediaLink.findMany({
+    where: {
+      ownerType: "RESORT",
+      ownerId: { in: resortIds },
+      media: { status: "PUBLISHED", kind: { in: ["IMAGE", "DRONE"] }, altText: { not: null } },
+    },
+    orderBy: { sortOrder: "asc" },
+    select: { ownerId: true, media: { select: { id: true, altText: true } } },
+  });
+  const lead = new Map<string, { id: string; altText: string }>();
+  for (const link of links) {
+    if (!lead.has(link.ownerId) && link.media.altText) {
+      lead.set(link.ownerId, { id: link.media.id, altText: link.media.altText });
+    }
+  }
+  return lead;
 }
 
 export function listIslandOptions() {

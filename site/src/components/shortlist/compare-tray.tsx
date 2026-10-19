@@ -23,7 +23,7 @@ export function CompareTray() {
   return (
     <aside
       aria-label="Compare"
-      className="sticky bottom-0 z-10 border-t border-border-subtle bg-white"
+      className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] z-10 border-t lg:bottom-0 border-border-subtle bg-white"
     >
       <div className="mx-auto flex w-full max-w-[90rem] flex-wrap items-center gap-3 px-4 py-3 lg:px-8">
         <p>

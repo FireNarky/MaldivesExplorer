@@ -2,12 +2,16 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Compass, MapPin } from "lucide-react";
 import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
 import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { RelatedList } from "@/components/discovery/related-list";
+import { PriceDisclosure } from "@/components/patterns/price-disclosure";
 import { ReviewList } from "@/components/reviews/review-list";
 import { ListingActions } from "@/components/shortlist/listing-actions";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/error-state";
 import { isNotFoundError } from "@/lib/http/navigation";
 import { logError } from "@/lib/observability/log";
@@ -63,8 +67,17 @@ export default async function ResortPage({ params }: PageProps) {
       crumbs.push({ name: resort.island.name, href: `/islands/${resort.island.slug}` });
     }
     crumbs.push({ name: resort.name });
+    const location = [
+      resort.island.status === "PUBLISHED" ? resort.island.name : null,
+      resort.island.status === "PUBLISHED" && resort.island.atoll.status === "PUBLISHED"
+        ? resort.island.atoll.name
+        : null,
+    ]
+      .filter(Boolean)
+      .join(", ");
+    const gallery = images.filter((image) => image.media.altText);
     const page = (
-      <article className="grid max-w-[65ch] gap-6">
+      <article className="grid gap-8">
         <Breadcrumbs items={crumbs} />
         <JsonLd
           data={lodgingData({
@@ -73,115 +86,188 @@ export default async function ResortPage({ params }: PageProps) {
             path: `/resorts/${resort.slug}`,
           })}
         />
-        <h1>{resort.name}</h1>
-        <ListingActions entityType="RESORT" entityId={resort.id} save compare />
-        <p>{resort.summary}</p>
-        <p>{resort.description}</p>
-        <p>Property type: {resort.propertyType}</p>
-        {resort.island.status === "PUBLISHED" ? (
-          <p>
-            Island:{" "}
-            <Link href={`/islands/${resort.island.slug}`} className="text-lagoon-ink">
-              {resort.island.name}
-            </Link>
-            {resort.island.atoll.status === "PUBLISHED" ? (
-              <>
-                {". Atoll: "}
-                <Link href={`/atolls/${resort.island.atoll.slug}`} className="text-lagoon-ink">
-                  {resort.island.atoll.name}
-                </Link>
-              </>
+        <header className="grid gap-3">
+          {location ? (
+            <p className="flex items-center gap-2 text-base text-muted">
+              <MapPin aria-hidden="true" size={16} strokeWidth={1.75} />
+              {location}
+            </p>
+          ) : null}
+          <h1>{resort.name}</h1>
+          <p className="max-w-[65ch] text-lg">{resort.summary}</p>
+        </header>
+
+        {gallery.length > 0 ? (
+          <section
+            aria-label="Photos"
+            className="grid gap-2 sm:grid-cols-3 sm:grid-rows-2 [&>*:first-child]:sm:col-span-2 [&>*:first-child]:sm:row-span-2"
+          >
+            {gallery.slice(0, 5).map((image) => (
+              <div
+                key={image.media.id}
+                className="relative aspect-[3/2] overflow-hidden rounded-lg bg-mist"
+              >
+                <Image
+                  src={`/media/${image.media.id}`}
+                  alt={image.media.altText ?? ""}
+                  fill
+                  unoptimized
+                  sizes="(min-width: 64rem) 60vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </section>
+        ) : null}
+
+        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+          <div className="grid content-start gap-10 lg:col-span-8">
+            <section className="grid max-w-[65ch] gap-4">
+              <h2>Overview</h2>
+              <p>{resort.description}</p>
+              <dl className="grid gap-2 sm:grid-cols-2">
+                <div>
+                  <dt className="text-sm text-muted">Property type</dt>
+                  <dd className="font-semibold">{resort.propertyType}</dd>
+                </div>
+                {resort.island.status === "PUBLISHED" ? (
+                  <div>
+                    <dt className="text-sm text-muted">Island</dt>
+                    <dd>
+                      <Link
+                        href={`/islands/${resort.island.slug}`}
+                        className="font-semibold text-lagoon-ink underline"
+                      >
+                        {resort.island.name}
+                      </Link>
+                    </dd>
+                  </div>
+                ) : null}
+                {resort.island.status === "PUBLISHED" &&
+                resort.island.atoll.status === "PUBLISHED" ? (
+                  <div>
+                    <dt className="text-sm text-muted">Atoll</dt>
+                    <dd>
+                      <Link
+                        href={`/atolls/${resort.island.atoll.slug}`}
+                        className="font-semibold text-lagoon-ink underline"
+                      >
+                        {resort.island.atoll.name}
+                      </Link>
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+            </section>
+            {resort.roomTypes.length > 0 ? (
+              <section className="grid gap-4">
+                <h2>Rooms</h2>
+                <ul className="grid gap-4 md:grid-cols-2">
+                  {resort.roomTypes.map((room) => (
+                    <li
+                      key={room.id}
+                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
+                    >
+                      <h3>{room.name}</h3>
+                      <p>{room.description}</p>
+                      <p className="text-sm text-muted">Maximum adults: {room.maxAdults}</p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
             ) : null}
-          </p>
-        ) : null}
-        <p>An indicative price is not published.</p>
-        {images.map((image) =>
-          image.media.altText ? (
-            <div key={image.media.id} className="relative aspect-[3/2] w-full">
-              <Image
-                src={`/media/${image.media.id}`}
-                alt={image.media.altText}
-                fill
-                unoptimized
-                sizes="(min-width: 65ch) 65ch, 100vw"
-                className="object-cover"
-              />
+            {resort.diningVenues.length > 0 ? (
+              <section className="grid gap-4">
+                <h2>Dining</h2>
+                <ul className="grid gap-4 md:grid-cols-2">
+                  {resort.diningVenues.map((venue) => (
+                    <li
+                      key={venue.id}
+                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
+                    >
+                      <h3>{venue.name}</h3>
+                      <p>{venue.description}</p>
+                      {venue.cuisine ? <p className="text-sm text-muted">{venue.cuisine}</p> : null}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+            {resort.transfers.length > 0 ? (
+              <section className="grid gap-4">
+                <h2>Transfers</h2>
+                <ul className="grid gap-4 md:grid-cols-2">
+                  {resort.transfers.map((transfer) => (
+                    <li
+                      key={transfer.id}
+                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
+                    >
+                      <h3>{transfer.label}</h3>
+                      <p>{transfer.transferType.label}</p>
+                      {transfer.durationMinutes ? (
+                        <p className="text-sm text-muted">
+                          Duration: {transfer.durationMinutes} minutes
+                        </p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+            {resort.amenities.length > 0 ? (
+              <section className="grid gap-4">
+                <h2>Amenities</h2>
+                <ul className="flex flex-wrap gap-2">
+                  {resort.amenities.map((item) => (
+                    <li key={item.amenityId}>
+                      <Badge tone="quoted">{item.amenity.name}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+            {resort.audiences.length > 0 ? (
+              <section className="grid gap-4">
+                <h2>Good for</h2>
+                <ul className="flex flex-wrap gap-2">
+                  {resort.audiences.map((item) => (
+                    <li key={item.audienceTagId}>
+                      <Badge tone="info">{item.audienceTag.name}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+            {reviews.length > 0 ? (
+              <section className="grid gap-4">
+                <h2>Reviews</h2>
+                <ReviewList reviews={reviews} />
+              </section>
+            ) : null}
+            <RelatedList title="Experiences" items={experiences} />
+            <RelatedList title="Guides" items={guides} />
+            <FaqList items={faqs} />
+          </div>
+
+          <aside
+            aria-label="Plan this stay"
+            className="order-first lg:order-last lg:col-span-4 lg:sticky lg:top-24 lg:self-start"
+          >
+            <div className="grid gap-4 rounded-lg border border-border-subtle bg-white p-6 shadow-1">
+              <h2 className="text-2xl">Plan a stay here</h2>
+              <PriceDisclosure />
+              <Button asChild variant="conversion">
+                <Link href="/plan">
+                  <Compass aria-hidden="true" size={20} strokeWidth={1.75} />
+                  Plan my trip
+                </Link>
+              </Button>
+              <div className="flex flex-wrap items-center gap-3">
+                <ListingActions entityType="RESORT" entityId={resort.id} save compare />
+              </div>
             </div>
-          ) : null,
-        )}
-        {resort.roomTypes.length > 0 ? (
-          <section className="grid gap-3">
-            <h2>Rooms</h2>
-            <ul className="grid gap-3">
-              {resort.roomTypes.map((room) => (
-                <li key={room.id}>
-                  <h3>{room.name}</h3>
-                  <p>{room.description}</p>
-                  <p>Maximum adults: {room.maxAdults}</p>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-        {resort.diningVenues.length > 0 ? (
-          <section className="grid gap-3">
-            <h2>Dining</h2>
-            <ul className="grid gap-3">
-              {resort.diningVenues.map((venue) => (
-                <li key={venue.id}>
-                  <h3>{venue.name}</h3>
-                  <p>{venue.description}</p>
-                  {venue.cuisine ? <p>{venue.cuisine}</p> : null}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-        {resort.transfers.length > 0 ? (
-          <section className="grid gap-3">
-            <h2>Transfers</h2>
-            <ul className="grid gap-3">
-              {resort.transfers.map((transfer) => (
-                <li key={transfer.id}>
-                  <h3>{transfer.label}</h3>
-                  <p>{transfer.transferType.label}</p>
-                  {transfer.durationMinutes ? (
-                    <p>Duration: {transfer.durationMinutes} minutes</p>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-        {resort.amenities.length > 0 ? (
-          <section className="grid gap-3">
-            <h2>Amenities</h2>
-            <ul>
-              {resort.amenities.map((item) => (
-                <li key={item.amenityId}>{item.amenity.name}</li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-        {resort.audiences.length > 0 ? (
-          <section className="grid gap-3">
-            <h2>Audiences</h2>
-            <ul>
-              {resort.audiences.map((item) => (
-                <li key={item.audienceTagId}>{item.audienceTag.name}</li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-        {reviews.length > 0 ? (
-          <section className="grid gap-3">
-            <h2>Reviews</h2>
-            <ReviewList reviews={reviews} />
-          </section>
-        ) : null}
-        <RelatedList title="Experiences" items={experiences} />
-        <RelatedList title="Guides" items={guides} />
-        <FaqList items={faqs} />
+          </aside>
+        </div>
       </article>
     );
     return page;
