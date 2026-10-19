@@ -25,8 +25,10 @@ const columns = [
     ],
   },
   {
-    title: "About",
+    title: "About & Team",
     links: [
+      { href: "/board", label: "Team Board" },
+      { href: "/dashboard", label: "Dashboard" },
       { href: "/faq", label: "Questions" },
       { href: "/reviews", label: "Testimonials" },
       { href: "/newsletter", label: "Newsletter" },
