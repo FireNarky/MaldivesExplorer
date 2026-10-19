@@ -1,0 +1,104 @@
+{
+  "name": "Tropical Palm",
+  "direction": "Natural, fresh",
+  "tokens": {
+    "ocean": "#12372a",
+    "lagoon": "#34b37e",
+    "lagoon-ink": "#1b6e4f",
+    "lagoon-ink-hover": "#155a41",
+    "mist": "#e1f3e8",
+    "coral": "#ffc233",
+    "coral-hover": "#f5b61f",
+    "sand": "#f9f7ee",
+    "ink": "#1f3128",
+    "muted": "#586b60",
+    "border": "#7c8a82",
+    "border-subtle": "#d6e0d8"
+  },
+  "contrast": [
+    {
+      "pair": "Body text on page",
+      "ratio": 12.8,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Body text on mist",
+      "ratio": 11.9,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Headings on page",
+      "ratio": 12.19,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on page",
+      "ratio": 5.77,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on mist",
+      "ratio": 5.37,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary button",
+      "ratio": 6.19,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary hover",
+      "ratio": 8.17,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent button",
+      "ratio": 8.52,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent hover",
+      "ratio": 7.59,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on page",
+      "ratio": 5.31,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on mist",
+      "ratio": 4.93,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Footer text on ocean",
+      "ratio": 12.19,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Input border on white",
+      "ratio": 3.61,
+      "required": 3,
+      "pass": true
+    },
+    {
+      "pair": "Input border on page",
+      "ratio": 3.37,
+      "required": 3,
+      "pass": true
+    }
+  ]
+}

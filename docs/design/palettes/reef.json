@@ -1,0 +1,104 @@
+{
+  "name": "Coral Reef",
+  "direction": "Playful, energetic",
+  "tokens": {
+    "ocean": "#0a3d3f",
+    "lagoon": "#17b5a6",
+    "lagoon-ink": "#0b6b66",
+    "lagoon-ink-hover": "#085a56",
+    "mist": "#def5f1",
+    "coral": "#ff7f9c",
+    "coral-hover": "#f56f8e",
+    "sand": "#faf8f4",
+    "ink": "#1f3234",
+    "muted": "#586b6c",
+    "border": "#7a8a8a",
+    "border-subtle": "#d3dfdc"
+  },
+  "contrast": [
+    {
+      "pair": "Body text on page",
+      "ratio": 12.66,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Body text on mist",
+      "ratio": 11.79,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Headings on page",
+      "ratio": 11.3,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on page",
+      "ratio": 5.98,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on mist",
+      "ratio": 5.57,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary button",
+      "ratio": 6.35,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary hover",
+      "ratio": 8.05,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent button",
+      "ratio": 5.61,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent hover",
+      "ratio": 4.83,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on page",
+      "ratio": 5.3,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on mist",
+      "ratio": 4.94,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Footer text on ocean",
+      "ratio": 11.3,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Input border on white",
+      "ratio": 3.6,
+      "required": 3,
+      "pass": true
+    },
+    {
+      "pair": "Input border on page",
+      "ratio": 3.4,
+      "required": 3,
+      "pass": true
+    }
+  ]
+}

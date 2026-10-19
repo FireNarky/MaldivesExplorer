@@ -1,0 +1,19 @@
+/* Maldives Explorer palette: Sunset Atoll (Warm, romantic)
+   Replace the colour block in :root. --color-coral holds the accent (conversion button), whatever its hue. */
+:root {
+  --color-ocean: #1b2a4e;
+  --color-lagoon: #2fb3c4;
+  --color-lagoon-ink: #1e5f8a;
+  --color-lagoon-ink-hover: #184f75;
+  --color-mist: #e6ecf7;
+  --color-coral: #ffa14a;
+  --color-coral-hover: #f59638;
+  --color-sand: #fcf7ef;
+  --color-ink: #232a3d;
+  --color-muted: #5f6577;
+  --color-border: #838796;
+  --color-border-subtle: #ddd9d0;
+  --color-white: #ffffff;
+  --color-focus: #1e5f8a;
+  --color-info: #1b2a4e;
+}

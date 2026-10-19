@@ -1,0 +1,104 @@
+{
+  "name": "Sunset Atoll",
+  "direction": "Warm, romantic",
+  "tokens": {
+    "ocean": "#1b2a4e",
+    "lagoon": "#2fb3c4",
+    "lagoon-ink": "#1e5f8a",
+    "lagoon-ink-hover": "#184f75",
+    "mist": "#e6ecf7",
+    "coral": "#ffa14a",
+    "coral-hover": "#f59638",
+    "sand": "#fcf7ef",
+    "ink": "#232a3d",
+    "muted": "#5f6577",
+    "border": "#838796",
+    "border-subtle": "#ddd9d0"
+  },
+  "contrast": [
+    {
+      "pair": "Body text on page",
+      "ratio": 13.39,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Body text on mist",
+      "ratio": 12.04,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Headings on page",
+      "ratio": 13.23,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on page",
+      "ratio": 6.44,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on mist",
+      "ratio": 5.79,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary button",
+      "ratio": 6.86,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary hover",
+      "ratio": 8.7,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent button",
+      "ratio": 7.11,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent hover",
+      "ratio": 6.33,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on page",
+      "ratio": 5.45,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on mist",
+      "ratio": 4.9,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Footer text on ocean",
+      "ratio": 13.23,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Input border on white",
+      "ratio": 3.58,
+      "required": 3,
+      "pass": true
+    },
+    {
+      "pair": "Input border on page",
+      "ratio": 3.35,
+      "required": 3,
+      "pass": true
+    }
+  ]
+}

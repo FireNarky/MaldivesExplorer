@@ -1,0 +1,104 @@
+{
+  "name": "Midnight Resort",
+  "direction": "Premium, quiet",
+  "tokens": {
+    "ocean": "#0b1f33",
+    "lagoon": "#3a9bb5",
+    "lagoon-ink": "#1c5f7c",
+    "lagoon-ink-hover": "#164e68",
+    "mist": "#e8eef3",
+    "coral": "#e2b45f",
+    "coral-hover": "#d6a64c",
+    "sand": "#f6f7f8",
+    "ink": "#1c2733",
+    "muted": "#586571",
+    "border": "#7b8590",
+    "border-subtle": "#d6dce2"
+  },
+  "contrast": [
+    {
+      "pair": "Body text on page",
+      "ratio": 14.11,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Body text on mist",
+      "ratio": 12.94,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Headings on page",
+      "ratio": 15.56,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on page",
+      "ratio": 6.58,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on mist",
+      "ratio": 6.03,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary button",
+      "ratio": 7.05,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary hover",
+      "ratio": 9.04,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent button",
+      "ratio": 7.88,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent hover",
+      "ratio": 6.79,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on page",
+      "ratio": 5.57,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on mist",
+      "ratio": 5.11,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Footer text on ocean",
+      "ratio": 15.56,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Input border on white",
+      "ratio": 3.75,
+      "required": 3,
+      "pass": true
+    },
+    {
+      "pair": "Input border on page",
+      "ratio": 3.5,
+      "required": 3,
+      "pass": true
+    }
+  ]
+}

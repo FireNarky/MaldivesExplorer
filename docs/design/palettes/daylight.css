@@ -1,0 +1,19 @@
+/* Maldives Explorer palette: Lagoon Daylight (Brighter, airier)
+   Replace the colour block in :root. --color-coral holds the accent (conversion button), whatever its hue. */
+:root {
+  --color-ocean: #0a4a5c;
+  --color-lagoon: #2bbcd0;
+  --color-lagoon-ink: #00697a;
+  --color-lagoon-ink-hover: #005a69;
+  --color-mist: #e3f7f8;
+  --color-coral: #ff7a5c;
+  --color-coral-hover: #f56f50;
+  --color-sand: #fbfcfb;
+  --color-ink: #1d3138;
+  --color-muted: #576a70;
+  --color-border: #78888d;
+  --color-border-subtle: #d3e2e4;
+  --color-white: #ffffff;
+  --color-focus: #00697a;
+  --color-info: #0a4a5c;
+}
