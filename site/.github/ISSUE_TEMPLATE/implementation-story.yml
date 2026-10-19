@@ -1,0 +1,34 @@
+---
+name: Implementation story
+description: Propose work that is already authorized by the current stage
+title: "[Story] "
+labels: ["story"]
+body:
+  - type: input
+    id: stage
+    attributes:
+      label: Stage
+      description: The approved stage this story belongs to
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What will be true when the story is done
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: The checklist item, decision, or document section this story implements
+    validations:
+      required: true
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of scope
+      description: Name the later-stage work this story must not include
+    validations:
+      required: true

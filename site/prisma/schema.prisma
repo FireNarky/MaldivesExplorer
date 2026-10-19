@@ -1,0 +1,2023 @@
+// Maldives Explorer database design
+// Validated source for Documentation/Database_Design.md
+// Prisma 6, PostgreSQL 16, extensions: pgcrypto, citext, pg_trgm
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto, citext, pg_trgm]
+}
+
+// ---------------------------------------------------------------------------
+// Enumerations
+// Lifecycle enums are code. Business taxonomies live in VocabularyItem.
+// ---------------------------------------------------------------------------
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  SUSPENDED
+  DISABLED
+
+  @@map("user_status")
+}
+
+enum PublishStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  SCHEDULED
+  PUBLISHED
+  UNPUBLISHED
+  ARCHIVED
+
+  @@map("publish_status")
+}
+
+enum IslandType {
+  RESORT
+  LOCAL
+  UNINHABITED
+
+  @@map("island_type")
+}
+
+enum PropertyType {
+  RESORT
+  GUESTHOUSE
+  LIVEABOARD
+
+  @@map("property_type")
+}
+
+enum MediaKind {
+  IMAGE
+  VIDEO
+  DRONE
+  TOUR_360
+  DOCUMENT
+
+  @@map("media_kind")
+}
+
+enum MediaRole {
+  HERO
+  GALLERY
+  OG
+  PORTRAIT
+  ATTACHMENT
+
+  @@map("media_role")
+}
+
+enum MediaOwnerType {
+  RESORT
+  ROOM_TYPE
+  DINING_VENUE
+  ISLAND
+  ATOLL
+  EXPERIENCE
+  OFFER
+  ARTICLE
+  EXPERT
+  COLLECTION
+  AWARD
+
+  @@map("media_owner_type")
+}
+
+enum SavedEntityType {
+  RESORT
+  OFFER
+  EXPERIENCE
+  ARTICLE
+
+  @@map("saved_entity_type")
+}
+
+enum CollectionEntityType {
+  RESORT
+  OFFER
+  EXPERIENCE
+  ARTICLE
+  ISLAND
+  ATOLL
+
+  @@map("collection_entity_type")
+}
+
+enum ContentEntityType {
+  RESORT
+  OFFER
+  EXPERIENCE
+  ARTICLE
+  ISLAND
+  ATOLL
+
+  @@map("content_entity_type")
+}
+
+enum FaqOwnerType {
+  GLOBAL
+  RESORT
+  ISLAND
+  ATOLL
+  EXPERIENCE
+  OFFER
+  ARTICLE
+
+  @@map("faq_owner_type")
+}
+
+enum AttachmentOwnerType {
+  ENQUIRY
+  QUOTE_VERSION
+  NOTE
+  MESSAGE
+
+  @@map("attachment_owner_type")
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACT_ATTEMPTED
+  CONTACTED
+  QUALIFIED
+  QUOTED
+  NEGOTIATION
+  WON
+  LOST
+  CLOSED
+
+  @@map("enquiry_status")
+}
+
+enum TravelerType {
+  ADULT
+  CHILD
+  INFANT
+
+  @@map("traveler_type")
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+  CANCELLED
+
+  @@map("task_status")
+}
+
+enum NoteVisibility {
+  INTERNAL
+  CUSTOMER
+
+  @@map("note_visibility")
+}
+
+enum CommChannel {
+  EMAIL
+  PHONE
+  PORTAL
+  WHATSAPP
+
+  @@map("comm_channel")
+}
+
+enum CommDirection {
+  INBOUND
+  OUTBOUND
+
+  @@map("comm_direction")
+}
+
+enum QuoteVersionStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  SENT
+  ACCEPTED
+  DECLINED
+  EXPIRED
+  SUPERSEDED
+  WITHDRAWN
+
+  @@map("quote_version_status")
+}
+
+enum QuoteItemType {
+  ACCOMMODATION
+  TRANSFER
+  EXPERIENCE
+  TAX
+  FEE
+  DISCOUNT
+  OTHER
+
+  @@map("quote_item_type")
+}
+
+enum QuoteResponseType {
+  CLARIFICATION
+  ACCEPT
+  DECLINE
+
+  @@map("quote_response_type")
+}
+
+enum ConsentPurpose {
+  ENQUIRY_CONTACT
+  ACCOUNT
+  NEWSLETTER
+  ANALYTICS
+  MARKETING
+
+  @@map("consent_purpose")
+}
+
+enum ConsentStatus {
+  GRANTED
+  WITHDRAWN
+
+  @@map("consent_status")
+}
+
+enum ConsentSubjectType {
+  CUSTOMER
+  USER
+  SUBSCRIPTION
+  ANONYMOUS
+
+  @@map("consent_subject_type")
+}
+
+enum SubscriptionStatus {
+  PENDING
+  CONFIRMED
+  UNSUBSCRIBED
+  SUPPRESSED
+
+  @@map("subscription_status")
+}
+
+enum ReviewSource {
+  FIRST_PARTY
+  EDITORIAL
+  IMPORTED
+
+  @@map("review_source")
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  VERIFIED
+  REJECTED
+
+  @@map("verification_status")
+}
+
+enum ModerationStatus {
+  PENDING
+  APPROVED
+  HIDDEN
+  REJECTED
+
+  @@map("moderation_status")
+}
+
+enum EmailClassification {
+  TRANSACTIONAL
+  MARKETING
+
+  @@map("email_classification")
+}
+
+enum EmailDeliveryStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  FAILED
+  BOUNCED
+  SUPPRESSED
+
+  @@map("email_delivery_status")
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+
+  @@map("job_status")
+}
+
+enum MfaType {
+  TOTP
+
+  @@map("mfa_type")
+}
+
+enum HomepageModuleType {
+  HERO
+  FEATURED_RESORTS
+  FEATURED_OFFERS
+  FEATURED_EXPERIENCES
+  FEATURED_GUIDES
+  DESTINATION_EXPLAINER
+  TRUST
+  TESTIMONIALS
+  NEWSLETTER
+  RECENTLY_VIEWED
+
+  @@map("homepage_module_type")
+}
+
+enum VocabularySet {
+  MEAL_PLAN
+  TRANSFER_TYPE
+  OCCUPANCY_BASIS
+  PRICE_BAND
+  TRIP_TYPE
+  LOSS_REASON
+  CLOSURE_REASON
+  ROOM_CATEGORY
+  VENUE_TYPE
+
+  @@map("vocabulary_set")
+}
+
+enum SenderType {
+  CUSTOMER
+  STAFF
+
+  @@map("sender_type")
+}
+
+enum AnalyticsConsent {
+  GRANTED
+  DENIED
+  UNKNOWN
+
+  @@map("analytics_consent")
+}
+
+enum BlockType {
+  RICH_TEXT
+  CALLOUT
+  FAQ_LIST
+  CTA
+  RELATED_ENTITIES
+  IMAGE_BAND
+
+  @@map("block_type")
+}
+
+// ---------------------------------------------------------------------------
+// Identity and access
+// ---------------------------------------------------------------------------
+
+model User {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email           String     @unique @db.Citext
+  name            String
+  passwordHash    String?    @map("password_hash")
+  emailVerifiedAt DateTime?  @map("email_verified_at") @db.Timestamptz(6)
+  status          UserStatus @default(INVITED)
+  locale          String     @default("en")
+  lastLoginAt     DateTime?  @map("last_login_at") @db.Timestamptz(6)
+  createdAt       DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  roles                       UserRole[]
+  assignedUserRoles           UserRole[]             @relation("UserRoleAssigner")
+  sessions                    Session[]
+  accounts                    Account[]
+  mfaFactors                  MfaFactor[]
+  expertProfile               ExpertProfile?         @relation("ExpertUser")
+  customer                    Customer?
+  atollsCreated               Atoll[]                @relation("AtollCreatedBy")
+  atollsUpdated               Atoll[]                @relation("AtollUpdatedBy")
+  islandsCreated              Island[]               @relation("IslandCreatedBy")
+  islandsUpdated              Island[]               @relation("IslandUpdatedBy")
+  resortsCreated              Resort[]               @relation("ResortCreatedBy")
+  resortsUpdated              Resort[]               @relation("ResortUpdatedBy")
+  roomTypesCreated            RoomType[]             @relation("RoomTypeCreatedBy")
+  roomTypesUpdated            RoomType[]             @relation("RoomTypeUpdatedBy")
+  diningVenuesCreated         DiningVenue[]          @relation("DiningVenueCreatedBy")
+  diningVenuesUpdated         DiningVenue[]          @relation("DiningVenueUpdatedBy")
+  experiencesCreated          Experience[]           @relation("ExperienceCreatedBy")
+  experiencesUpdated          Experience[]           @relation("ExperienceUpdatedBy")
+  offersCreated               Offer[]                @relation("OfferCreatedBy")
+  offersUpdated               Offer[]                @relation("OfferUpdatedBy")
+  collectionsCreated          Collection[]           @relation("CollectionCreatedBy")
+  collectionsUpdated          Collection[]           @relation("CollectionUpdatedBy")
+  articlesCreated             Article[]              @relation("ArticleCreatedBy")
+  articlesUpdated             Article[]              @relation("ArticleUpdatedBy")
+  expertsCreated              ExpertProfile[]        @relation("ExpertCreatedBy")
+  expertsUpdated              ExpertProfile[]        @relation("ExpertUpdatedBy")
+  awardsCreated               Award[]                @relation("AwardCreatedBy")
+  awardsUpdated               Award[]                @relation("AwardUpdatedBy")
+  faqsCreated                 Faq[]                  @relation("FaqCreatedBy")
+  faqsUpdated                 Faq[]                  @relation("FaqUpdatedBy")
+  homepageModulesCreated      HomepageModule[]       @relation("HomepageModuleCreatedBy")
+  homepageModulesUpdated      HomepageModule[]       @relation("HomepageModuleUpdatedBy")
+  reusableBlocksCreated       ReusableBlock[]        @relation("ReusableBlockCreatedBy")
+  reusableBlocksUpdated       ReusableBlock[]        @relation("ReusableBlockUpdatedBy")
+  categoriesCreated           ContentCategory[]      @relation("ContentCategoryCreatedBy")
+  categoriesUpdated           ContentCategory[]      @relation("ContentCategoryUpdatedBy")
+  experienceCategoriesCreated ExperienceCategory[]   @relation("ExperienceCategoryCreatedBy")
+  experienceCategoriesUpdated ExperienceCategory[]   @relation("ExperienceCategoryUpdatedBy")
+  mediaCreated                MediaAsset[]           @relation("MediaCreatedBy")
+  assignedEnquiries           Enquiry[]              @relation("EnquiryAssignee")
+  statusChanges               EnquiryStatusHistory[] @relation("EnquiryStatusChangedBy")
+  assignmentsFrom             EnquiryAssignment[]    @relation("AssignmentFrom")
+  assignmentsTo               EnquiryAssignment[]    @relation("AssignmentTo")
+  assignmentsMade             EnquiryAssignment[]    @relation("AssignmentBy")
+  tasks                       Task[]
+  notes                       Note[]
+  communicationLogs           CommunicationLog[]
+  quoteVersionsCreated        QuoteVersion[]         @relation("QuoteVersionCreatedBy")
+  quoteVersionsApproved       QuoteVersion[]         @relation("QuoteVersionApprovedBy")
+  staffMessages               Message[]              @relation("MessageStaffSender")
+  emailTemplatesCreated       EmailTemplate[]        @relation("EmailTemplateCreatedBy")
+  emailTemplatesUpdated       EmailTemplate[]        @relation("EmailTemplateUpdatedBy")
+  settingsUpdated             SystemSetting[]        @relation("SettingUpdatedBy")
+  analyticsEvents             AnalyticsEvent[]
+  auditLogs                   AuditLog[]
+
+  @@index([status])
+  @@map("users")
+}
+
+model Role {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String   @unique
+  name        String
+  description String
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  permissions RolePermission[]
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String   @unique
+  description String
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String @map("role_id") @db.Uuid
+  permissionId String @map("permission_id") @db.Uuid
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId       String   @map("user_id") @db.Uuid
+  roleId       String   @map("role_id") @db.Uuid
+  assignedById String?  @map("assigned_by_id") @db.Uuid
+  assignedAt   DateTime @default(now()) @map("assigned_at") @db.Timestamptz(6)
+
+  user       User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       Role  @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  assignedBy User? @relation("UserRoleAssigner", fields: [assignedById], references: [id], onDelete: SetNull)
+
+  @@id([userId, roleId])
+  @@index([roleId])
+  @@index([assignedById])
+  @@map("user_roles")
+}
+
+model MfaFactor {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String    @map("user_id") @db.Uuid
+  type            MfaType
+  secretEncrypted String    @map("secret_encrypted")
+  enabledAt       DateTime? @map("enabled_at") @db.Timestamptz(6)
+  lastUsedAt      DateTime? @map("last_used_at") @db.Timestamptz(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+  @@map("mfa_factors")
+}
+
+model Session {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionToken String    @unique @map("session_token")
+  userId       String    @map("user_id") @db.Uuid
+  expires      DateTime  @db.Timestamptz(6)
+  revokedAt    DateTime? @map("revoked_at") @db.Timestamptz(6)
+  userAgent    String?   @map("user_agent")
+  ipHash       String?   @map("ip_hash")
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expires])
+  @@map("sessions")
+}
+
+model Account {
+  id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String  @map("user_id") @db.Uuid
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime @db.Timestamptz(6)
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model ExpertProfile {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String?       @unique @map("user_id") @db.Uuid
+  name            String
+  slug            String        @unique
+  title           String
+  bio             String        @db.Text
+  yearsInTourism  Int?          @map("years_in_tourism")
+  portraitMediaId String?       @map("portrait_media_id") @db.Uuid
+  locale          String        @default("en")
+  status          PublishStatus @default(DRAFT)
+  publishedAt     DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt     DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt   DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt      DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById     String?       @map("created_by_id") @db.Uuid
+  updatedById     String?       @map("updated_by_id") @db.Uuid
+
+  user             User?       @relation("ExpertUser", fields: [userId], references: [id], onDelete: SetNull)
+  portrait         MediaAsset? @relation("ExpertPortrait", fields: [portraitMediaId], references: [id], onDelete: SetNull)
+  createdBy        User?       @relation("ExpertCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy        User?       @relation("ExpertUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  authoredArticles Article[]   @relation("ArticleAuthor")
+  reviewedArticles Article[]   @relation("ArticleReviewer")
+
+  @@index([status])
+  @@index([portraitMediaId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("expert_profiles")
+}
+
+// ---------------------------------------------------------------------------
+// Geography and catalog
+// ---------------------------------------------------------------------------
+
+model Atoll {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name           String
+  slug           String        @unique
+  summary        String
+  description    String        @db.Text
+  latitude       Decimal?      @db.Decimal(9, 6)
+  longitude      Decimal?      @db.Decimal(9, 6)
+  seoTitle       String?       @map("seo_title")
+  seoDescription String?       @map("seo_description")
+  status         PublishStatus @default(DRAFT)
+  publishedAt    DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt    DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt  DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt     DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById    String?       @map("created_by_id") @db.Uuid
+  updatedById    String?       @map("updated_by_id") @db.Uuid
+
+  createdBy User?    @relation("AtollCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User?    @relation("AtollUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  islands   Island[]
+
+  @@index([status, publishedAt])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("atolls")
+}
+
+model Island {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  atollId        String        @map("atoll_id") @db.Uuid
+  name           String
+  slug           String        @unique
+  islandType     IslandType    @map("island_type")
+  summary        String
+  description    String        @db.Text
+  history        String?       @db.Text
+  cultureNotes   String?       @map("culture_notes") @db.Text
+  etiquette      String?       @db.Text
+  latitude       Decimal?      @db.Decimal(9, 6)
+  longitude      Decimal?      @db.Decimal(9, 6)
+  seoTitle       String?       @map("seo_title")
+  seoDescription String?       @map("seo_description")
+  status         PublishStatus @default(DRAFT)
+  publishedAt    DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt    DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt  DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt     DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById    String?       @map("created_by_id") @db.Uuid
+  updatedById    String?       @map("updated_by_id") @db.Uuid
+
+  atoll       Atoll              @relation(fields: [atollId], references: [id], onDelete: Restrict)
+  createdBy   User?              @relation("IslandCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy   User?              @relation("IslandUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  resorts     Resort[]
+  experiences IslandExperience[]
+
+  @@index([atollId, status])
+  @@index([islandType])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("islands")
+}
+
+model Resort {
+  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  islandId              String        @map("island_id") @db.Uuid
+  name                  String
+  slug                  String        @unique
+  propertyType          PropertyType  @default(RESORT) @map("property_type")
+  summary               String
+  description           String        @db.Text
+  editorialPositioning  String?       @map("editorial_positioning")
+  priceBandId           String?       @map("price_band_id") @db.Uuid
+  indicativeFromPrice   Decimal?      @map("indicative_from_price") @db.Decimal(12, 2)
+  indicativeCurrency    String?       @map("indicative_currency") @db.Char(3)
+  priceBasis            String?       @map("price_basis")
+  priceIncludesTransfer Boolean?      @map("price_includes_transfer")
+  priceIncludesTax      Boolean?      @map("price_includes_tax")
+  priceSourceNote       String?       @map("price_source_note")
+  priceReviewedAt       DateTime?     @map("price_reviewed_at") @db.Timestamptz(6)
+  popularityRank        Int           @default(0) @map("popularity_rank")
+  starCategory          Int?          @map("star_category")
+  starCategorySource    String?       @map("star_category_source")
+  hasHouseReef          Boolean?      @map("has_house_reef")
+  reefSummary           String?       @map("reef_summary") @db.Text
+  diveCenterSummary     String?       @map("dive_center_summary") @db.Text
+  reefSourceNote        String?       @map("reef_source_note")
+  reefReviewedAt        DateTime?     @map("reef_reviewed_at") @db.Timestamptz(6)
+  checkInNotes          String?       @map("check_in_notes") @db.Text
+  seoTitle              String?       @map("seo_title")
+  seoDescription        String?       @map("seo_description")
+  status                PublishStatus @default(DRAFT)
+  publishedAt           DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt           DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt         DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt            DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt             DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt             DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById           String?       @map("created_by_id") @db.Uuid
+  updatedById           String?       @map("updated_by_id") @db.Uuid
+  revision              Int           @default(1)
+
+  island       Island             @relation(fields: [islandId], references: [id], onDelete: Restrict)
+  priceBand    VocabularyItem?    @relation("ResortPriceBand", fields: [priceBandId], references: [id], onDelete: Restrict)
+  createdBy    User?              @relation("ResortCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy    User?              @relation("ResortUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  roomTypes    RoomType[]
+  diningVenues DiningVenue[]
+  transfers    TransferOption[]
+  amenities    ResortAmenity[]
+  audiences    ResortAudience[]
+  experiences  ResortExperience[]
+  offers       Offer[]
+  awards       Award[]
+  reviews      Review[]
+  enquiryLinks EnquiryResort[]
+  segments     ItinerarySegment[]
+
+  @@index([islandId, status])
+  @@index([status, popularityRank])
+  @@index([propertyType, status])
+  @@index([priceBandId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("resorts")
+}
+
+model RoomType {
+  id                  String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resortId            String        @map("resort_id") @db.Uuid
+  categoryId          String        @map("category_id") @db.Uuid
+  name                String
+  slug                String
+  description         String        @db.Text
+  maxAdults           Int           @map("max_adults")
+  maxChildren         Int           @default(0) @map("max_children")
+  sizeSqm             Decimal?      @map("size_sqm") @db.Decimal(8, 2)
+  features            String?       @db.Text
+  indicativeFromPrice Decimal?      @map("indicative_from_price") @db.Decimal(12, 2)
+  indicativeCurrency  String?       @map("indicative_currency") @db.Char(3)
+  status              PublishStatus @default(DRAFT)
+  sortOrder           Int           @default(0) @map("sort_order")
+  createdAt           DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById         String?       @map("created_by_id") @db.Uuid
+  updatedById         String?       @map("updated_by_id") @db.Uuid
+
+  resort    Resort             @relation(fields: [resortId], references: [id], onDelete: Restrict)
+  category  VocabularyItem     @relation("RoomCategory", fields: [categoryId], references: [id], onDelete: Restrict)
+  createdBy User?              @relation("RoomTypeCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User?              @relation("RoomTypeUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  offers    Offer[]
+  segments  ItinerarySegment[]
+
+  @@unique([resortId, slug])
+  @@index([categoryId])
+  @@index([resortId, status, sortOrder])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("room_types")
+}
+
+model DiningVenue {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resortId    String        @map("resort_id") @db.Uuid
+  venueTypeId String        @map("venue_type_id") @db.Uuid
+  name        String
+  cuisine     String?
+  description String        @db.Text
+  status      PublishStatus @default(DRAFT)
+  sortOrder   Int           @default(0) @map("sort_order")
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById String?       @map("created_by_id") @db.Uuid
+  updatedById String?       @map("updated_by_id") @db.Uuid
+
+  resort    Resort                @relation(fields: [resortId], references: [id], onDelete: Restrict)
+  venueType VocabularyItem        @relation("VenueType", fields: [venueTypeId], references: [id], onDelete: Restrict)
+  createdBy User?                 @relation("DiningVenueCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User?                 @relation("DiningVenueUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  mealPlans DiningVenueMealPlan[]
+
+  @@index([resortId, status, sortOrder])
+  @@index([venueTypeId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("dining_venues")
+}
+
+model DiningVenueMealPlan {
+  diningVenueId String @map("dining_venue_id") @db.Uuid
+  mealPlanId    String @map("meal_plan_id") @db.Uuid
+
+  diningVenue DiningVenue    @relation(fields: [diningVenueId], references: [id], onDelete: Cascade)
+  mealPlan    VocabularyItem @relation("DiningMealPlan", fields: [mealPlanId], references: [id], onDelete: Restrict)
+
+  @@id([diningVenueId, mealPlanId])
+  @@index([mealPlanId])
+  @@map("dining_venue_meal_plans")
+}
+
+model TransferOption {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resortId        String   @map("resort_id") @db.Uuid
+  transferTypeId  String   @map("transfer_type_id") @db.Uuid
+  label           String
+  durationMinutes Int?     @map("duration_minutes")
+  durationBasis   String?  @map("duration_basis")
+  sourceNote      String?  @map("source_note")
+  notes           String?  @db.Text
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  resort       Resort         @relation(fields: [resortId], references: [id], onDelete: Restrict)
+  transferType VocabularyItem @relation("TransferType", fields: [transferTypeId], references: [id], onDelete: Restrict)
+
+  @@index([resortId, sortOrder])
+  @@index([transferTypeId])
+  @@map("transfer_options")
+}
+
+model Amenity {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String  @unique
+  name        String
+  category    String
+  description String?
+
+  resorts ResortAmenity[]
+
+  @@index([category])
+  @@map("amenities")
+}
+
+model ResortAmenity {
+  resortId  String @map("resort_id") @db.Uuid
+  amenityId String @map("amenity_id") @db.Uuid
+
+  resort  Resort  @relation(fields: [resortId], references: [id], onDelete: Cascade)
+  amenity Amenity @relation(fields: [amenityId], references: [id], onDelete: Restrict)
+
+  @@id([resortId, amenityId])
+  @@index([amenityId])
+  @@map("resort_amenities")
+}
+
+model AudienceTag {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code String @unique
+  name String
+
+  resorts ResortAudience[]
+  offers  OfferAudience[]
+
+  @@map("audience_tags")
+}
+
+model ResortAudience {
+  resortId      String @map("resort_id") @db.Uuid
+  audienceTagId String @map("audience_tag_id") @db.Uuid
+
+  resort      Resort      @relation(fields: [resortId], references: [id], onDelete: Cascade)
+  audienceTag AudienceTag @relation(fields: [audienceTagId], references: [id], onDelete: Restrict)
+
+  @@id([resortId, audienceTagId])
+  @@index([audienceTagId])
+  @@map("resort_audiences")
+}
+
+model ExperienceCategory {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug        String        @unique
+  name        String
+  description String
+  sortOrder   Int           @default(0) @map("sort_order")
+  status      PublishStatus @default(DRAFT)
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById String?       @map("created_by_id") @db.Uuid
+  updatedById String?       @map("updated_by_id") @db.Uuid
+
+  createdBy   User?        @relation("ExperienceCategoryCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy   User?        @relation("ExperienceCategoryUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  experiences Experience[]
+
+  @@index([status, sortOrder])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("experience_categories")
+}
+
+model Experience {
+  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId         String        @map("category_id") @db.Uuid
+  name               String
+  slug               String        @unique
+  summary            String
+  description        String        @db.Text
+  seasonality        String?       @db.Text
+  seasonSourceNote   String?       @map("season_source_note")
+  seasonReviewedAt   DateTime?     @map("season_reviewed_at") @db.Timestamptz(6)
+  suitability        String?       @db.Text
+  durationGuidance   String?       @map("duration_guidance")
+  difficulty         String?
+  safetyNotes        String?       @map("safety_notes") @db.Text
+  environmentalNotes String?       @map("environmental_notes") @db.Text
+  seoTitle           String?       @map("seo_title")
+  seoDescription     String?       @map("seo_description")
+  status             PublishStatus @default(DRAFT)
+  publishedAt        DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt        DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt      DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt         DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById        String?       @map("created_by_id") @db.Uuid
+  updatedById        String?       @map("updated_by_id") @db.Uuid
+
+  category   ExperienceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdBy  User?              @relation("ExperienceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy  User?              @relation("ExperienceUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  resorts    ResortExperience[]
+  islands    IslandExperience[]
+  enquiries  EnquiryInterest[]
+  quoteItems QuoteItem[]
+
+  @@index([categoryId, status])
+  @@index([status, publishedAt])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("experiences")
+}
+
+model ResortExperience {
+  resortId     String  @map("resort_id") @db.Uuid
+  experienceId String  @map("experience_id") @db.Uuid
+  notes        String?
+
+  resort     Resort     @relation(fields: [resortId], references: [id], onDelete: Cascade)
+  experience Experience @relation(fields: [experienceId], references: [id], onDelete: Restrict)
+
+  @@id([resortId, experienceId])
+  @@index([experienceId])
+  @@map("resort_experiences")
+}
+
+model IslandExperience {
+  islandId     String @map("island_id") @db.Uuid
+  experienceId String @map("experience_id") @db.Uuid
+
+  island     Island     @relation(fields: [islandId], references: [id], onDelete: Cascade)
+  experience Experience @relation(fields: [experienceId], references: [id], onDelete: Restrict)
+
+  @@id([islandId, experienceId])
+  @@index([experienceId])
+  @@map("island_experiences")
+}
+
+// ---------------------------------------------------------------------------
+// Offers and collections
+// ---------------------------------------------------------------------------
+
+model Offer {
+  id                  String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resortId            String        @map("resort_id") @db.Uuid
+  roomTypeId          String?       @map("room_type_id") @db.Uuid
+  title               String
+  slug                String        @unique
+  summary             String
+  currency            String        @db.Char(3)
+  fromPrice           Decimal       @map("from_price") @db.Decimal(12, 2)
+  comparisonPrice     Decimal?      @map("comparison_price") @db.Decimal(12, 2)
+  comparisonBasisNote String?       @map("comparison_basis_note")
+  occupancyBasisId    String        @map("occupancy_basis_id") @db.Uuid
+  mealPlanId          String        @map("meal_plan_id") @db.Uuid
+  transferIncluded    Boolean       @map("transfer_included")
+  validFrom           DateTime      @map("valid_from") @db.Date
+  validUntil          DateTime      @map("valid_until") @db.Date
+  stayFrom            DateTime?     @map("stay_from") @db.Date
+  stayUntil           DateTime?     @map("stay_until") @db.Date
+  minNights           Int?          @map("min_nights")
+  terms               String        @db.Text
+  seoTitle            String?       @map("seo_title")
+  seoDescription      String?       @map("seo_description")
+  status              PublishStatus @default(DRAFT)
+  publishedAt         DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt         DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt       DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt          DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt           DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById         String?       @map("created_by_id") @db.Uuid
+  updatedById         String?       @map("updated_by_id") @db.Uuid
+  revision            Int           @default(1)
+
+  resort         Resort           @relation(fields: [resortId], references: [id], onDelete: Restrict)
+  roomType       RoomType?        @relation(fields: [roomTypeId], references: [id], onDelete: Restrict)
+  occupancyBasis VocabularyItem   @relation("OfferOccupancy", fields: [occupancyBasisId], references: [id], onDelete: Restrict)
+  mealPlan       VocabularyItem   @relation("OfferMealPlan", fields: [mealPlanId], references: [id], onDelete: Restrict)
+  createdBy      User?            @relation("OfferCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy      User?            @relation("OfferUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  inclusions     OfferInclusion[]
+  exclusions     OfferExclusion[]
+  audiences      OfferAudience[]
+  enquiries      EnquiryOffer[]
+
+  @@index([resortId, status])
+  @@index([roomTypeId])
+  @@index([status, validUntil])
+  @@index([occupancyBasisId])
+  @@index([mealPlanId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("offers")
+}
+
+model OfferInclusion {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  offerId   String @map("offer_id") @db.Uuid
+  text      String
+  sortOrder Int    @default(0) @map("sort_order")
+
+  offer Offer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  @@index([offerId, sortOrder])
+  @@map("offer_inclusions")
+}
+
+model OfferExclusion {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  offerId   String @map("offer_id") @db.Uuid
+  text      String
+  sortOrder Int    @default(0) @map("sort_order")
+
+  offer Offer @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  @@index([offerId, sortOrder])
+  @@map("offer_exclusions")
+}
+
+model OfferAudience {
+  offerId       String @map("offer_id") @db.Uuid
+  audienceTagId String @map("audience_tag_id") @db.Uuid
+
+  offer       Offer       @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  audienceTag AudienceTag @relation(fields: [audienceTagId], references: [id], onDelete: Restrict)
+
+  @@id([offerId, audienceTagId])
+  @@index([audienceTagId])
+  @@map("offer_audiences")
+}
+
+model Collection {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  slug           String
+  summary        String
+  body           Json
+  seoTitle       String?       @map("seo_title")
+  seoDescription String?       @map("seo_description")
+  locale         String        @default("en")
+  status         PublishStatus @default(DRAFT)
+  publishedAt    DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt    DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt  DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt     DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById    String?       @map("created_by_id") @db.Uuid
+  updatedById    String?       @map("updated_by_id") @db.Uuid
+
+  createdBy User?            @relation("CollectionCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User?            @relation("CollectionUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  items     CollectionItem[]
+
+  @@unique([locale, slug])
+  @@index([status, publishedAt])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("collections")
+}
+
+model CollectionItem {
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  collectionId String               @map("collection_id") @db.Uuid
+  entityType   CollectionEntityType @map("entity_type")
+  entityId     String               @map("entity_id") @db.Uuid
+  sortOrder    Int                  @default(0) @map("sort_order")
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, entityType, entityId])
+  @@index([entityType, entityId])
+  @@index([collectionId, sortOrder])
+  @@map("collection_items")
+}
+
+// ---------------------------------------------------------------------------
+// Content and media
+// ---------------------------------------------------------------------------
+
+model ContentCategory {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug        String   @unique
+  name        String
+  description String
+  parentId    String?  @map("parent_id") @db.Uuid
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById String?  @map("created_by_id") @db.Uuid
+  updatedById String?  @map("updated_by_id") @db.Uuid
+
+  parent    ContentCategory?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children  ContentCategory[] @relation("CategoryTree")
+  createdBy User?             @relation("ContentCategoryCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User?             @relation("ContentCategoryUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  articles  Article[]
+
+  @@index([parentId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("content_categories")
+}
+
+model Tag {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug String @unique
+  name String
+
+  articles ArticleTag[]
+
+  @@map("tags")
+}
+
+model Article {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  slug           String
+  excerpt        String
+  body           Json
+  bodyPlain      String        @map("body_plain") @db.Text
+  categoryId     String        @map("category_id") @db.Uuid
+  authorId       String        @map("author_id") @db.Uuid
+  reviewerId     String?       @map("reviewer_id") @db.Uuid
+  reviewedAt     DateTime?     @map("reviewed_at") @db.Timestamptz(6)
+  staleAfter     DateTime?     @map("stale_after") @db.Date
+  locale         String        @default("en")
+  seoTitle       String?       @map("seo_title")
+  seoDescription String?       @map("seo_description")
+  ogMediaId      String?       @map("og_media_id") @db.Uuid
+  canonicalPath  String?       @map("canonical_path")
+  status         PublishStatus @default(DRAFT)
+  publishedAt    DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt    DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt  DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt     DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById    String?       @map("created_by_id") @db.Uuid
+  updatedById    String?       @map("updated_by_id") @db.Uuid
+  revision       Int           @default(1)
+
+  category  ContentCategory   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  author    ExpertProfile     @relation("ArticleAuthor", fields: [authorId], references: [id], onDelete: Restrict)
+  reviewer  ExpertProfile?    @relation("ArticleReviewer", fields: [reviewerId], references: [id], onDelete: Restrict)
+  ogMedia   MediaAsset?       @relation("ArticleOg", fields: [ogMediaId], references: [id], onDelete: SetNull)
+  createdBy User?             @relation("ArticleCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User?             @relation("ArticleUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  tags      ArticleTag[]
+  relations ContentRelation[]
+
+  @@unique([locale, slug])
+  @@index([categoryId, status])
+  @@index([authorId])
+  @@index([reviewerId])
+  @@index([status, publishedAt])
+  @@index([staleAfter])
+  @@index([ogMediaId])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("articles")
+}
+
+model ArticleTag {
+  articleId String @map("article_id") @db.Uuid
+  tagId     String @map("tag_id") @db.Uuid
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Restrict)
+
+  @@id([articleId, tagId])
+  @@index([tagId])
+  @@map("article_tags")
+}
+
+model ContentRelation {
+  id         String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  articleId  String            @map("article_id") @db.Uuid
+  entityType ContentEntityType @map("entity_type")
+  entityId   String            @map("entity_id") @db.Uuid
+  sortOrder  Int               @default(0) @map("sort_order")
+
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([articleId, entityType, entityId])
+  @@index([entityType, entityId])
+  @@map("content_relations")
+}
+
+model Faq {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerType     FaqOwnerType  @map("owner_type")
+  ownerId       String?       @map("owner_id") @db.Uuid
+  question      String
+  answer        String        @db.Text
+  sortOrder     Int           @default(0) @map("sort_order")
+  locale        String        @default("en")
+  status        PublishStatus @default(DRAFT)
+  publishedAt   DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt   DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt    DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById   String?       @map("created_by_id") @db.Uuid
+  updatedById   String?       @map("updated_by_id") @db.Uuid
+
+  createdBy User? @relation("FaqCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("FaqUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([ownerType, ownerId, status, sortOrder])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("faqs")
+}
+
+model HomepageModule {
+  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  moduleType    HomepageModuleType @map("module_type")
+  title         String?
+  config        Json
+  sortOrder     Int                @default(0) @map("sort_order")
+  startsAt      DateTime?          @map("starts_at") @db.Timestamptz(6)
+  endsAt        DateTime?          @map("ends_at") @db.Timestamptz(6)
+  status        PublishStatus      @default(DRAFT)
+  publishedAt   DateTime?          @map("published_at") @db.Timestamptz(6)
+  scheduledAt   DateTime?          @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt DateTime?          @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt    DateTime?          @map("archived_at") @db.Timestamptz(6)
+  createdAt     DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById   String?            @map("created_by_id") @db.Uuid
+  updatedById   String?            @map("updated_by_id") @db.Uuid
+
+  createdBy User? @relation("HomepageModuleCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("HomepageModuleUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([status, sortOrder])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("homepage_modules")
+}
+
+model ReusableBlock {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code        String        @unique
+  blockType   BlockType     @map("block_type")
+  body        Json
+  status      PublishStatus @default(DRAFT)
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById String?       @map("created_by_id") @db.Uuid
+  updatedById String?       @map("updated_by_id") @db.Uuid
+
+  createdBy User? @relation("ReusableBlockCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User? @relation("ReusableBlockUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("reusable_blocks")
+}
+
+model MediaAsset {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  storageKey      String        @unique @map("storage_key")
+  mimeType        String        @map("mime_type")
+  byteSize        Int           @map("byte_size")
+  width           Int?
+  height          Int?
+  durationSeconds Int?          @map("duration_seconds")
+  altText         String?       @map("alt_text")
+  caption         String?
+  transcript      String?       @db.Text
+  attribution     String?
+  focalPoint      Json?         @map("focal_point")
+  kind            MediaKind
+  status          PublishStatus @default(DRAFT)
+  createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById     String?       @map("created_by_id") @db.Uuid
+
+  createdBy       User?           @relation("MediaCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  links           MediaLink[]
+  expertPortraits ExpertProfile[] @relation("ExpertPortrait")
+  articleOg       Article[]       @relation("ArticleOg")
+  quotePdfs       QuoteVersion[]  @relation("QuotePdf")
+  attachments     Attachment[]
+
+  @@index([kind, status])
+  @@index([createdById])
+  @@map("media_assets")
+}
+
+model MediaLink {
+  id        String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  mediaId   String         @map("media_id") @db.Uuid
+  ownerType MediaOwnerType @map("owner_type")
+  ownerId   String         @map("owner_id") @db.Uuid
+  role      MediaRole
+  sortOrder Int            @default(0) @map("sort_order")
+
+  media MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@index([ownerType, ownerId, role, sortOrder])
+  @@index([mediaId])
+  @@map("media_links")
+}
+
+model Redirect {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fromPath   String   @unique @map("from_path")
+  toPath     String   @map("to_path")
+  statusCode Int      @default(301) @map("status_code")
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([active])
+  @@map("redirects")
+}
+
+model Award {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String
+  issuer        String
+  year          Int
+  sourceUrl     String        @map("source_url")
+  resortId      String?       @map("resort_id") @db.Uuid
+  status        PublishStatus @default(DRAFT)
+  publishedAt   DateTime?     @map("published_at") @db.Timestamptz(6)
+  scheduledAt   DateTime?     @map("scheduled_at") @db.Timestamptz(6)
+  unpublishedAt DateTime?     @map("unpublished_at") @db.Timestamptz(6)
+  archivedAt    DateTime?     @map("archived_at") @db.Timestamptz(6)
+  createdAt     DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById   String?       @map("created_by_id") @db.Uuid
+  updatedById   String?       @map("updated_by_id") @db.Uuid
+
+  resort    Resort? @relation(fields: [resortId], references: [id], onDelete: Restrict)
+  createdBy User?   @relation("AwardCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy User?   @relation("AwardUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([resortId, status])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("awards")
+}
+
+// ---------------------------------------------------------------------------
+// Customers, consent, shortlists
+// ---------------------------------------------------------------------------
+
+model Customer {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String?  @unique @map("user_id") @db.Uuid
+  name        String
+  email       String   @unique @db.Citext
+  phone       String?
+  countryCode String?  @map("country_code") @db.Char(2)
+  locale      String   @default("en")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user           User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  savedItems     SavedItem[]
+  enquiries      Enquiry[]
+  quoteResponses QuoteResponse[]
+  messages       Message[]       @relation("MessageCustomerSender")
+
+  @@map("customers")
+}
+
+model ConsentRecord {
+  id            String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  subjectType   ConsentSubjectType @map("subject_type")
+  subjectId     String             @map("subject_id") @db.Uuid
+  purpose       ConsentPurpose
+  status        ConsentStatus
+  noticeVersion String             @map("notice_version")
+  source        String
+  capturedAt    DateTime           @default(now()) @map("captured_at") @db.Timestamptz(6)
+  withdrawnAt   DateTime?          @map("withdrawn_at") @db.Timestamptz(6)
+  ipHash        String?            @map("ip_hash")
+
+  subscriptions Subscription[]
+
+  @@index([subjectType, subjectId, purpose, capturedAt])
+  @@map("consent_records")
+}
+
+model SavedItem {
+  id         String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId String          @map("customer_id") @db.Uuid
+  entityType SavedEntityType @map("entity_type")
+  entityId   String          @map("entity_id") @db.Uuid
+  note       String?
+  createdAt  DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, entityType, entityId])
+  @@index([entityType, entityId])
+  @@map("saved_items")
+}
+
+model Subscription {
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email            String             @unique @db.Citext
+  status           SubscriptionStatus @default(PENDING)
+  preferences      Json
+  consentRecordId  String             @map("consent_record_id") @db.Uuid
+  confirmTokenHash String?            @unique @map("confirm_token_hash")
+  subscribedAt     DateTime?          @map("subscribed_at") @db.Timestamptz(6)
+  unsubscribedAt   DateTime?          @map("unsubscribed_at") @db.Timestamptz(6)
+  source           String
+  createdAt        DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  consentRecord ConsentRecord @relation(fields: [consentRecordId], references: [id], onDelete: Restrict)
+
+  @@index([status])
+  @@index([consentRecordId])
+  @@map("subscriptions")
+}
+
+// ---------------------------------------------------------------------------
+// Enquiries and CRM
+// ---------------------------------------------------------------------------
+
+model Enquiry {
+  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reference          String        @unique
+  customerId         String        @map("customer_id") @db.Uuid
+  status             EnquiryStatus @default(NEW)
+  assignedUserId     String?       @map("assigned_user_id") @db.Uuid
+  source             String?
+  medium             String?
+  campaign           String?
+  referrer           String?
+  landingPath        String?       @map("landing_path")
+  travelStart        DateTime?     @map("travel_start") @db.Date
+  travelEnd          DateTime?     @map("travel_end") @db.Date
+  flexibility        String?
+  adultCount         Int           @map("adult_count")
+  childCount         Int           @default(0) @map("child_count")
+  budgetMin          Decimal?      @map("budget_min") @db.Decimal(12, 2)
+  budgetMax          Decimal?      @map("budget_max") @db.Decimal(12, 2)
+  budgetCurrency     String?       @map("budget_currency") @db.Char(3)
+  tripTypeId         String?       @map("trip_type_id") @db.Uuid
+  requirements       String?       @db.Text
+  accessibilityNeeds String?       @map("accessibility_needs") @db.Text
+  qualificationScore Int?          @map("qualification_score")
+  firstResponseAt    DateTime?     @map("first_response_at") @db.Timestamptz(6)
+  wonReference       String?       @map("won_reference")
+  terminalReasonCode String?       @map("terminal_reason_code")
+  submittedSnapshot  Json          @map("submitted_snapshot")
+  idempotencyKey     String        @unique @map("idempotency_key")
+  revision           Int           @default(1)
+  createdAt          DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  customer       Customer               @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  assignedUser   User?                  @relation("EnquiryAssignee", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  tripType       VocabularyItem?        @relation("EnquiryTripType", fields: [tripTypeId], references: [id], onDelete: Restrict)
+  travelers      EnquiryTraveler[]
+  resorts        EnquiryResort[]
+  offers         EnquiryOffer[]
+  interests      EnquiryInterest[]
+  statusHistory  EnquiryStatusHistory[]
+  assignments    EnquiryAssignment[]
+  tasks          Task[]
+  notes          Note[]
+  communications CommunicationLog[]
+  quotes         Quote[]
+  messages       Message[]
+
+  @@index([customerId, createdAt])
+  @@index([assignedUserId, status, createdAt])
+  @@index([status, createdAt])
+  @@index([tripTypeId])
+  @@map("enquiries")
+}
+
+model EnquiryTraveler {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enquiryId    String       @map("enquiry_id") @db.Uuid
+  travelerType TravelerType @map("traveler_type")
+  ageAtArrival Int?         @map("age_at_arrival")
+  sortOrder    Int          @default(0) @map("sort_order")
+
+  enquiry Enquiry @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+
+  @@index([enquiryId, sortOrder])
+  @@map("enquiry_travelers")
+}
+
+model EnquiryResort {
+  enquiryId String @map("enquiry_id") @db.Uuid
+  resortId  String @map("resort_id") @db.Uuid
+
+  enquiry Enquiry @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+  resort  Resort  @relation(fields: [resortId], references: [id], onDelete: Restrict)
+
+  @@id([enquiryId, resortId])
+  @@index([resortId])
+  @@map("enquiry_resorts")
+}
+
+model EnquiryOffer {
+  enquiryId String @map("enquiry_id") @db.Uuid
+  offerId   String @map("offer_id") @db.Uuid
+
+  enquiry Enquiry @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+  offer   Offer   @relation(fields: [offerId], references: [id], onDelete: Restrict)
+
+  @@id([enquiryId, offerId])
+  @@index([offerId])
+  @@map("enquiry_offers")
+}
+
+model EnquiryInterest {
+  enquiryId    String @map("enquiry_id") @db.Uuid
+  experienceId String @map("experience_id") @db.Uuid
+
+  enquiry    Enquiry    @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+  experience Experience @relation(fields: [experienceId], references: [id], onDelete: Restrict)
+
+  @@id([enquiryId, experienceId])
+  @@index([experienceId])
+  @@map("enquiry_interests")
+}
+
+model EnquiryStatusHistory {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enquiryId   String         @map("enquiry_id") @db.Uuid
+  fromStatus  EnquiryStatus? @map("from_status")
+  toStatus    EnquiryStatus  @map("to_status")
+  reasonCode  String?        @map("reason_code")
+  note        String?
+  changedById String?        @map("changed_by_id") @db.Uuid
+  changedAt   DateTime       @default(now()) @map("changed_at") @db.Timestamptz(6)
+
+  enquiry   Enquiry @relation(fields: [enquiryId], references: [id], onDelete: Restrict)
+  changedBy User?   @relation("EnquiryStatusChangedBy", fields: [changedById], references: [id], onDelete: SetNull)
+
+  @@index([enquiryId, changedAt])
+  @@index([changedById])
+  @@map("enquiry_status_history")
+}
+
+model EnquiryAssignment {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enquiryId    String   @map("enquiry_id") @db.Uuid
+  fromUserId   String?  @map("from_user_id") @db.Uuid
+  toUserId     String   @map("to_user_id") @db.Uuid
+  reason       String
+  assignedById String   @map("assigned_by_id") @db.Uuid
+  assignedAt   DateTime @default(now()) @map("assigned_at") @db.Timestamptz(6)
+
+  enquiry    Enquiry @relation(fields: [enquiryId], references: [id], onDelete: Restrict)
+  fromUser   User?   @relation("AssignmentFrom", fields: [fromUserId], references: [id], onDelete: Restrict)
+  toUser     User    @relation("AssignmentTo", fields: [toUserId], references: [id], onDelete: Restrict)
+  assignedBy User    @relation("AssignmentBy", fields: [assignedById], references: [id], onDelete: Restrict)
+
+  @@index([enquiryId, assignedAt])
+  @@index([toUserId])
+  @@index([fromUserId])
+  @@index([assignedById])
+  @@map("enquiry_assignments")
+}
+
+model Task {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enquiryId   String     @map("enquiry_id") @db.Uuid
+  assigneeId  String     @map("assignee_id") @db.Uuid
+  title       String
+  dueAt       DateTime?  @map("due_at") @db.Timestamptz(6)
+  status      TaskStatus @default(OPEN)
+  completedAt DateTime?  @map("completed_at") @db.Timestamptz(6)
+  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime   @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  enquiry  Enquiry @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+  assignee User    @relation(fields: [assigneeId], references: [id], onDelete: Restrict)
+
+  @@index([assigneeId, status, dueAt])
+  @@index([enquiryId, status])
+  @@map("tasks")
+}
+
+model Note {
+  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enquiryId  String         @map("enquiry_id") @db.Uuid
+  authorId   String         @map("author_id") @db.Uuid
+  visibility NoteVisibility
+  body       String         @db.Text
+  createdAt  DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  enquiry Enquiry @relation(fields: [enquiryId], references: [id], onDelete: Restrict)
+  author  User    @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([enquiryId, visibility, createdAt])
+  @@index([authorId])
+  @@map("notes")
+}
+
+model CommunicationLog {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enquiryId         String        @map("enquiry_id") @db.Uuid
+  channel           CommChannel
+  direction         CommDirection
+  subject           String?
+  summary           String        @db.Text
+  providerReference String?       @map("provider_reference")
+  occurredAt        DateTime      @map("occurred_at") @db.Timestamptz(6)
+  loggedById        String?       @map("logged_by_id") @db.Uuid
+  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  enquiry  Enquiry @relation(fields: [enquiryId], references: [id], onDelete: Restrict)
+  loggedBy User?   @relation(fields: [loggedById], references: [id], onDelete: SetNull)
+
+  @@index([enquiryId, occurredAt])
+  @@index([loggedById])
+  @@map("communication_logs")
+}
+
+model Attachment {
+  id        String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerType AttachmentOwnerType @map("owner_type")
+  ownerId   String              @map("owner_id") @db.Uuid
+  mediaId   String              @map("media_id") @db.Uuid
+  createdAt DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  media MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@index([ownerType, ownerId])
+  @@index([mediaId])
+  @@map("attachments")
+}
+
+// ---------------------------------------------------------------------------
+// Quotes
+// ---------------------------------------------------------------------------
+
+model Quote {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enquiryId       String   @map("enquiry_id") @db.Uuid
+  reference       String   @unique
+  activeVersionId String?  @unique @map("active_version_id") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  enquiry       Enquiry        @relation(fields: [enquiryId], references: [id], onDelete: Restrict)
+  activeVersion QuoteVersion?  @relation("QuoteActiveVersion", fields: [activeVersionId], references: [id], onDelete: SetNull)
+  versions      QuoteVersion[] @relation("QuoteVersions")
+
+  @@index([enquiryId])
+  @@map("quotes")
+}
+
+model QuoteVersion {
+  id             String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quoteId        String             @map("quote_id") @db.Uuid
+  versionNo      Int                @map("version_no")
+  currency       String             @db.Char(3)
+  subtotal       Decimal            @db.Decimal(12, 2)
+  taxTotal       Decimal            @map("tax_total") @db.Decimal(12, 2)
+  feeTotal       Decimal            @map("fee_total") @db.Decimal(12, 2)
+  discountTotal  Decimal            @map("discount_total") @db.Decimal(12, 2)
+  grandTotal     Decimal            @map("grand_total") @db.Decimal(12, 2)
+  termsSnapshot  String             @map("terms_snapshot") @db.Text
+  welcomeMessage String?            @map("welcome_message") @db.Text
+  overview       String?            @db.Text
+  expiresAt      DateTime           @map("expires_at") @db.Timestamptz(6)
+  status         QuoteVersionStatus @default(DRAFT)
+  createdById    String             @map("created_by_id") @db.Uuid
+  approvedById   String?            @map("approved_by_id") @db.Uuid
+  approvedAt     DateTime?          @map("approved_at") @db.Timestamptz(6)
+  sentAt         DateTime?          @map("sent_at") @db.Timestamptz(6)
+  pdfMediaId     String?            @map("pdf_media_id") @db.Uuid
+  revision       Int                @default(1)
+  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  quote      Quote              @relation("QuoteVersions", fields: [quoteId], references: [id], onDelete: Restrict)
+  createdBy  User               @relation("QuoteVersionCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  approvedBy User?              @relation("QuoteVersionApprovedBy", fields: [approvedById], references: [id], onDelete: Restrict)
+  pdf        MediaAsset?        @relation("QuotePdf", fields: [pdfMediaId], references: [id], onDelete: SetNull)
+  activeFor  Quote?             @relation("QuoteActiveVersion")
+  segments   ItinerarySegment[]
+  items      QuoteItem[]
+  responses  QuoteResponse[]
+
+  @@unique([quoteId, versionNo])
+  @@index([status, expiresAt])
+  @@index([createdById])
+  @@index([approvedById])
+  @@index([pdfMediaId])
+  @@map("quote_versions")
+}
+
+model ItinerarySegment {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quoteVersionId  String   @map("quote_version_id") @db.Uuid
+  sortOrder       Int      @map("sort_order")
+  resortId        String?  @map("resort_id") @db.Uuid
+  roomTypeId      String?  @map("room_type_id") @db.Uuid
+  mealPlanId      String?  @map("meal_plan_id") @db.Uuid
+  startDate       DateTime @map("start_date") @db.Date
+  endDate         DateTime @map("end_date") @db.Date
+  transferSummary String?  @map("transfer_summary")
+  notes           String?  @db.Text
+
+  quoteVersion QuoteVersion    @relation(fields: [quoteVersionId], references: [id], onDelete: Cascade)
+  resort       Resort?         @relation(fields: [resortId], references: [id], onDelete: Restrict)
+  roomType     RoomType?       @relation(fields: [roomTypeId], references: [id], onDelete: Restrict)
+  mealPlan     VocabularyItem? @relation("SegmentMealPlan", fields: [mealPlanId], references: [id], onDelete: Restrict)
+
+  @@unique([quoteVersionId, sortOrder])
+  @@index([resortId])
+  @@index([roomTypeId])
+  @@index([mealPlanId])
+  @@map("itinerary_segments")
+}
+
+model QuoteItem {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quoteVersionId String        @map("quote_version_id") @db.Uuid
+  itemType       QuoteItemType @map("item_type")
+  experienceId   String?       @map("experience_id") @db.Uuid
+  description    String
+  quantity       Decimal       @db.Decimal(12, 2)
+  unitAmount     Decimal       @map("unit_amount") @db.Decimal(12, 2)
+  taxAmount      Decimal       @default(0) @map("tax_amount") @db.Decimal(12, 2)
+  discountAmount Decimal       @default(0) @map("discount_amount") @db.Decimal(12, 2)
+  lineTotal      Decimal       @map("line_total") @db.Decimal(12, 2)
+  sortOrder      Int           @map("sort_order")
+
+  quoteVersion QuoteVersion @relation(fields: [quoteVersionId], references: [id], onDelete: Cascade)
+  experience   Experience?  @relation(fields: [experienceId], references: [id], onDelete: Restrict)
+
+  @@index([quoteVersionId, sortOrder])
+  @@index([experienceId])
+  @@map("quote_items")
+}
+
+model QuoteResponse {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  quoteVersionId String            @map("quote_version_id") @db.Uuid
+  customerId     String            @map("customer_id") @db.Uuid
+  responseType   QuoteResponseType @map("response_type")
+  message        String?           @db.Text
+  createdAt      DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  quoteVersion QuoteVersion @relation(fields: [quoteVersionId], references: [id], onDelete: Restrict)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  @@index([quoteVersionId, createdAt])
+  @@index([customerId])
+  @@map("quote_responses")
+}
+
+// ---------------------------------------------------------------------------
+// Communications, reviews, platform
+// ---------------------------------------------------------------------------
+
+model Message {
+  id               String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  enquiryId        String     @map("enquiry_id") @db.Uuid
+  senderType       SenderType @map("sender_type")
+  staffSenderId    String?    @map("staff_sender_id") @db.Uuid
+  customerSenderId String?    @map("customer_sender_id") @db.Uuid
+  body             String     @db.Text
+  createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  enquiry        Enquiry   @relation(fields: [enquiryId], references: [id], onDelete: Restrict)
+  staffSender    User?     @relation("MessageStaffSender", fields: [staffSenderId], references: [id], onDelete: Restrict)
+  customerSender Customer? @relation("MessageCustomerSender", fields: [customerSenderId], references: [id], onDelete: Restrict)
+
+  @@index([enquiryId, createdAt])
+  @@index([staffSenderId])
+  @@index([customerSenderId])
+  @@map("messages")
+}
+
+model EmailTemplate {
+  id             String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code           String
+  locale         String              @default("en")
+  classification EmailClassification
+  subject        String
+  body           String              @db.Text
+  version        Int                 @default(1)
+  status         PublishStatus       @default(DRAFT)
+  createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  createdById    String?             @map("created_by_id") @db.Uuid
+  updatedById    String?             @map("updated_by_id") @db.Uuid
+
+  createdBy  User?           @relation("EmailTemplateCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  updatedBy  User?           @relation("EmailTemplateUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  deliveries EmailDelivery[]
+
+  @@unique([code, locale, version])
+  @@index([code, locale, status])
+  @@index([createdById])
+  @@index([updatedById])
+  @@map("email_templates")
+}
+
+model EmailDelivery {
+  id             String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId     String?             @map("template_id") @db.Uuid
+  templateCode   String              @map("template_code")
+  toEmail        String              @map("to_email") @db.Citext
+  classification EmailClassification
+  idempotencyKey String              @unique @map("idempotency_key")
+  providerId     String?             @map("provider_id")
+  status         EmailDeliveryStatus @default(QUEUED)
+  error          String?
+  relatedType    String?             @map("related_type")
+  relatedId      String?             @map("related_id") @db.Uuid
+  createdAt      DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  sentAt         DateTime?           @map("sent_at") @db.Timestamptz(6)
+
+  template EmailTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  @@index([templateId])
+  @@index([status, createdAt])
+  @@index([relatedType, relatedId])
+  @@index([toEmail])
+  @@map("email_deliveries")
+}
+
+model Review {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  resortId           String?            @map("resort_id") @db.Uuid
+  sourceType         ReviewSource       @map("source_type")
+  sourceReference    String?            @map("source_reference")
+  displayName        String             @map("display_name")
+  rating             Decimal?           @db.Decimal(2, 1)
+  ratingBasis        String?            @map("rating_basis")
+  body               String             @db.Text
+  verificationStatus VerificationStatus @default(UNVERIFIED) @map("verification_status")
+  consentStatus      ConsentStatus      @map("consent_status")
+  moderationStatus   ModerationStatus   @default(PENDING) @map("moderation_status")
+  featured           Boolean            @default(false)
+  publishedAt        DateTime?          @map("published_at") @db.Timestamptz(6)
+  createdAt          DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime           @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  resort Resort? @relation(fields: [resortId], references: [id], onDelete: Restrict)
+
+  @@index([resortId, moderationStatus, publishedAt])
+  @@index([featured, publishedAt])
+  @@index([sourceType])
+  @@map("reviews")
+}
+
+model AuditLog {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorId       String?  @map("actor_id") @db.Uuid
+  action        String
+  entityType    String   @map("entity_type")
+  entityId      String   @map("entity_id") @db.Uuid
+  before        Json?
+  after         Json?
+  correlationId String   @map("correlation_id")
+  occurredAt    DateTime @default(now()) @map("occurred_at") @db.Timestamptz(6)
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId, occurredAt])
+  @@index([actorId, occurredAt])
+  @@index([occurredAt])
+  @@index([correlationId])
+  @@map("audit_logs")
+}
+
+model AnalyticsEvent {
+  id           String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  eventName    String           @map("event_name")
+  anonymousKey String?          @map("anonymous_key")
+  userId       String?          @map("user_id") @db.Uuid
+  properties   Json
+  consentState AnalyticsConsent @map("consent_state")
+  occurredAt   DateTime         @default(now()) @map("occurred_at") @db.Timestamptz(6)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([eventName, occurredAt])
+  @@index([anonymousKey, occurredAt])
+  @@index([userId, occurredAt])
+  @@map("analytics_events")
+}
+
+model IdempotencyKey {
+  key          String   @id
+  requestHash  String   @map("request_hash")
+  responseCode Int      @map("response_code")
+  responseBody Json     @map("response_body")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  expiresAt    DateTime @map("expires_at") @db.Timestamptz(6)
+
+  @@index([expiresAt])
+  @@map("idempotency_keys")
+}
+
+model SystemSetting {
+  key         String   @id
+  value       Json
+  updatedById String?  @map("updated_by_id") @db.Uuid
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  updatedBy User? @relation("SettingUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@index([updatedById])
+  @@map("system_settings")
+}
+
+model VocabularyItem {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  set       VocabularySet
+  code      String
+  label     String
+  sortOrder Int           @default(0) @map("sort_order")
+  active    Boolean       @default(true)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  resortsAsPriceBand Resort[]              @relation("ResortPriceBand")
+  roomsAsCategory    RoomType[]            @relation("RoomCategory")
+  venuesAsType       DiningVenue[]         @relation("VenueType")
+  diningMealPlans    DiningVenueMealPlan[] @relation("DiningMealPlan")
+  transfers          TransferOption[]      @relation("TransferType")
+  offersAsOccupancy  Offer[]               @relation("OfferOccupancy")
+  offersAsMealPlan   Offer[]               @relation("OfferMealPlan")
+  enquiriesAsTrip    Enquiry[]             @relation("EnquiryTripType")
+  segmentsAsMealPlan ItinerarySegment[]    @relation("SegmentMealPlan")
+
+  @@unique([set, code])
+  @@index([set, active, sortOrder])
+  @@map("vocabulary_items")
+}
+
+model FeatureFlag {
+  key         String    @id
+  enabled     Boolean   @default(false)
+  owner       String
+  description String
+  retiresOn   DateTime? @map("retires_on") @db.Date
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("feature_flags")
+}
+
+model Job {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type           String
+  payload        Json
+  status         JobStatus @default(PENDING)
+  runAt          DateTime  @default(now()) @map("run_at") @db.Timestamptz(6)
+  attempts       Int       @default(0)
+  lastError      String?   @map("last_error") @db.Text
+  idempotencyKey String    @unique @map("idempotency_key")
+  lockedAt       DateTime? @map("locked_at") @db.Timestamptz(6)
+  finishedAt     DateTime? @map("finished_at") @db.Timestamptz(6)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([status, runAt])
+  @@map("jobs")
+}
+
+model SlaPolicy {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                 String
+  firstResponseMinutes Int      @map("first_response_minutes")
+  businessHours        Json     @map("business_hours")
+  active               Boolean  @default(false)
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("sla_policies")
+}

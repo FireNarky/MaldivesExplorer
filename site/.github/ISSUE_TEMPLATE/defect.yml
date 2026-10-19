@@ -1,0 +1,32 @@
+---
+name: Defect
+description: Report a defect in the application foundation or a later approved stage
+title: "[Defect] "
+labels: ["defect"]
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened
+      description: Describe the observed behavior. Do not include secrets, session cookies, or personal data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What was expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: local, preview, staging, or production, plus the application version if known
+    validations:
+      required: true
