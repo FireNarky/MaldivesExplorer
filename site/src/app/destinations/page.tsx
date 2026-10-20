@@ -80,7 +80,7 @@ export default async function DestinationsPage({
         />
 
         {/* Atoll Geography Hero & Stats Banner */}
-        <section className="relative overflow-hidden rounded-3xl border border-border-subtle bg-gradient-to-br from-ocean/90 via-ocean to-[#062936] p-6 sm:p-10 text-sand shadow-2">
+        <section className="relative overflow-hidden rounded-3xl border border-border-subtle bg-gradient-to-br from-[#083b4c]/95 via-[#083b4c] to-[#062936] dark:from-[#061d28] dark:via-[#082633] dark:to-[#041219] p-6 sm:p-10 text-sand shadow-2">
           <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#2bbcd0_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
           <div className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-lagoon/20 blur-3xl" />
 

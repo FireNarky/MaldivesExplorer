@@ -200,7 +200,7 @@ export default async function HomePage() {
       <JsonLd data={websiteSearchData(siteOrigin())} />
 
       {/* Hero Section */}
-      <section className="surface-inverse full-bleed relative overflow-hidden bg-gradient-to-b from-ocean via-ocean/95 to-[#062936] text-sand">
+      <section className="surface-inverse full-bleed relative overflow-hidden bg-gradient-to-b from-[#083b4c] via-[#083b4c]/95 to-[#062936] text-sand dark:from-[#061820] dark:via-[#071d27] dark:to-[#041017]">
         <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#2bbcd0_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
         <div className="pointer-events-none absolute -right-24 top-1/4 size-96 rounded-full bg-lagoon/10 dark:bg-cyan-400/10 blur-3xl animate-pulse-glow" />
         <div className="pointer-events-none absolute -left-24 bottom-10 size-80 rounded-full bg-coral/10 blur-3xl animate-pulse-glow" />

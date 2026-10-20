@@ -23,19 +23,19 @@ export function CompareTray() {
   return (
     <aside
       aria-label="Compare"
-      className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] z-10 border-t lg:bottom-0 border-border-subtle bg-white"
+      className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] z-10 border-t lg:bottom-0 border-border-subtle bg-white/95 dark:bg-[#071318]/95 dark:border-white/15 backdrop-blur-md shadow-2"
     >
-      <div className="mx-auto flex w-full max-w-[90rem] flex-wrap items-center gap-3 px-4 py-3 lg:px-8">
-        <p>
+      <div className="mx-auto flex w-full max-w-[90rem] flex-wrap items-center gap-4 px-4 py-3 lg:px-8 text-sm">
+        <p className="font-semibold text-ocean dark:text-cyan-300">
           {ids.length} of {compareLimit} resorts
         </p>
-        {ids.length >= compareLimit ? <p>Compare holds 3 resorts.</p> : null}
-        <Link href={`/compare?ids=${ids.join(",")}`} className="text-lagoon-ink">
-          Compare resorts
+        {ids.length >= compareLimit ? <p className="text-xs text-muted">Compare holds 3 resorts.</p> : null}
+        <Link href={`/compare?ids=${ids.join(",")}`} className="font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline">
+          Compare resorts &rarr;
         </Link>
         <button
           type="button"
-          className="min-h-11 text-lagoon-ink"
+          className="ml-auto min-h-9 text-xs text-muted hover:text-danger dark:hover:text-rose-400 transition"
           onClick={() => {
             for (const id of ids) removeLocalCompare(id);
             setIds([]);

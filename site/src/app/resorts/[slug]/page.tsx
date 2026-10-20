@@ -166,10 +166,10 @@ export default async function ResortPage({ params }: PageProps) {
                   {resort.roomTypes.map((room) => (
                     <li
                       key={room.id}
-                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
+                      className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
-                      <h3>{room.name}</h3>
-                      <p>{room.description}</p>
+                      <h3 className="text-ocean dark:text-cyan-300">{room.name}</h3>
+                      <p className="text-ink dark:text-sand/85">{room.description}</p>
                       <p className="text-sm text-muted">Maximum adults: {room.maxAdults}</p>
                     </li>
                   ))}
@@ -183,10 +183,10 @@ export default async function ResortPage({ params }: PageProps) {
                   {resort.diningVenues.map((venue) => (
                     <li
                       key={venue.id}
-                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
+                      className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
-                      <h3>{venue.name}</h3>
-                      <p>{venue.description}</p>
+                      <h3 className="text-ocean dark:text-cyan-300">{venue.name}</h3>
+                      <p className="text-ink dark:text-sand/85">{venue.description}</p>
                       {venue.cuisine ? <p className="text-sm text-muted">{venue.cuisine}</p> : null}
                     </li>
                   ))}
@@ -200,10 +200,10 @@ export default async function ResortPage({ params }: PageProps) {
                   {resort.transfers.map((transfer) => (
                     <li
                       key={transfer.id}
-                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
+                      className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
-                      <h3>{transfer.label}</h3>
-                      <p>{transfer.transferType.label}</p>
+                      <h3 className="text-ocean dark:text-cyan-300">{transfer.label}</h3>
+                      <p className="text-ink dark:text-sand/85">{transfer.transferType.label}</p>
                       {transfer.durationMinutes ? (
                         <p className="text-sm text-muted">
                           Duration: {transfer.durationMinutes} minutes
@@ -253,8 +253,8 @@ export default async function ResortPage({ params }: PageProps) {
             aria-label="Plan this stay"
             className="order-first lg:order-last lg:col-span-4 lg:sticky lg:top-24 lg:self-start"
           >
-            <div className="grid gap-4 rounded-lg border border-border-subtle bg-white p-6 shadow-1">
-              <h2 className="text-2xl">Plan a stay here</h2>
+            <div className="grid gap-4 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-6 shadow-2">
+              <h2 className="text-2xl text-ocean dark:text-cyan-300">Plan a stay here</h2>
               <PriceDisclosure />
               <Button asChild variant="conversion">
                 <Link href="/plan">

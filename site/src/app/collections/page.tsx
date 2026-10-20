@@ -41,28 +41,28 @@ export default async function CollectionsPage() {
             {collections.map((col) => (
               <article
                 key={col.id}
-                className="group relative flex flex-col justify-between rounded-2xl border border-border-subtle bg-white p-6 lg:p-8 shadow-1 transition-all duration-200 hover:-translate-y-1 hover:border-ocean/40 hover:shadow-2"
+                className="group relative flex flex-col justify-between rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-6 lg:p-8 shadow-1 transition-all duration-200 hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/50 hover:shadow-2"
               >
                 <div>
                   <div className="mb-4 flex items-center justify-between">
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-mist text-lagoon-ink">
+                    <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300">
                       <Sparkles size={20} aria-hidden="true" />
                     </span>
-                    <span className="text-xs font-semibold text-muted bg-sand px-3 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-muted dark:text-sand/80 bg-sand dark:bg-white/10 px-3 py-1 rounded-full border border-border-subtle/50 dark:border-white/10">
                       {col.items.length} curated {col.items.length === 1 ? "resort" : "resorts"}
                     </span>
                   </div>
 
-                  <h2 className="mb-3 font-display text-2xl text-ocean">
+                  <h2 className="mb-3 font-display text-2xl text-ocean dark:text-cyan-300">
                     <Link href={`/collections/${col.slug}`} className="after:absolute after:inset-0 hover:underline">
                       {col.title}
                     </Link>
                   </h2>
 
-                  <p className="text-sm text-ink leading-relaxed mb-6">{col.summary}</p>
+                  <p className="text-sm text-ink dark:text-sand/85 leading-relaxed mb-6">{col.summary}</p>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-border-subtle/80 pt-4 text-sm font-semibold text-lagoon-ink group-hover:text-ocean">
+                <div className="flex items-center justify-between border-t border-border-subtle/80 dark:border-white/10 pt-4 text-sm font-semibold text-lagoon-ink dark:text-cyan-400 group-hover:text-ocean dark:group-hover:text-cyan-300">
                   <span>View Curated Collection &rarr;</span>
                   <FolderHeart size={16} aria-hidden="true" />
                 </div>

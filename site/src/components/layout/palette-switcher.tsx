@@ -198,17 +198,17 @@ export function PaletteSwitcher() {
           role="dialog"
           aria-modal="true"
           aria-label="Select website theme and palette"
-          className="animate-in fade-in slide-in-from-bottom-2 mb-3 max-h-[82vh] w-[calc(100vw-2rem)] max-w-sm overflow-y-auto rounded-2xl border border-border-subtle bg-white p-4 shadow-3 backdrop-blur-md sm:w-88"
+          className="animate-in fade-in slide-in-from-bottom-2 mb-3 max-h-[82vh] w-[calc(100vw-2rem)] max-w-sm overflow-y-auto rounded-2xl border border-border-subtle bg-white dark:bg-[#0c1a20] dark:border-white/15 p-4 shadow-3 backdrop-blur-md sm:w-88"
         >
-          <div className="mb-3 flex items-center justify-between border-b border-border-subtle pb-2">
+          <div className="mb-3 flex items-center justify-between border-b border-border-subtle dark:border-white/10 pb-2">
             <div className="flex items-center gap-2">
-              <Palette size={18} className="text-lagoon-ink" aria-hidden="true" />
-              <span className="text-sm font-bold text-ocean">Theme &amp; Palettes</span>
+              <Palette size={18} className="text-lagoon-ink dark:text-cyan-400" aria-hidden="true" />
+              <span className="text-sm font-bold text-ocean dark:text-cyan-300">Theme &amp; Palettes</span>
             </div>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="rounded-full p-1 text-muted hover:bg-mist hover:text-ink transition"
+              className="rounded-full p-1 text-muted hover:bg-mist dark:hover:bg-white/10 hover:text-ink dark:hover:text-sand transition"
               aria-label="Close palette selector"
             >
               <X size={16} aria-hidden="true" />
@@ -217,15 +217,15 @@ export function PaletteSwitcher() {
 
           {/* Mode Switcher */}
           <div className="mb-4">
-            <p className="mb-1.5 text-xs font-semibold text-muted">Display Mode</p>
-            <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-border-subtle bg-sand/60 p-1">
+            <p className="mb-1.5 text-xs font-semibold text-muted dark:text-sand/75">Display Mode</p>
+            <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-border-subtle dark:border-white/10 bg-sand/60 dark:bg-white/5 p-1">
               <button
                 type="button"
                 onClick={() => handleSelectMode("light")}
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
                   mode === "light"
                     ? "bg-white text-ink shadow-sm"
-                    : "text-muted hover:text-ink"
+                    : "text-muted hover:text-ink dark:hover:text-sand"
                 }`}
               >
                 <Sun size={13} className="text-amber-500" />
@@ -236,8 +236,8 @@ export function PaletteSwitcher() {
                 onClick={() => handleSelectMode("dark")}
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
                   mode === "dark"
-                    ? "bg-white text-ink shadow-sm"
-                    : "text-muted hover:text-ink"
+                    ? "bg-white dark:bg-white/20 text-ink dark:text-sand shadow-sm"
+                    : "text-muted hover:text-ink dark:hover:text-sand"
                 }`}
               >
                 <Moon size={13} className="text-indigo-400" />
@@ -248,8 +248,8 @@ export function PaletteSwitcher() {
                 onClick={() => handleSelectMode("system")}
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
                   mode === "system"
-                    ? "bg-white text-ink shadow-sm"
-                    : "text-muted hover:text-ink"
+                    ? "bg-white dark:bg-white/20 text-ink dark:text-sand shadow-sm"
+                    : "text-muted hover:text-ink dark:hover:text-sand"
                 }`}
               >
                 <Laptop size={13} />
@@ -258,7 +258,7 @@ export function PaletteSwitcher() {
             </div>
           </div>
 
-          <p className="mb-2 text-xs font-semibold text-muted">
+          <p className="mb-2 text-xs font-semibold text-muted dark:text-sand/75">
             Maldives Color Palettes (WCAG AA compliant)
           </p>
 
@@ -272,35 +272,35 @@ export function PaletteSwitcher() {
                   onClick={() => handleSelectPalette(palette.id)}
                   className={`flex w-full items-center justify-between rounded-xl p-2.5 text-left transition-all ${
                     isSelected
-                      ? "border border-lagoon-ink bg-mist/60 ring-1 ring-lagoon-ink"
-                      : "border border-transparent hover:border-border-subtle hover:bg-sand"
+                      ? "border border-lagoon-ink bg-mist/60 dark:bg-white/10 ring-1 ring-lagoon-ink"
+                      : "border border-transparent hover:border-border-subtle dark:hover:border-white/15 hover:bg-sand dark:hover:bg-white/5"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex -space-x-1">
                       <span
-                        className="inline-block h-5 w-5 rounded-full border border-white shadow-sm"
+                        className="inline-block h-5 w-5 rounded-full border border-white/60 shadow-sm"
                         style={{ backgroundColor: isDark ? palette.darkOcean : palette.ocean }}
                         title="Primary color"
                       />
                       <span
-                        className="inline-block h-5 w-5 rounded-full border border-white shadow-sm"
+                        className="inline-block h-5 w-5 rounded-full border border-white/60 shadow-sm"
                         style={{ backgroundColor: isDark ? palette.darkAccent : palette.accent }}
                         title="Accent action"
                       />
                       <span
-                        className="inline-block h-5 w-5 rounded-full border border-white shadow-sm"
+                        className="inline-block h-5 w-5 rounded-full border border-white/60 shadow-sm"
                         style={{ backgroundColor: palette.sand }}
                         title="Background tone"
                       />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-ink leading-tight">{palette.name}</p>
-                      <p className="text-xs text-muted leading-tight">{palette.tagline}</p>
+                      <p className="text-sm font-semibold text-ink dark:text-sand leading-tight">{palette.name}</p>
+                      <p className="text-xs text-muted dark:text-sand/70 leading-tight">{palette.tagline}</p>
                     </div>
                   </div>
                   {isSelected ? (
-                    <Check size={16} className="text-lagoon-ink" aria-hidden="true" />
+                    <Check size={16} className="text-lagoon-ink dark:text-cyan-400" aria-hidden="true" />
                   ) : null}
                 </button>
               );
@@ -314,7 +314,7 @@ export function PaletteSwitcher() {
           type="button"
           onClick={handleToggleMode}
           title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
-          className="flex size-10 items-center justify-center rounded-full border border-border/80 bg-white/95 text-ink shadow-2 backdrop-blur transition hover:border-ocean hover:bg-white active:scale-95"
+          className="flex size-10 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-sand shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95"
           aria-label="Toggle dark and light mode"
         >
           {isDark ? (
@@ -328,7 +328,7 @@ export function PaletteSwitcher() {
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
-          className="group flex items-center gap-2 rounded-full border border-border/80 bg-white/95 px-3.5 py-2.5 text-sm font-semibold text-ocean shadow-2 backdrop-blur hover:border-ocean hover:bg-white active:scale-95 transition-all"
+          className="group flex items-center gap-2 rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 px-3.5 py-2.5 text-sm font-semibold text-ocean dark:text-cyan-300 shadow-2 backdrop-blur hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95 transition-all"
         >
           <span
             className="inline-block h-3.5 w-3.5 rounded-full shadow-sm ring-1 ring-black/10"

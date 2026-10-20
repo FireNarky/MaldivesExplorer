@@ -37,7 +37,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
         aria-controls="mobile-menu"
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex size-11 items-center justify-center rounded-md border border-border bg-white text-ink active:scale-95 transition-transform"
+        className="inline-flex size-11 items-center justify-center rounded-xl border border-border-subtle bg-white dark:bg-white/10 dark:border-white/15 text-ink dark:text-sand active:scale-95 transition-transform"
       >
         {open ? (
           <X aria-hidden="true" size={20} strokeWidth={1.75} />
@@ -48,13 +48,13 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
       {open ? (
         <div
           id="mobile-menu"
-          className="absolute inset-x-0 top-full z-20 border-b border-border-subtle bg-white shadow-3 animate-in fade-in slide-in-from-top-1"
+          className="absolute inset-x-0 top-full z-20 border-b border-border-subtle bg-white dark:bg-[#071318] dark:border-white/10 shadow-3 animate-in fade-in slide-in-from-top-1"
         >
           <nav aria-label="Mobile" className="mx-auto grid w-full max-w-[90rem] gap-2 px-4 py-4">
             <Link
               href="/plan"
               onClick={() => setOpen(false)}
-              className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-coral px-4 text-base font-semibold text-white shadow-sm active:opacity-90"
+              className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-coral px-4 text-base font-semibold text-[#111827] shadow-sm active:opacity-90"
             >
               <Compass aria-hidden="true" size={20} strokeWidth={2} />
               Plan my trip
@@ -65,7 +65,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
                   key={link.href}
                   href={link.href}
                   aria-current={pathname.startsWith(link.href) ? "page" : undefined}
-                  className="flex min-h-11 items-center rounded-lg px-3 text-base font-semibold text-ocean transition-colors hover:bg-mist aria-[current=page]:bg-mist aria-[current=page]:font-bold"
+                  className="flex min-h-11 items-center rounded-xl px-3.5 text-base font-semibold text-ocean dark:text-cyan-300 transition-colors hover:bg-mist dark:hover:bg-white/10 aria-[current=page]:bg-mist dark:aria-[current=page]:bg-white/10 aria-[current=page]:font-bold"
                 >
                   {link.label}
                 </Link>

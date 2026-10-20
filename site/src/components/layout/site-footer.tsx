@@ -40,15 +40,16 @@ const columns = [
 export async function SiteFooter() {
   const noticeVersion = await currentNoticeVersion().catch(() => "2026-10-10");
   return (
-    <footer className="surface-inverse mt-8 bg-ocean pb-20 text-sand lg:pb-0">
+    <footer className="surface-inverse mt-12 bg-[#083b4c] dark:bg-[#03090c] text-sand dark:border-t dark:border-white/10 pb-20 lg:pb-0">
       <div className="mx-auto grid w-full max-w-[90rem] gap-10 px-4 py-12 lg:grid-cols-12 lg:px-8 lg:py-16">
         <div className="grid content-start gap-4 lg:col-span-5">
           <p className="font-display text-2xl text-sand">Maldives Explorer</p>
-          <p className="max-w-[40ch] text-sand">
+          <p className="max-w-[40ch] text-sand/85">
             Plan your Maldives stay with a travel team that replies with a clear, written quote.
           </p>
-          <div className="max-w-md rounded-lg bg-white p-4 text-ink">
-            <h2 className="mb-3 font-sans text-base font-semibold text-ocean">Newsletter</h2>
+          <div className="max-w-md rounded-2xl border border-white/20 bg-white/10 dark:bg-white/5 p-5 text-sand backdrop-blur-md shadow-2">
+            <h2 className="mb-2 font-display text-lg font-semibold text-sand">Newsletter</h2>
+            <p className="text-xs text-sand/75 mb-3">Occasional insider dispatches &amp; seaplane transfer alerts.</p>
             <SubscribeForm
               idPrefix="footer"
               noticeVersion={noticeVersion}
