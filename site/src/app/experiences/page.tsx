@@ -16,7 +16,10 @@ export const metadata: Metadata = publicMetadata({
 export default async function ExperiencesPage() {
   try {
     const experiences = await db.experience.findMany({
-      where: { status: "PUBLISHED" },
+      where: {
+        status: "PUBLISHED",
+        NOT: { slug: { startsWith: "browser-" } },
+      },
       orderBy: { name: "asc" },
       include: {
         category: true,

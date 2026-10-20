@@ -17,7 +17,7 @@ export const metadata: Metadata = publicMetadata({
 export default async function CollectionsPage() {
   try {
     const collections = await db.collection.findMany({
-      where: { status: "PUBLISHED" },
+      where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
       orderBy: { title: "asc" },
       include: {
         items: true,

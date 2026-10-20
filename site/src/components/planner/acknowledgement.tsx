@@ -20,7 +20,7 @@ export function Acknowledgement() {
       <EmptyState title="Acknowledgement">
         <p>Submit a plan to see the acknowledgement on this device.</p>
         <Link href="/plan" className="text-lagoon-ink">
-          Plan a trip
+          Plan my trip
         </Link>
       </EmptyState>
     );

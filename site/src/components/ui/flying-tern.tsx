@@ -11,19 +11,9 @@ export function FlyingTern() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 overflow-hidden z-20"
     >
-      {/* Lead White Tern - swooping gracefully across the hero */}
+      {/* Single graceful White Tern soaring across the hero */}
       <div className="tern-container-1">
         <div className="real-tern tern-flap-1" />
-      </div>
-
-      {/* Companion White Tern in formation following higher */}
-      <div className="tern-container-2">
-        <div className="real-tern tern-flap-2" />
-      </div>
-
-      {/* High-altitude White Tern soaring near the horizon */}
-      <div className="tern-container-3">
-        <div className="real-tern tern-flap-3" />
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export default function PlanReceivedPage() {
       <Breadcrumbs
         items={[
           { name: "Home", href: "/" },
-          { name: "Plan a trip", href: "/plan" },
+          { name: "Plan my trip", href: "/plan" },
           { name: "Received" },
         ]}
       />

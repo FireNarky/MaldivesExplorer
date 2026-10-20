@@ -192,7 +192,7 @@ export function PaletteSwitcher() {
   const isDark = getResolvedMode(mode) === "dark";
 
   return (
-    <aside aria-label="Design Palette & Theme Switcher" className="fixed bottom-20 right-3 z-40 sm:right-6 lg:bottom-6">
+    <aside aria-label="Design Palette & Theme Switcher" className="hidden lg:block fixed bottom-6 right-6 z-40">
       {isOpen ? (
         <div
           role="dialog"

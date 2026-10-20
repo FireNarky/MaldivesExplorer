@@ -11,7 +11,10 @@ function link(id: string, name: string, href: string, summary: string): PublicLi
   return { id, name, href, summary };
 }
 
-const published = { status: "PUBLISHED" as const };
+const published = {
+  status: "PUBLISHED" as const,
+  NOT: { slug: { startsWith: "browser-" } },
+};
 
 export async function listPublishedAtolls(): Promise<PublicLink[]> {
   const rows = await db.atoll.findMany({
@@ -87,7 +90,7 @@ export async function listPublishedResortsForIsland(islandId: string): Promise<P
 
 export async function listPublishedResortsForAtoll(atollId: string): Promise<PublicLink[]> {
   const rows = await db.resort.findMany({
-    where: { status: "PUBLISHED", island: { atollId, status: "PUBLISHED" } },
+    where: { ...published, island: { atollId, status: "PUBLISHED" } },
     orderBy: { name: "asc" },
     select: { id: true, name: true, slug: true, summary: true },
   });
@@ -274,7 +277,7 @@ export async function listOwnerFaqs(
   ownerId: string,
 ): Promise<PublicFaq[]> {
   return db.faq.findMany({
-    where: { ownerType, ownerId, ...published },
+    where: { ownerType, ownerId, status: "PUBLISHED" },
     orderBy: [{ sortOrder: "asc" }, { question: "asc" }],
     select: { id: true, question: true, answer: true },
   });
@@ -282,7 +285,7 @@ export async function listOwnerFaqs(
 
 export async function listGlobalFaqs(): Promise<PublicFaq[]> {
   return db.faq.findMany({
-    where: { ownerType: "GLOBAL", ownerId: null, ...published },
+    where: { ownerType: "GLOBAL", ownerId: null, status: "PUBLISHED" },
     orderBy: [{ sortOrder: "asc" }, { question: "asc" }],
     select: { id: true, question: true, answer: true },
   });

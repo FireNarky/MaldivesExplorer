@@ -47,13 +47,16 @@ export function GuideCard({ item }: { item: GuideCardData }) {
         <p className="mb-4 flex-1 text-sm text-ink leading-relaxed line-clamp-3">{item.excerpt}</p>
 
         <div className="mt-auto flex items-center justify-between border-t border-border-subtle/80 pt-3 text-xs text-muted">
-          {item.authorName ? (
+          {item.authorName && item.authorName !== "Dr. Aminath Rasheed" ? (
             <span className="flex items-center gap-1.5 font-medium">
               <User size={14} className="text-lagoon-ink" aria-hidden="true" />
               {item.authorName}
             </span>
           ) : (
-            <span>Editorial Team</span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <User size={14} className="text-lagoon-ink" aria-hidden="true" />
+              Maldives Explorer Editorial Team
+            </span>
           )}
           <span className="font-semibold text-lagoon-ink group-hover:underline">Read Guide &rarr;</span>
         </div>

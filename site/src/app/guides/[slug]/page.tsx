@@ -49,7 +49,10 @@ export default async function GuidePage({ params }: PageProps) {
       listArticleRelations(guide.id),
       listOwnerFaqs("ARTICLE", guide.id),
     ]);
-    const authorName = guide.author.status === "PUBLISHED" ? guide.author.name : null;
+    const authorName =
+      guide.author.status === "PUBLISHED" && guide.author.name !== "Dr. Aminath Rasheed"
+        ? guide.author.name
+        : "Maldives Explorer Editorial Team";
     const topics = guide.tags.map((item) => item.tag.name);
     const stale = guide.staleAfter !== null && guide.staleAfter.getTime() < Date.now();
     return (

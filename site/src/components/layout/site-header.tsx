@@ -12,7 +12,6 @@ export async function SiteHeader() {
   const session = await auth().catch(() => null);
   const signedIn = Boolean(session?.user?.id);
   const account = [
-    { href: "/board", label: "Team Board" },
     ...utilityLinks,
     ...(signedIn
       ? [{ href: "/account", label: "Account" }]
@@ -36,9 +35,6 @@ export async function SiteHeader() {
         <nav aria-label="Account" className="ml-auto flex items-center gap-2">
           <QuickSearchDialog />
           <div className="hidden items-center gap-2 lg:flex">
-            <NavLink href="/board" className="px-2 font-medium text-ocean hover:text-coral">
-              Team Board
-            </NavLink>
             {utilityLinks.slice(0, 1).map((link) => (
               <NavLink key={link.href} href={link.href} className="px-2">
                 {link.label}

@@ -29,7 +29,7 @@ export default async function ResortsPage({ searchParams }: PageProps) {
     const [allResorts, atolls] = await Promise.all([
       listPublishedResorts(),
       db.atoll.findMany({
-        where: { status: "PUBLISHED" },
+        where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
         select: { slug: true, name: true },
         orderBy: { name: "asc" },
       }),

@@ -50,7 +50,7 @@ export function ResortCard({ resort }: { resort: ResortCardData }) {
         <div className="mt-auto pt-2 border-t border-border-subtle/80 flex items-center justify-between">
           <PriceDisclosure />
           <span className="text-xs font-semibold text-lagoon-ink dark:text-cyan-400 group-hover:translate-x-1 transition-transform">
-            View Sanctuary &rarr;
+            View resort &rarr;
           </span>
         </div>
       </div>

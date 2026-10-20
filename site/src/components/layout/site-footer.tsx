@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { FooterNav } from "@/components/layout/footer-nav";
 import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { currentNoticeVersion } from "@/modules/newsletter/service";
 
@@ -17,7 +17,7 @@ const columns = [
   {
     title: "Plan",
     links: [
-      { href: "/plan", label: "Plan a trip" },
+      { href: "/plan", label: "Plan my trip" },
       { href: "/search", label: "Search" },
       { href: "/wishlist", label: "Saved" },
       { href: "/compare", label: "Compare" },
@@ -25,11 +25,9 @@ const columns = [
     ],
   },
   {
-    title: "About & Team",
+    title: "About & Community",
     links: [
-      { href: "/board", label: "Team Board" },
-      { href: "/dashboard", label: "Dashboard" },
-      { href: "/faq", label: "Questions" },
+      { href: "/faq", label: "Questions & FAQ" },
       { href: "/reviews", label: "Testimonials" },
       { href: "/newsletter", label: "Newsletter" },
       { href: "/account", label: "Your account" },
@@ -59,25 +57,7 @@ export async function SiteFooter() {
             />
           </div>
         </div>
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
-          {columns.map((column) => (
-            <div key={column.title} className="grid content-start gap-3">
-              <h2 className="font-sans text-xs sm:text-sm font-semibold uppercase tracking-wider text-white/90">{column.title}</h2>
-              <ul className="grid gap-1.5">
-                {column.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="inline-flex min-h-8 items-center text-sm sm:text-base text-slate-200 hover:text-white underline-offset-4 hover:underline transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </nav>
+        <FooterNav columns={columns} />
       </div>
       <div className="border-t border-white/15">
         <p className="mx-auto w-full max-w-[90rem] px-4 py-4 text-xs sm:text-sm text-slate-300 lg:px-8">

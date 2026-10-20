@@ -3,14 +3,33 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Menu, X } from "lucide-react";
+import { Compass, Menu, Moon, Sun, X } from "lucide-react";
 
 type MenuLink = { href: string; label: string };
 
 export function MobileMenu({ links, account }: { links: MenuLink[]; account: MenuLink[] }) {
   const [open, setOpen] = useState(false);
+  const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+  }, [open]);
+
+  const toggleDarkMode = () => {
+    const nextDark = !isDark;
+    setIsDark(nextDark);
+    if (nextDark) {
+      document.documentElement.classList.add("dark");
+      document.documentElement.setAttribute("data-theme", "dark");
+      try { localStorage.setItem("mdv-mode", "dark"); } catch {}
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.removeAttribute("data-theme");
+      try { localStorage.setItem("mdv-mode", "light"); } catch {}
+    }
+  };
 
   useEffect(() => {
     setOpen(false);
@@ -18,6 +37,8 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
 
   useEffect(() => {
     if (!open) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
@@ -25,7 +46,10 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
       }
     };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
   }, [open]);
 
   return (
@@ -70,6 +94,19 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
                   {link.label}
                 </Link>
               ))}
+            </div>
+            <div className="mt-2 border-t border-border-subtle dark:border-white/10 pt-3">
+              <button
+                type="button"
+                onClick={toggleDarkMode}
+                className="flex min-h-11 w-full items-center justify-between rounded-xl px-3.5 text-sm font-semibold text-ocean dark:text-cyan-300 hover:bg-mist dark:hover:bg-white/10"
+              >
+                <span>Theme Mode</span>
+                <span className="flex items-center gap-1.5 text-xs text-muted dark:text-slate-300">
+                  {isDark ? <Sun size={15} className="text-amber-400" /> : <Moon size={15} />}
+                  {isDark ? "Dark Mode" : "Light Mode"}
+                </span>
+              </button>
             </div>
           </nav>
         </div>

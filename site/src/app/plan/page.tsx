@@ -30,12 +30,12 @@ const plannerPerks = [
   },
   {
     icon: ShieldCheck,
-    title: "100% Zero Obligation",
+    title: "Zero Obligation",
     desc: "Nothing is charged or booked until you review and sign your custom quote.",
   },
   {
     icon: Plane,
-    title: "Verified Transfers",
+    title: "Transfer Coordination",
     desc: "Seaplane and luxury yacht arrivals timed seamlessly with international flights.",
   },
   {
@@ -53,7 +53,7 @@ export default async function PlanPage() {
 
     return (
       <div className="mx-auto max-w-4xl space-y-10 py-2 sm:py-6 animate-in fade-in duration-500">
-        <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Plan a trip" }]} />
+        <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Plan my trip" }]} />
 
         {/* Hero Header */}
         <div className="relative overflow-hidden rounded-3xl border border-border-subtle bg-gradient-to-br from-[#083b4c]/95 via-[#083b4c] to-[#062936] dark:from-[#061d28] dark:via-[#082633] dark:to-[#041219] p-6 sm:p-10 text-white shadow-2">
@@ -115,7 +115,7 @@ export default async function PlanPage() {
   } catch (error) {
     logError(error instanceof Error ? error.message : "The planner could not be loaded.");
     return (
-      <ErrorState title="Plan a trip">
+      <ErrorState title="Plan my trip">
         <p>The planner could not be loaded.</p>
         <Link href="/resorts" className="text-lagoon-ink">
           Resorts

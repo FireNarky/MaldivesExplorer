@@ -551,8 +551,17 @@ html[data-theme="dark"][data-palette="bioluminescence"] {
 }
 
 @utility full-bleed {
-  margin-inline: calc(50% - 50vw);
-  width: 100vw;
+  margin-inline: -1rem;
+  width: calc(100% + 2rem);
+  max-width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .full-bleed {
+    margin-inline: -2rem;
+    width: calc(100% + 4rem);
+    max-width: 100%;
+  }
 }
 
 @keyframes float {

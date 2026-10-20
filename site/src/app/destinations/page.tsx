@@ -25,7 +25,7 @@ export default async function DestinationsPage({
     const filter = params?.filter ?? "all";
 
     const atolls = await db.atoll.findMany({
-      where: { status: "PUBLISHED" },
+      where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
       orderBy: { name: "asc" },
       select: {
         id: true,
@@ -35,11 +35,11 @@ export default async function DestinationsPage({
         latitude: true,
         longitude: true,
         islands: {
-          where: { status: "PUBLISHED" },
+          where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
           select: {
             id: true,
             resorts: {
-              where: { status: "PUBLISHED" },
+              where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
               select: { name: true, slug: true },
             },
           },

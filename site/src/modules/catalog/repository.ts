@@ -1,7 +1,12 @@
 import { db } from "@/lib/db";
 
+const publishedStatus = {
+  status: "PUBLISHED" as const,
+};
+
 const publishedResort = {
   status: "PUBLISHED" as const,
+  NOT: { slug: { startsWith: "browser-" } },
 };
 
 export function listResorts() {
@@ -54,12 +59,12 @@ export function getPublishedResort(slug: string) {
         },
       },
       roomTypes: {
-        where: publishedResort,
+        where: publishedStatus,
         orderBy: { sortOrder: "asc" },
         select: { id: true, name: true, description: true, maxAdults: true },
       },
       diningVenues: {
-        where: publishedResort,
+        where: publishedStatus,
         orderBy: { sortOrder: "asc" },
         select: { id: true, name: true, description: true, cuisine: true },
       },

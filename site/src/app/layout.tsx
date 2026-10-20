@@ -25,13 +25,37 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin()),
   title: {
-    default: "Maldives Explorer",
+    default: "Maldives Explorer · Curated Luxury Resorts & Islands",
     template: "%s · Maldives Explorer",
   },
-  description: "Maldives Explorer application foundation.",
+  description: "Curated private island resorts, iconic overwater pool villas, and bespoke journeys across the Maldives.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico" },
+    ],
+    apple: "/favicon.svg",
+  },
   openGraph: {
     siteName: "Maldives Explorer",
     type: "website",
+    title: "Maldives Explorer · Curated Luxury Resorts & Bespoke Island Journeys",
+    description: "Discover hand-curated private islands, iconic overwater pool villas, and direct resort quotes across the Maldives.",
+    url: "https://xplorer.itnvend.com",
+    images: [
+      {
+        url: "/images/og-maldives.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Maldives Explorer Luxury Overwater Villa & Lagoon",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Maldives Explorer · Curated Luxury Resorts",
+    description: "Discover hand-curated private islands, iconic overwater pool villas, and bespoke journeys across the Maldives.",
+    images: ["/images/og-maldives.jpg"],
   },
   robots: { index: false, follow: false },
 };
@@ -48,7 +72,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           }}
         />
       </head>
-      <body className="flex min-h-screen flex-col font-sans antialiased">
+      <body className="flex min-h-screen flex-col font-sans antialiased overflow-x-hidden">
         <a href="#main" className="skip-link">
           Skip to content
         </a>
