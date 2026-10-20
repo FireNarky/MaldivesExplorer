@@ -13,6 +13,7 @@ import {
   Waves,
 } from "lucide-react";
 import { JsonLd } from "@/components/discovery/json-ld";
+import { FlyingTern } from "@/components/ui/flying-tern";
 import { Button } from "@/components/ui/button";
 import { ResortCard } from "@/components/patterns/resort-card";
 import { ExperienceCard } from "@/components/patterns/experience-card";
@@ -204,6 +205,9 @@ export default async function HomePage() {
         <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#2bbcd0_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
         <div className="pointer-events-none absolute -right-24 top-1/4 size-96 rounded-full bg-lagoon/10 dark:bg-cyan-400/10 blur-3xl animate-pulse-glow" />
         <div className="pointer-events-none absolute -left-24 bottom-10 size-80 rounded-full bg-coral/10 blur-3xl animate-pulse-glow" />
+        
+        {/* Flying terns */}
+        <FlyingTern />
         
         <div className="relative mx-auto grid w-full max-w-[90rem] items-center gap-10 px-4 py-16 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32">
           <div className="grid content-center gap-6 lg:col-span-8">
