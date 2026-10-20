@@ -200,33 +200,35 @@ export default async function HomePage() {
       <JsonLd data={websiteSearchData(siteOrigin())} />
 
       {/* Hero Section */}
-      <section className="surface-inverse full-bleed relative overflow-hidden bg-gradient-to-b from-ocean to-[#062936] text-sand">
-        <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#2bbcd0_1px,transparent_1px)] [background-size:24px_24px]" />
+      <section className="surface-inverse full-bleed relative overflow-hidden bg-gradient-to-b from-ocean via-ocean/95 to-[#062936] text-sand">
+        <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#2bbcd0_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
+        <div className="pointer-events-none absolute -right-24 top-1/4 size-96 rounded-full bg-lagoon/10 dark:bg-cyan-400/10 blur-3xl animate-pulse-glow" />
+        <div className="pointer-events-none absolute -left-24 bottom-10 size-80 rounded-full bg-coral/10 blur-3xl animate-pulse-glow" />
         
-        <div className="relative mx-auto grid w-full max-w-[90rem] gap-8 px-4 py-16 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32">
-          <div className="grid content-center gap-6 lg:col-span-9">
-            <div className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-sand backdrop-blur-md border border-white/15">
-              <Sparkles size={14} className="text-coral" aria-hidden="true" />
+        <div className="relative mx-auto grid w-full max-w-[90rem] items-center gap-10 px-4 py-16 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32">
+          <div className="grid content-center gap-6 lg:col-span-8">
+            <div className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-sand backdrop-blur-md border border-white/20 shadow-sm animate-in fade-in duration-500">
+              <Sparkles size={14} className="text-coral animate-spin-slow" aria-hidden="true" />
               <span>Curated Maldivian Archipelago</span>
             </div>
 
-            <h1 className="text-[clamp(2.5rem,1.2rem+4vw,4.5rem)] font-display font-medium leading-[1.08] tracking-[-0.025em] text-sand">
+            <h1 className="text-[clamp(2.5rem,1.2rem+4vw,4.5rem)] font-display font-medium leading-[1.08] tracking-[-0.025em] text-sand animate-in fade-in slide-in-from-bottom-2 duration-500">
               Bespoke Luxury Stays Across the Maldives
             </h1>
 
-            <p className="max-w-[56ch] text-lg sm:text-xl text-sand/90 font-light leading-relaxed">
+            <p className="max-w-[56ch] text-lg sm:text-xl text-sand/90 font-light leading-relaxed animate-in fade-in slide-in-from-bottom-3 duration-500">
               Curated private island sanctuaries, iconic overwater villas with lagoon slides,
               and verified transfers orchestrated by Maldivian travel specialists.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <Button asChild variant="conversion" className="rounded-full px-8 py-4 text-base shadow-2">
+            <div className="flex flex-wrap items-center gap-4 pt-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <Button asChild variant="conversion" className="rounded-full px-8 py-4 text-base shadow-2 group transition-all hover:scale-105 active:scale-95">
                 <Link href="/plan">
-                  <Compass aria-hidden="true" size={20} strokeWidth={2} />
+                  <Compass aria-hidden="true" size={20} strokeWidth={2} className="transition-transform group-hover:rotate-45" />
                   Plan my journey
                 </Link>
               </Button>
-              <Button asChild variant="secondary" className="rounded-full px-7 py-4 text-base bg-white/10 text-sand border-white/20 hover:bg-white/20">
+              <Button asChild variant="secondary" className="rounded-full px-7 py-4 text-base bg-white/10 text-sand border-white/20 hover:bg-white/20 backdrop-blur-md transition-all hover:scale-105 active:scale-95">
                 <Link href="/resorts">
                   <Waves aria-hidden="true" size={18} strokeWidth={2} />
                   Explore Resorts
@@ -236,22 +238,65 @@ export default async function HomePage() {
 
             {/* Quick Stat Highlights */}
             <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/15 pt-8 sm:grid-cols-4">
-              <div>
+              <div className="rounded-2xl bg-white/5 p-3.5 backdrop-blur-sm border border-white/10 transition-transform hover:-translate-y-1">
                 <p className="font-display text-2xl sm:text-3xl font-semibold text-sand">1,192</p>
                 <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Coral Islands</p>
               </div>
-              <div>
+              <div className="rounded-2xl bg-white/5 p-3.5 backdrop-blur-sm border border-white/10 transition-transform hover:-translate-y-1">
                 <p className="font-display text-2xl sm:text-3xl font-semibold text-sand">26</p>
                 <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Natural Atolls</p>
               </div>
-              <div>
+              <div className="rounded-2xl bg-white/5 p-3.5 backdrop-blur-sm border border-white/10 transition-transform hover:-translate-y-1">
                 <p className="font-display text-2xl sm:text-3xl font-semibold text-sand">100%</p>
                 <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Verified Transfers</p>
               </div>
-              <div>
+              <div className="rounded-2xl bg-white/5 p-3.5 backdrop-blur-sm border border-white/10 transition-transform hover:-translate-y-1">
                 <p className="font-display text-2xl sm:text-3xl font-semibold text-sand">5-Star</p>
-                <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Marine Sanctuaries</p>
+                <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Sanctuaries</p>
               </div>
+            </div>
+          </div>
+
+          {/* Floating Luxury Itinerary Card */}
+          <div className="hidden lg:col-span-4 lg:block">
+            <div className="relative mx-auto max-w-sm rounded-3xl border border-white/20 bg-white/10 p-6 shadow-3 backdrop-blur-xl animate-float">
+              <div className="flex items-center justify-between border-b border-white/15 pb-4">
+                <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-sand/90">
+                  <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Island Concierge Active
+                </span>
+                <span className="rounded-full bg-coral/30 px-2.5 py-0.5 text-[11px] font-bold text-coral-hover border border-coral/40">
+                  VIP PASS
+                </span>
+              </div>
+              <div className="space-y-4 py-4">
+                <div>
+                  <span className="text-[11px] uppercase tracking-wider text-sand/70">Atoll Itinerary</span>
+                  <p className="font-display text-lg font-medium text-sand">Baa Atoll &amp; North Malé</p>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="rounded-xl bg-white/10 p-2.5">
+                    <span className="block text-[10px] uppercase text-sand/60">Seaplane</span>
+                    <span className="font-semibold text-sand">TMA Twin Otter</span>
+                  </div>
+                  <div className="rounded-xl bg-white/10 p-2.5">
+                    <span className="block text-[10px] uppercase text-sand/60">Villa Class</span>
+                    <span className="font-semibold text-sand">Overwater Pool</span>
+                  </div>
+                </div>
+                <div className="rounded-xl border border-white/15 bg-white/10 p-3 text-xs text-sand/90">
+                  <p className="flex items-center gap-1.5 font-medium">
+                    <Sparkles size={13} className="text-amber-300" />
+                    Complimentary Benefits:
+                  </p>
+                  <p className="mt-1 text-[11px] text-sand/75">
+                    Sunset Champagne Cruise, Half-Board Dine-Around, &amp; Marine Biologist Snorkel
+                  </p>
+                </div>
+              </div>
+              <Button asChild variant="conversion" className="w-full rounded-xl py-2.5 text-xs font-semibold shadow-sm">
+                <Link href="/plan">Build Your Custom Quote &rarr;</Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -261,10 +306,10 @@ export default async function HomePage() {
       <section aria-labelledby="explore-heading" className="grid gap-8">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink">Explore the Maldives</p>
-            <h2 id="explore-heading" className="text-3xl font-display">Begin Your Discovery</h2>
+            <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">Explore the Maldives</p>
+            <h2 id="explore-heading" className="text-3xl font-display text-ocean">Begin Your Discovery</h2>
           </div>
-          <Link href="/search" className="text-sm font-semibold text-lagoon-ink hover:underline">
+          <Link href="/search" className="text-sm font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline">
             All categories &rarr;
           </Link>
         </div>
@@ -272,13 +317,13 @@ export default async function HomePage() {
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {entryPoints.map((item) => (
             <li key={item.href} className="group relative">
-              <div className="flex h-full flex-col justify-between rounded-2xl border border-border-subtle bg-white p-6 shadow-1 transition-all duration-200 hover:-translate-y-1 hover:border-ocean/40 hover:shadow-2">
+              <div className="flex h-full flex-col justify-between rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-6 shadow-1 transition-all duration-300 hover:-translate-y-2 hover:border-ocean/50 dark:hover:border-cyan-400/50 hover:shadow-2">
                 <div>
                   <div className="mb-4 flex items-center justify-between">
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-mist text-lagoon-ink group-hover:bg-ocean group-hover:text-sand transition-colors">
+                    <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 group-hover:bg-ocean group-hover:text-sand transition-colors">
                       <item.icon size={20} strokeWidth={1.75} aria-hidden="true" />
                     </span>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-muted bg-sand px-2.5 py-1 rounded-full">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-muted dark:text-sand/80 bg-sand dark:bg-white/10 px-2.5 py-1 rounded-full border border-border-subtle/50">
                       {item.badge}
                     </span>
                   </div>
@@ -289,7 +334,7 @@ export default async function HomePage() {
                   </h3>
                   <p className="text-sm text-ink leading-relaxed">{item.text}</p>
                 </div>
-                <div className="mt-6 flex items-center text-xs font-semibold text-lagoon-ink group-hover:text-ocean">
+                <div className="mt-6 flex items-center text-xs font-semibold text-lagoon-ink dark:text-cyan-400 group-hover:translate-x-1 transition-transform">
                   Explore &rarr;
                 </div>
               </div>
@@ -382,16 +427,16 @@ export default async function HomePage() {
       ) : null}
 
       {/* Why Choose Us / Trust Banner */}
-      <section className="rounded-3xl border border-border-subtle bg-white p-8 lg:p-12 shadow-1">
+      <section className="rounded-3xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-8 lg:p-12 shadow-1">
         <div className="mb-8 max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink">The Maldives Explorer Standard</p>
+          <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">The Maldives Explorer Standard</p>
           <h2 className="text-3xl font-display text-ocean mt-1">Why Discerning Travelers Plan With Us</h2>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
           {trustPillars.map((pillar) => (
-            <div key={pillar.title} className="flex flex-col gap-3">
-              <span className="flex size-12 items-center justify-center rounded-2xl bg-mist text-lagoon-ink">
+            <div key={pillar.title} className="group flex flex-col gap-3 rounded-2xl p-4 transition-all hover:bg-mist/40 dark:hover:bg-white/5">
+              <span className="flex size-12 items-center justify-center rounded-2xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 shadow-sm transition-transform group-hover:scale-110">
                 <pillar.icon size={24} strokeWidth={1.75} aria-hidden="true" />
               </span>
               <h3 className="text-xl font-display text-ocean">{pillar.title}</h3>
@@ -406,10 +451,10 @@ export default async function HomePage() {
         <section aria-labelledby="guides-heading" className="grid gap-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink">Curated Knowledge</p>
-              <h2 id="guides-heading" className="text-3xl font-display">Editorial Guides</h2>
+              <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">Curated Knowledge</p>
+              <h2 id="guides-heading" className="text-3xl font-display text-ocean">Editorial Guides</h2>
             </div>
-            <Link href="/guides" className="text-sm font-semibold text-lagoon-ink hover:underline">
+            <Link href="/guides" className="text-sm font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline">
               Browse all guides &rarr;
             </Link>
           </div>
@@ -439,20 +484,20 @@ export default async function HomePage() {
       {reviews.length > 0 ? (
         <section aria-labelledby="reviews-heading" className="grid gap-8">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink">Guest Reflections</p>
-            <h2 id="reviews-heading" className="text-3xl font-display">Verified Traveler Stories</h2>
+            <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">Guest Reflections</p>
+            <h2 id="reviews-heading" className="text-3xl font-display text-ocean">Verified Traveler Stories</h2>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2">
             {reviews.map((rev) => (
               <div
                 key={rev.id}
-                className="flex flex-col justify-between rounded-2xl border border-border-subtle bg-white p-6 lg:p-8 shadow-1"
+                className="group flex flex-col justify-between rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-6 lg:p-8 shadow-1 transition-all duration-300 hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/40 hover:shadow-2"
               >
                 <div>
                   <div className="mb-3 flex items-center gap-1 text-[#e2b45f]">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={18} fill="currentColor" aria-hidden="true" />
+                      <Star key={i} size={18} fill="currentColor" aria-hidden="true" className="transition-transform group-hover:scale-110" />
                     ))}
                   </div>
                   <blockquote className="mb-4 text-base italic text-ink leading-relaxed">
@@ -463,12 +508,12 @@ export default async function HomePage() {
                   <div>
                     <p className="font-semibold text-ink">{rev.displayName}</p>
                     {rev.resort ? (
-                      <Link href={`/resorts/${rev.resort.slug}`} className="text-lagoon-ink hover:underline">
+                      <Link href={`/resorts/${rev.resort.slug}`} className="text-lagoon-ink dark:text-cyan-400 hover:underline">
                         Stayed at {rev.resort.name}
                       </Link>
                     ) : null}
                   </div>
-                  <span className="flex items-center gap-1 text-success font-medium">
+                  <span className="flex items-center gap-1 text-success dark:text-emerald-400 font-medium">
                     <CheckCircle2 size={14} aria-hidden="true" />
                     Verified Stay
                   </span>
@@ -480,10 +525,10 @@ export default async function HomePage() {
       ) : null}
 
       {/* How Planning Works */}
-      <section className="surface-tint full-bleed bg-mist rounded-3xl">
+      <section className="surface-tint full-bleed bg-mist/60 dark:bg-white/[0.03] dark:border-y dark:border-white/10 rounded-3xl">
         <div className="mx-auto grid w-full max-w-[90rem] gap-8 px-4 py-16 lg:px-8 lg:py-24">
           <div className="max-w-xl">
-            <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink">Seamless Process</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">Seamless Process</p>
             <h2 className="text-3xl font-display text-ocean mt-1">How Trip Planning Works</h2>
             <p className="text-muted mt-2">
               From your initial vision to your private seaplane touchdown, our specialists craft every detail.
@@ -492,12 +537,12 @@ export default async function HomePage() {
 
           <ol className="grid gap-6 md:grid-cols-3">
             {steps.map((step, index) => (
-              <li key={step.title} className="flex flex-col gap-4 rounded-2xl bg-white p-8 shadow-1">
+              <li key={step.title} className="group flex flex-col gap-4 rounded-2xl border border-border-subtle/80 bg-white dark:bg-white/5 dark:border-white/10 p-8 shadow-1 transition-all duration-300 hover:-translate-y-2 hover:border-ocean/50 dark:hover:border-cyan-400/50 hover:shadow-2">
                 <span className="flex items-center justify-between text-lagoon-ink">
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-mist text-lagoon-ink">
+                  <span className="flex size-12 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 transition-colors group-hover:bg-ocean group-hover:text-sand">
                     <step.icon aria-hidden="true" size={24} strokeWidth={1.75} />
                   </span>
-                  <span className="text-xs font-bold uppercase tracking-widest text-muted bg-sand px-3 py-1 rounded-full">
+                  <span className="text-xs font-bold uppercase tracking-widest text-muted dark:text-sand/80 bg-sand dark:bg-white/10 px-3 py-1 rounded-full border border-border-subtle/50">
                     Step {index + 1}
                   </span>
                 </span>
@@ -508,9 +553,9 @@ export default async function HomePage() {
           </ol>
 
           <div className="mt-4 flex justify-center">
-            <Button asChild variant="conversion" className="rounded-full px-8 py-4 text-base shadow-2">
+            <Button asChild variant="conversion" className="rounded-full px-8 py-4 text-base shadow-2 group transition-all hover:scale-105 active:scale-95">
               <Link href="/plan">
-                <Compass aria-hidden="true" size={20} strokeWidth={2} />
+                <Compass aria-hidden="true" size={20} strokeWidth={2} className="transition-transform group-hover:rotate-45" />
                 Start planning your stay
               </Link>
             </Button>
