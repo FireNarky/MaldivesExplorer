@@ -56,19 +56,19 @@ export default async function PlanPage() {
         <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Plan a trip" }]} />
 
         {/* Hero Header */}
-        <div className="relative overflow-hidden rounded-3xl border border-border-subtle bg-gradient-to-br from-[#083b4c]/95 via-[#083b4c] to-[#062936] dark:from-[#061d28] dark:via-[#082633] dark:to-[#041219] p-6 sm:p-10 text-sand shadow-2">
+        <div className="relative overflow-hidden rounded-3xl border border-border-subtle bg-gradient-to-br from-[#083b4c]/95 via-[#083b4c] to-[#062936] dark:from-[#061d28] dark:via-[#082633] dark:to-[#041219] p-6 sm:p-10 text-white shadow-2">
           <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#2bbcd0_1.5px,transparent_1.5px)] [background-size:24px_24px]" />
           <div className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-lagoon/20 blur-3xl" />
 
           <div className="relative max-w-2xl space-y-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-sand backdrop-blur-md border border-white/20">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/20">
               <Sparkles size={13} className="text-coral" />
               Resident Concierge Service
             </span>
-            <h1 className="text-3xl sm:text-4xl font-display font-medium text-sand leading-snug">
+            <h1 className="text-3xl sm:text-4xl font-display font-medium text-white leading-snug">
               Bespoke Maldives Trip Planner
             </h1>
-            <p className="text-sm sm:text-base text-sand/85 font-light leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-200 font-light leading-relaxed">
               Tell us your desired travel dates, island style, and companion preferences. Within 4 hours, our specialists will deliver a comprehensive, written quote with verified resort privileges and seaplane flights.
             </p>
           </div>

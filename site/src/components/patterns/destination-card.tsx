@@ -74,30 +74,30 @@ export function DestinationCard({ item }: { item: DestinationCardData }) {
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 shadow-1 transition-all duration-300 hover:-translate-y-2 hover:border-ocean/50 dark:hover:border-cyan-400/50 hover:shadow-2">
       {/* Decorative Atoll Horizon Banner */}
-      <div className={`relative h-28 overflow-hidden bg-gradient-to-br ${insight.gradient} p-5 text-sand`}>
+      <div className={`relative h-28 overflow-hidden bg-gradient-to-br ${insight.gradient} p-5 text-white`}>
         <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" />
         
         <div className="relative flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 dark:bg-black/30 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sand backdrop-blur-md border border-white/25">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 dark:bg-black/40 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/25">
             <Compass size={13} className="text-coral" aria-hidden="true" />
             Atoll Geography
           </span>
 
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium text-sand backdrop-blur-md">
+          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 dark:bg-black/30 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md">
             <Plane size={12} />
             {insight.transfer}
           </span>
         </div>
 
-        <div className="absolute bottom-3 left-5 right-5 flex items-center justify-between text-xs text-sand/80">
+        <div className="absolute bottom-3 left-5 right-5 flex items-center justify-between text-xs text-slate-200">
           {item.latitude && item.longitude ? (
-            <span className="flex items-center gap-1 font-mono text-[11px]">
+            <span className="flex items-center gap-1 font-mono text-[11px] text-white">
               <MapPin size={12} className="text-coral" aria-hidden="true" />
               {Number(item.latitude).toFixed(2)}°N, {Number(item.longitude).toFixed(2)}°E
             </span>
           ) : <span />}
           {typeof item.islandCount === "number" && (
-            <span className="font-medium text-[11px] tracking-wide uppercase">
+            <span className="font-medium text-[11px] tracking-wide uppercase text-slate-200">
               {item.islandCount} {item.islandCount === 1 ? "Island" : "Islands"}
             </span>
           )}

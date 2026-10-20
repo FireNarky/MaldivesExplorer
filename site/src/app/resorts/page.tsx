@@ -80,7 +80,7 @@ export default async function ResortsPage({ searchParams }: PageProps) {
             className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
               !selectedAtoll
                 ? "bg-lagoon-ink text-white dark:bg-cyan-500 dark:text-[#041d24] shadow-sm"
-                : "bg-white dark:bg-white/10 text-ink dark:text-sand border border-border-subtle dark:border-white/15 hover:border-ocean dark:hover:border-cyan-400"
+                : "bg-white dark:bg-white/10 text-ink dark:text-white border border-border-subtle dark:border-white/15 hover:border-ocean dark:hover:border-cyan-400"
             }`}
           >
             All Atolls ({allResorts.length})
@@ -94,7 +94,7 @@ export default async function ResortsPage({ searchParams }: PageProps) {
                 className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
                   isSelected
                     ? "bg-lagoon-ink text-white dark:bg-cyan-500 dark:text-[#041d24] shadow-sm"
-                    : "bg-white dark:bg-white/10 text-ink dark:text-sand border border-border-subtle dark:border-white/15 hover:border-ocean dark:hover:border-cyan-400"
+                    : "bg-white dark:bg-white/10 text-ink dark:text-white border border-border-subtle dark:border-white/15 hover:border-ocean dark:hover:border-cyan-400"
                 }`}
               >
                 {atoll.name}

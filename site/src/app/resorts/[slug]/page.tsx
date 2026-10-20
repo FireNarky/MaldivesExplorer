@@ -169,7 +169,7 @@ export default async function ResortPage({ params }: PageProps) {
                       className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
                       <h3 className="text-ocean dark:text-cyan-300">{room.name}</h3>
-                      <p className="text-ink dark:text-sand/85">{room.description}</p>
+                      <p className="text-ink dark:text-slate-200">{room.description}</p>
                       <p className="text-sm text-muted">Maximum adults: {room.maxAdults}</p>
                     </li>
                   ))}
@@ -186,7 +186,7 @@ export default async function ResortPage({ params }: PageProps) {
                       className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
                       <h3 className="text-ocean dark:text-cyan-300">{venue.name}</h3>
-                      <p className="text-ink dark:text-sand/85">{venue.description}</p>
+                      <p className="text-ink dark:text-slate-200">{venue.description}</p>
                       {venue.cuisine ? <p className="text-sm text-muted">{venue.cuisine}</p> : null}
                     </li>
                   ))}
@@ -203,7 +203,7 @@ export default async function ResortPage({ params }: PageProps) {
                       className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
                       <h3 className="text-ocean dark:text-cyan-300">{transfer.label}</h3>
-                      <p className="text-ink dark:text-sand/85">{transfer.transferType.label}</p>
+                      <p className="text-ink dark:text-slate-200">{transfer.transferType.label}</p>
                       {transfer.durationMinutes ? (
                         <p className="text-sm text-muted">
                           Duration: {transfer.durationMinutes} minutes

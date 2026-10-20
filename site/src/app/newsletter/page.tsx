@@ -91,7 +91,7 @@ export default async function NewsletterPage({
             key={perk.title}
             className="group rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-5 shadow-1 transition-all duration-300 hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/40 hover:shadow-2"
           >
-            <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 mb-3 transition-colors group-hover:bg-ocean group-hover:text-sand">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 mb-3 transition-colors group-hover:bg-ocean group-hover:text-white">
               <perk.icon size={18} strokeWidth={1.75} />
             </span>
             <h3 className="font-display text-base font-semibold text-ocean mb-1">{perk.title}</h3>

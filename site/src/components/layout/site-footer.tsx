@@ -40,34 +40,35 @@ const columns = [
 export async function SiteFooter() {
   const noticeVersion = await currentNoticeVersion().catch(() => "2026-10-10");
   return (
-    <footer className="surface-inverse mt-12 bg-[#083b4c] dark:bg-[#03090c] text-sand dark:border-t dark:border-white/10 pb-20 lg:pb-0">
+    <footer className="surface-inverse mt-16 bg-[#083b4c] dark:bg-[#03090c] text-white dark:border-t dark:border-white/10 pb-20 lg:pb-0">
       <div className="mx-auto grid w-full max-w-[90rem] gap-10 px-4 py-12 lg:grid-cols-12 lg:px-8 lg:py-16">
         <div className="grid content-start gap-4 lg:col-span-5">
-          <p className="font-display text-2xl text-sand">Maldives Explorer</p>
-          <p className="max-w-[40ch] text-sand/85">
+          <p className="font-display text-2xl font-medium text-white tracking-tight">Maldives Explorer</p>
+          <p className="max-w-[40ch] text-sm sm:text-base text-slate-200 leading-relaxed font-light">
             Plan your Maldives stay with a travel team that replies with a clear, written quote.
           </p>
-          <div className="max-w-md rounded-2xl border border-white/20 bg-white/10 dark:bg-white/5 p-5 text-sand backdrop-blur-md shadow-2">
-            <h2 className="mb-2 font-display text-lg font-semibold text-sand">Newsletter</h2>
-            <p className="text-xs text-sand/75 mb-3">Occasional insider dispatches &amp; seaplane transfer alerts.</p>
+          <div className="max-w-md rounded-2xl border border-white/20 bg-white/10 dark:bg-white/5 p-5 text-white backdrop-blur-md shadow-2">
+            <h2 className="mb-1 font-display text-lg font-semibold text-white">Newsletter</h2>
+            <p className="text-xs text-slate-300 mb-4">Occasional insider dispatches &amp; seaplane transfer alerts.</p>
             <SubscribeForm
               idPrefix="footer"
               noticeVersion={noticeVersion}
               returnPath="/newsletter"
               showTopics={false}
+              inverted
             />
           </div>
         </div>
         <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
           {columns.map((column) => (
             <div key={column.title} className="grid content-start gap-3">
-              <h2 className="font-sans text-base font-semibold text-sand">{column.title}</h2>
-              <ul className="grid gap-1">
+              <h2 className="font-sans text-xs sm:text-sm font-semibold uppercase tracking-wider text-white/90">{column.title}</h2>
+              <ul className="grid gap-1.5">
                 {column.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="inline-flex min-h-8 items-center text-base text-sand underline-offset-4 hover:underline"
+                      className="inline-flex min-h-8 items-center text-sm sm:text-base text-slate-200 hover:text-white underline-offset-4 hover:underline transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -78,8 +79,8 @@ export async function SiteFooter() {
           ))}
         </nav>
       </div>
-      <div className="border-t border-sand/20">
-        <p className="mx-auto w-full max-w-[90rem] px-4 py-4 text-sm text-sand lg:px-8">
+      <div className="border-t border-white/15">
+        <p className="mx-auto w-full max-w-[90rem] px-4 py-4 text-xs sm:text-sm text-slate-300 lg:px-8">
           © {new Date().getFullYear()} Maldives Explorer
         </p>
       </div>

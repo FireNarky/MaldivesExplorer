@@ -37,7 +37,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
         aria-controls="mobile-menu"
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex size-11 items-center justify-center rounded-xl border border-border-subtle bg-white dark:bg-white/10 dark:border-white/15 text-ink dark:text-sand active:scale-95 transition-transform"
+        className="inline-flex size-11 items-center justify-center rounded-xl border border-border-subtle bg-white dark:bg-white/10 dark:border-white/15 text-ink dark:text-white active:scale-95 transition-transform"
       >
         {open ? (
           <X aria-hidden="true" size={20} strokeWidth={1.75} />

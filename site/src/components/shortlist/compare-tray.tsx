@@ -25,7 +25,7 @@ export function CompareTray() {
       aria-label="Compare"
       className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] z-10 border-t lg:bottom-0 border-border-subtle bg-white/95 dark:bg-[#071318]/95 dark:border-white/15 backdrop-blur-md shadow-2"
     >
-      <div className="mx-auto flex w-full max-w-[90rem] flex-wrap items-center gap-4 px-4 py-3 lg:px-8 text-sm">
+      <div className="mx-auto flex w-full max-w-[90rem] flex-wrap items-center gap-4 px-4 py-3 lg:px-8 text-sm dark:text-white">
         <p className="font-semibold text-ocean dark:text-cyan-300">
           {ids.length} of {compareLimit} resorts
         </p>

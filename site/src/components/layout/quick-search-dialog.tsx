@@ -149,7 +149,7 @@ export function QuickSearchDialog() {
                   <X size={16} aria-hidden="true" />
                 </button>
               ) : null}
-              <kbd className="hidden sm:inline-block rounded border border-border-subtle bg-sand dark:bg-white/10 dark:border-white/10 px-2 py-0.5 text-[11px] font-semibold text-muted dark:text-sand/75">
+              <kbd className="hidden sm:inline-block rounded border border-border-subtle bg-sand dark:bg-white/10 dark:border-white/10 px-2 py-0.5 text-[11px] font-semibold text-muted dark:text-slate-300">
                 ESC
               </kbd>
             </div>
@@ -172,7 +172,7 @@ export function QuickSearchDialog() {
                         key={`${item.href}-${index}`}
                         type="button"
                         onClick={() => handleSelect(item.href)}
-                        className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm text-ink dark:text-sand hover:bg-mist dark:hover:bg-white/10 transition-colors"
+                        className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm text-ink dark:text-white hover:bg-mist dark:hover:bg-white/10 transition-colors"
                       >
                         <div className="flex items-center gap-3">
                           {getIcon(item.kind)}
@@ -206,7 +206,7 @@ export function QuickSearchDialog() {
                       key={item.href}
                       type="button"
                       onClick={() => handleSelect(item.href)}
-                      className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm text-ink dark:text-sand hover:bg-mist dark:hover:bg-white/10 transition-colors"
+                      className="flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-sm text-ink dark:text-white hover:bg-mist dark:hover:bg-white/10 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         {getIcon(item.kind)}
@@ -222,7 +222,7 @@ export function QuickSearchDialog() {
             </div>
 
             {/* Footer */}
-            <div className="flex items-center justify-between border-t border-border-subtle bg-sand/60 dark:bg-white/5 dark:border-white/10 px-4 py-2.5 text-xs text-muted dark:text-sand/70">
+            <div className="flex items-center justify-between border-t border-border-subtle bg-sand/60 dark:bg-white/5 dark:border-white/10 px-4 py-2.5 text-xs text-muted dark:text-slate-300">
               <span>Tip: press <kbd className="font-mono text-[10px] rounded bg-white dark:bg-white/10 px-1 py-0.5 border border-border-subtle dark:border-white/10">/</kbd> anywhere to open</span>
               <Link
                 href="/search"

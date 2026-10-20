@@ -44,7 +44,7 @@ export function OfferCard({ item }: { item: OfferCardData }) {
         </Link>
       </h2>
 
-      <p className="mb-6 flex-1 text-sm text-ink dark:text-sand/85 leading-relaxed">{item.summary}</p>
+      <p className="mb-6 flex-1 text-sm text-ink dark:text-slate-200 leading-relaxed">{item.summary}</p>
 
       <div className="mb-4 flex flex-wrap gap-2 text-xs">
         {item.transferIncluded ? (
@@ -54,7 +54,7 @@ export function OfferCard({ item }: { item: OfferCardData }) {
           </span>
         ) : null}
         {item.minNights ? (
-          <span className="inline-flex items-center gap-1 rounded-md bg-sand dark:bg-white/10 px-2.5 py-1 text-muted dark:text-sand/80 border border-border-subtle/50 dark:border-white/10">
+          <span className="inline-flex items-center gap-1 rounded-md bg-sand dark:bg-white/10 px-2.5 py-1 text-muted dark:text-slate-300 border border-border-subtle/50 dark:border-white/10">
             <CheckCircle2 size={13} aria-hidden="true" />
             Min. {item.minNights} nights
           </span>

@@ -17,7 +17,7 @@ export function ErrorState({ title, children, action }: ErrorStateProps) {
         <CircleX aria-hidden="true" className="mt-1 size-7 shrink-0 text-danger" strokeWidth={1.75} />
         <h2 className="text-danger font-display text-xl">{title}</h2>
       </div>
-      <div className="text-base text-ink dark:text-sand/90">{children}</div>
+      <div className="text-base text-ink dark:text-slate-200">{children}</div>
       {action}
     </section>
   );

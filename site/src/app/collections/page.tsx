@@ -48,7 +48,7 @@ export default async function CollectionsPage() {
                     <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300">
                       <Sparkles size={20} aria-hidden="true" />
                     </span>
-                    <span className="text-xs font-semibold text-muted dark:text-sand/80 bg-sand dark:bg-white/10 px-3 py-1 rounded-full border border-border-subtle/50 dark:border-white/10">
+                    <span className="text-xs font-semibold text-muted dark:text-slate-300 bg-sand dark:bg-white/10 px-3 py-1 rounded-full border border-border-subtle/50 dark:border-white/10">
                       {col.items.length} curated {col.items.length === 1 ? "resort" : "resorts"}
                     </span>
                   </div>
@@ -59,7 +59,7 @@ export default async function CollectionsPage() {
                     </Link>
                   </h2>
 
-                  <p className="text-sm text-ink dark:text-sand/85 leading-relaxed mb-6">{col.summary}</p>
+                  <p className="text-sm text-ink dark:text-slate-200 leading-relaxed mb-6">{col.summary}</p>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-border-subtle/80 dark:border-white/10 pt-4 text-sm font-semibold text-lagoon-ink dark:text-cyan-400 group-hover:text-ocean dark:group-hover:text-cyan-300">

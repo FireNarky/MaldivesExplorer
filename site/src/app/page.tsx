@@ -200,23 +200,23 @@ export default async function HomePage() {
       <JsonLd data={websiteSearchData(siteOrigin())} />
 
       {/* Hero Section */}
-      <section className="surface-inverse full-bleed relative overflow-hidden bg-gradient-to-b from-[#083b4c] via-[#083b4c]/95 to-[#062936] text-sand dark:from-[#061820] dark:via-[#071d27] dark:to-[#041017]">
+      <section className="surface-inverse full-bleed relative overflow-hidden bg-gradient-to-b from-[#083b4c] via-[#083b4c]/95 to-[#062936] text-white dark:from-[#061820] dark:via-[#071d27] dark:to-[#041017]">
         <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#2bbcd0_1.5px,transparent_1.5px)] [background-size:28px_28px]" />
         <div className="pointer-events-none absolute -right-24 top-1/4 size-96 rounded-full bg-lagoon/10 dark:bg-cyan-400/10 blur-3xl animate-pulse-glow" />
         <div className="pointer-events-none absolute -left-24 bottom-10 size-80 rounded-full bg-coral/10 blur-3xl animate-pulse-glow" />
         
         <div className="relative mx-auto grid w-full max-w-[90rem] items-center gap-10 px-4 py-16 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32">
           <div className="grid content-center gap-6 lg:col-span-8">
-            <div className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-sand backdrop-blur-md border border-white/20 shadow-sm animate-in fade-in duration-500">
+            <div className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/20 shadow-sm animate-in fade-in duration-500">
               <Sparkles size={14} className="text-coral animate-spin-slow" aria-hidden="true" />
               <span>Curated Maldivian Archipelago</span>
             </div>
 
-            <h1 className="text-[clamp(2.5rem,1.2rem+4vw,4.5rem)] font-display font-medium leading-[1.08] tracking-[-0.025em] text-sand animate-in fade-in slide-in-from-bottom-2 duration-500">
+            <h1 className="text-[clamp(2.5rem,1.2rem+4vw,4.5rem)] font-display font-medium leading-[1.08] tracking-[-0.025em] text-white animate-in fade-in slide-in-from-bottom-2 duration-500">
               Bespoke Luxury Stays Across the Maldives
             </h1>
 
-            <p className="max-w-[56ch] text-lg sm:text-xl text-sand/90 font-light leading-relaxed animate-in fade-in slide-in-from-bottom-3 duration-500">
+            <p className="max-w-[56ch] text-lg sm:text-xl text-slate-200 font-light leading-relaxed animate-in fade-in slide-in-from-bottom-3 duration-500">
               Curated private island sanctuaries, iconic overwater villas with lagoon slides,
               and verified transfers orchestrated by Maldivian travel specialists.
             </p>
@@ -228,7 +228,7 @@ export default async function HomePage() {
                   Plan my journey
                 </Link>
               </Button>
-              <Button asChild variant="secondary" className="rounded-full px-7 py-4 text-base bg-white/10 text-sand border-white/20 hover:bg-white/20 backdrop-blur-md transition-all hover:scale-105 active:scale-95">
+              <Button asChild variant="secondary" className="rounded-full px-7 py-4 text-base bg-white/10 text-white border-white/20 hover:bg-white/20 backdrop-blur-md transition-all hover:scale-105 active:scale-95">
                 <Link href="/resorts">
                   <Waves aria-hidden="true" size={18} strokeWidth={2} />
                   Explore Resorts
@@ -239,20 +239,20 @@ export default async function HomePage() {
             {/* Quick Stat Highlights */}
             <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/15 pt-8 sm:grid-cols-4">
               <div className="rounded-2xl bg-white/5 p-3.5 backdrop-blur-sm border border-white/10 transition-transform hover:-translate-y-1">
-                <p className="font-display text-2xl sm:text-3xl font-semibold text-sand">1,192</p>
-                <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Coral Islands</p>
+                <p className="font-display text-2xl sm:text-3xl font-semibold text-white">1,192</p>
+                <p className="text-xs text-slate-300 uppercase tracking-wider mt-0.5">Coral Islands</p>
               </div>
               <div className="rounded-2xl bg-white/5 p-3.5 backdrop-blur-sm border border-white/10 transition-transform hover:-translate-y-1">
-                <p className="font-display text-2xl sm:text-3xl font-semibold text-sand">26</p>
-                <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Natural Atolls</p>
+                <p className="font-display text-2xl sm:text-3xl font-semibold text-white">26</p>
+                <p className="text-xs text-slate-300 uppercase tracking-wider mt-0.5">Natural Atolls</p>
               </div>
               <div className="rounded-2xl bg-white/5 p-3.5 backdrop-blur-sm border border-white/10 transition-transform hover:-translate-y-1">
-                <p className="font-display text-2xl sm:text-3xl font-semibold text-sand">100%</p>
-                <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Verified Transfers</p>
+                <p className="font-display text-2xl sm:text-3xl font-semibold text-white">100%</p>
+                <p className="text-xs text-slate-300 uppercase tracking-wider mt-0.5">Verified Transfers</p>
               </div>
               <div className="rounded-2xl bg-white/5 p-3.5 backdrop-blur-sm border border-white/10 transition-transform hover:-translate-y-1">
-                <p className="font-display text-2xl sm:text-3xl font-semibold text-sand">5-Star</p>
-                <p className="text-xs text-sand/75 uppercase tracking-wider mt-0.5">Sanctuaries</p>
+                <p className="font-display text-2xl sm:text-3xl font-semibold text-white">5-Star</p>
+                <p className="text-xs text-slate-300 uppercase tracking-wider mt-0.5">Sanctuaries</p>
               </div>
             </div>
           </div>
@@ -261,7 +261,7 @@ export default async function HomePage() {
           <div className="hidden lg:col-span-4 lg:block">
             <div className="relative mx-auto max-w-sm rounded-3xl border border-white/20 bg-white/10 p-6 shadow-3 backdrop-blur-xl animate-float">
               <div className="flex items-center justify-between border-b border-white/15 pb-4">
-                <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-sand/90">
+                <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/90">
                   <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
                   Island Concierge Active
                 </span>
@@ -271,25 +271,25 @@ export default async function HomePage() {
               </div>
               <div className="space-y-4 py-4">
                 <div>
-                  <span className="text-[11px] uppercase tracking-wider text-sand/70">Atoll Itinerary</span>
-                  <p className="font-display text-lg font-medium text-sand">Baa Atoll &amp; North Malé</p>
+                  <span className="text-[11px] uppercase tracking-wider text-slate-300">Atoll Itinerary</span>
+                  <p className="font-display text-lg font-medium text-white">Baa Atoll &amp; North Malé</p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div className="rounded-xl bg-white/10 p-2.5">
-                    <span className="block text-[10px] uppercase text-sand/60">Seaplane</span>
-                    <span className="font-semibold text-sand">TMA Twin Otter</span>
+                    <span className="block text-[10px] uppercase text-slate-300">Seaplane</span>
+                    <span className="font-semibold text-white">TMA Twin Otter</span>
                   </div>
                   <div className="rounded-xl bg-white/10 p-2.5">
-                    <span className="block text-[10px] uppercase text-sand/60">Villa Class</span>
-                    <span className="font-semibold text-sand">Overwater Pool</span>
+                    <span className="block text-[10px] uppercase text-slate-300">Villa Class</span>
+                    <span className="font-semibold text-white">Overwater Pool</span>
                   </div>
                 </div>
-                <div className="rounded-xl border border-white/15 bg-white/10 p-3 text-xs text-sand/90">
+                <div className="rounded-xl border border-white/15 bg-white/10 p-3 text-xs text-white/90">
                   <p className="flex items-center gap-1.5 font-medium">
                     <Sparkles size={13} className="text-amber-300" />
                     Complimentary Benefits:
                   </p>
-                  <p className="mt-1 text-[11px] text-sand/75">
+                  <p className="mt-1 text-[11px] text-slate-300">
                     Sunset Champagne Cruise, Half-Board Dine-Around, &amp; Marine Biologist Snorkel
                   </p>
                 </div>
@@ -320,10 +320,10 @@ export default async function HomePage() {
               <div className="flex h-full flex-col justify-between rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-6 shadow-1 transition-all duration-300 hover:-translate-y-2 hover:border-ocean/50 dark:hover:border-cyan-400/50 hover:shadow-2">
                 <div>
                   <div className="mb-4 flex items-center justify-between">
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 group-hover:bg-ocean group-hover:text-sand transition-colors">
+                    <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 group-hover:bg-ocean group-hover:text-white transition-colors">
                       <item.icon size={20} strokeWidth={1.75} aria-hidden="true" />
                     </span>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-muted dark:text-sand/80 bg-sand dark:bg-white/10 px-2.5 py-1 rounded-full border border-border-subtle/50">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-muted dark:text-slate-200 bg-sand dark:bg-white/10 px-2.5 py-1 rounded-full border border-border-subtle/50">
                       {item.badge}
                     </span>
                   </div>
@@ -539,10 +539,10 @@ export default async function HomePage() {
             {steps.map((step, index) => (
               <li key={step.title} className="group flex flex-col gap-4 rounded-2xl border border-border-subtle/80 bg-white dark:bg-white/5 dark:border-white/10 p-8 shadow-1 transition-all duration-300 hover:-translate-y-2 hover:border-ocean/50 dark:hover:border-cyan-400/50 hover:shadow-2">
                 <span className="flex items-center justify-between text-lagoon-ink">
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 transition-colors group-hover:bg-ocean group-hover:text-sand">
+                  <span className="flex size-12 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 transition-colors group-hover:bg-ocean group-hover:text-white">
                     <step.icon aria-hidden="true" size={24} strokeWidth={1.75} />
                   </span>
-                  <span className="text-xs font-bold uppercase tracking-widest text-muted dark:text-sand/80 bg-sand dark:bg-white/10 px-3 py-1 rounded-full border border-border-subtle/50">
+                  <span className="text-xs font-bold uppercase tracking-widest text-muted dark:text-slate-200 bg-sand dark:bg-white/10 px-3 py-1 rounded-full border border-border-subtle/50">
                     Step {index + 1}
                   </span>
                 </span>

@@ -208,7 +208,7 @@ export function PaletteSwitcher() {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="rounded-full p-1 text-muted hover:bg-mist dark:hover:bg-white/10 hover:text-ink dark:hover:text-sand transition"
+              className="rounded-full p-1 text-muted hover:bg-mist dark:hover:bg-white/10 hover:text-ink dark:hover:text-white transition"
               aria-label="Close palette selector"
             >
               <X size={16} aria-hidden="true" />
@@ -217,7 +217,7 @@ export function PaletteSwitcher() {
 
           {/* Mode Switcher */}
           <div className="mb-4">
-            <p className="mb-1.5 text-xs font-semibold text-muted dark:text-sand/75">Display Mode</p>
+            <p className="mb-1.5 text-xs font-semibold text-muted dark:text-slate-300">Display Mode</p>
             <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-border-subtle dark:border-white/10 bg-sand/60 dark:bg-white/5 p-1">
               <button
                 type="button"
@@ -225,7 +225,7 @@ export function PaletteSwitcher() {
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
                   mode === "light"
                     ? "bg-white text-ink shadow-sm"
-                    : "text-muted hover:text-ink dark:hover:text-sand"
+                    : "text-muted hover:text-ink dark:hover:text-white"
                 }`}
               >
                 <Sun size={13} className="text-amber-500" />
@@ -236,8 +236,8 @@ export function PaletteSwitcher() {
                 onClick={() => handleSelectMode("dark")}
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
                   mode === "dark"
-                    ? "bg-white dark:bg-white/20 text-ink dark:text-sand shadow-sm"
-                    : "text-muted hover:text-ink dark:hover:text-sand"
+                    ? "bg-white dark:bg-white/20 text-ink dark:text-white shadow-sm"
+                    : "text-muted hover:text-ink dark:hover:text-white"
                 }`}
               >
                 <Moon size={13} className="text-indigo-400" />
@@ -248,8 +248,8 @@ export function PaletteSwitcher() {
                 onClick={() => handleSelectMode("system")}
                 className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-semibold transition ${
                   mode === "system"
-                    ? "bg-white dark:bg-white/20 text-ink dark:text-sand shadow-sm"
-                    : "text-muted hover:text-ink dark:hover:text-sand"
+                    ? "bg-white dark:bg-white/20 text-ink dark:text-white shadow-sm"
+                    : "text-muted hover:text-ink dark:hover:text-white"
                 }`}
               >
                 <Laptop size={13} />
@@ -258,7 +258,7 @@ export function PaletteSwitcher() {
             </div>
           </div>
 
-          <p className="mb-2 text-xs font-semibold text-muted dark:text-sand/75">
+          <p className="mb-2 text-xs font-semibold text-muted dark:text-slate-300">
             Maldives Color Palettes (WCAG AA compliant)
           </p>
 
@@ -295,8 +295,8 @@ export function PaletteSwitcher() {
                       />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-ink dark:text-sand leading-tight">{palette.name}</p>
-                      <p className="text-xs text-muted dark:text-sand/70 leading-tight">{palette.tagline}</p>
+                      <p className="text-sm font-semibold text-ink dark:text-white leading-tight">{palette.name}</p>
+                      <p className="text-xs text-muted dark:text-slate-300 leading-tight">{palette.tagline}</p>
                     </div>
                   </div>
                   {isSelected ? (
@@ -314,7 +314,7 @@ export function PaletteSwitcher() {
           type="button"
           onClick={handleToggleMode}
           title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
-          className="flex size-10 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-sand shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95"
+          className="flex size-10 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95"
           aria-label="Toggle dark and light mode"
         >
           {isDark ? (

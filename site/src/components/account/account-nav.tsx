@@ -26,7 +26,7 @@ export async function AccountNav() {
           key={link.href}
           href={link.href}
           aria-current={current(path, link.href) ? "page" : undefined}
-          className="inline-flex min-h-11 items-center rounded-xl px-3.5 font-semibold text-lagoon-ink dark:text-cyan-400 aria-[current=page]:bg-white dark:aria-[current=page]:bg-white/10 aria-[current=page]:shadow-xs dark:aria-[current=page]:text-sand aria-[current=page]:underline"
+          className="inline-flex min-h-11 items-center rounded-xl px-3.5 font-semibold text-lagoon-ink dark:text-cyan-400 aria-[current=page]:bg-white dark:aria-[current=page]:bg-white/10 aria-[current=page]:shadow-xs dark:aria-[current=page]:text-white aria-[current=page]:underline"
         >
           {link.label}
         </Link>
