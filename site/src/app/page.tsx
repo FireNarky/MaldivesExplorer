@@ -214,6 +214,11 @@ export default async function HomePage() {
             <div className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/20 shadow-sm animate-in fade-in duration-500">
               <Sparkles size={14} className="text-coral animate-spin-slow" aria-hidden="true" />
               <span>Curated Maldivian Archipelago</span>
+              <span className="text-white/40">•</span>
+              <span className="inline-flex items-center gap-1 text-cyan-200">
+                <span className="text-sm" aria-hidden="true">🕊️</span>
+                <span>White Tern Soaring</span>
+              </span>
             </div>
 
             <h1 className="text-[clamp(2.5rem,1.2rem+4vw,4.5rem)] font-display font-medium leading-[1.08] tracking-[-0.025em] text-white animate-in fade-in slide-in-from-bottom-2 duration-500">

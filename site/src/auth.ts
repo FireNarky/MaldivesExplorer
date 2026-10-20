@@ -1,5 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
+import Facebook from "next-auth/providers/facebook";
 import { randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
 import { decryptSecret, verifyTotp } from "@/lib/auth/mfa";
@@ -114,6 +116,22 @@ function authInstance() {
           };
         },
       }),
+      ...(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET
+        ? [
+            Google({
+              clientId: process.env.AUTH_GOOGLE_ID,
+              clientSecret: process.env.AUTH_GOOGLE_SECRET,
+            }),
+          ]
+        : []),
+      ...(process.env.AUTH_FACEBOOK_ID && process.env.AUTH_FACEBOOK_SECRET
+        ? [
+            Facebook({
+              clientId: process.env.AUTH_FACEBOOK_ID,
+              clientSecret: process.env.AUTH_FACEBOOK_SECRET,
+            }),
+          ]
+        : []),
     ],
     callbacks: {
       jwt({ token, user }) {
