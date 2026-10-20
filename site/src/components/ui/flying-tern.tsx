@@ -4,7 +4,8 @@
  * FlyingTern – an animated white seabird (common tern) that glides
  * across the hero banner, banking gently as it climbs and dips.
  *
- * The bird is a pure-CSS/SVG animation – no canvas, no JS RAF loops.
+ * The birds are positioned fixed relative to the viewport so that
+ * the section's overflow:hidden never clips them mid-flight.
  * All motion is disabled automatically via prefers-reduced-motion.
  */
 
@@ -171,18 +172,21 @@ export function FlyingTern() {
   }, []);
 
   return (
-    /* pointer-events-none so the birds never block clicks */
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 overflow-hidden z-10"
-    >
+    /*
+     * fixed + z-[5] keeps the birds above the hero but below the sticky
+     * header (z-10). We limit height to the hero section visually by
+     * clamping the top offset — birds drift between 5vh and 40vh, which
+     * stays well within the hero on any screen.
+     * pointer-events-none so nothing is blocked.
+     */
+    <div aria-hidden="true" className="pointer-events-none fixed top-0 left-0 w-full z-[5]">
       {/* Primary bird – large, full-speed pass */}
-      <div className="tern-bird-a absolute top-0 left-0 w-[120px] will-change-transform">
+      <div className="tern-bird-a absolute top-[8vh] left-0 w-[120px] will-change-transform">
         <TernSvg />
       </div>
 
       {/* Secondary bird – slightly smaller, delayed, softer */}
-      <div className="tern-bird-b absolute top-0 left-0 w-[90px] will-change-transform">
+      <div className="tern-bird-b absolute top-[18vh] left-0 w-[90px] will-change-transform">
         <TernSvg />
       </div>
     </div>
