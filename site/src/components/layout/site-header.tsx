@@ -20,7 +20,7 @@ export async function SiteHeader() {
   ];
   return (
     <header className="sticky top-0 z-10 border-b border-border-subtle bg-sand/95 backdrop-blur">
-      <div className="relative mx-auto flex min-h-16 w-full max-w-[90rem] items-center gap-2 sm:gap-4 px-4 lg:gap-8 lg:px-8">
+      <div className="relative mx-auto flex min-h-16 w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] items-center gap-2 sm:gap-4 px-4 lg:gap-8 lg:px-8 2xl:px-12">
         <Link href="/" className="flex shrink-0 items-baseline gap-2 py-2 font-display text-lg sm:text-xl text-ocean">
           <span aria-hidden="true" className="size-2.5 sm:size-3 rounded-full bg-lagoon" />
           Maldives Explorer

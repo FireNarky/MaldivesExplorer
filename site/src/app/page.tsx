@@ -227,7 +227,7 @@ export default async function HomePage() {
         {/* Flying tern */}
         <FlyingTern />
         
-        <div className="relative mx-auto grid w-full max-w-[90rem] items-center gap-10 px-4 py-16 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32">
+        <div className="relative mx-auto grid w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] items-center gap-10 px-4 py-16 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32 2xl:px-12">
           <div className="grid content-center gap-6 lg:col-span-8">
             <div className="inline-flex items-center gap-2 self-start rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/20 shadow-sm animate-in fade-in duration-500">
               <Sparkles size={14} className="text-coral animate-spin-slow" aria-hidden="true" />
@@ -571,8 +571,8 @@ export default async function HomePage() {
       ) : null}
 
       {/* How Planning Works - Compact, clean steps */}
-      <section className="surface-tint full-bleed bg-mist/60 dark:bg-white/[0.03] dark:border-y dark:border-white/10 rounded-3xl">
-        <div className="mx-auto grid w-full max-w-[90rem] gap-8 px-4 py-12 lg:px-8 lg:py-20">
+      <section className="surface-tint full-bleed bg-mist/60 dark:bg-white/[0.03] border-y border-border-subtle/80 dark:border-white/10">
+        <div className="mx-auto grid w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] gap-8 px-4 py-12 lg:px-8 lg:py-20 2xl:px-12">
           <div className="max-w-xl">
             <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">Seamless Process</p>
             <h2 className="text-3xl font-display text-ocean mt-1">How Trip Planning Works</h2>

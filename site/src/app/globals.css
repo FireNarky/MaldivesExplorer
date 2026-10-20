@@ -8,6 +8,10 @@
   }
 }
 
+:root {
+  --sbw: 0px;
+}
+
 :root,
 html[data-palette="ocean"] {
   --color-ocean: #083b4c;
@@ -343,10 +347,12 @@ html[data-theme="dark"][data-palette="bioluminescence"] {
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
   --breakpoint-2xl: 96rem;
+  --breakpoint-3xl: 120rem;
 }
 
 @layer base {
   html {
+    overflow-x: clip;
     background: var(--color-sand);
     color: var(--color-ink);
     font-size: 100%;
@@ -551,17 +557,9 @@ html[data-theme="dark"][data-palette="bioluminescence"] {
 }
 
 @utility full-bleed {
-  margin-inline: -1rem;
-  width: calc(100% + 2rem);
-  max-width: 100%;
-}
-
-@media (min-width: 1024px) {
-  .full-bleed {
-    margin-inline: -2rem;
-    width: calc(100% + 4rem);
-    max-width: 100%;
-  }
+  margin-inline: calc(50% - (100vw - var(--sbw, 0px)) / 2);
+  width: calc(100vw - var(--sbw, 0px));
+  max-width: calc(100vw - var(--sbw, 0px));
 }
 
 @keyframes float {

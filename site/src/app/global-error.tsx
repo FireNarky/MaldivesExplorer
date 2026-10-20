@@ -14,7 +14,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
   return (
     <html lang="en" className={`${display.variable} ${sans.variable}`}>
       <body className="flex min-h-screen flex-col font-sans antialiased">
-        <main id="main" className="mx-auto w-full max-w-[90rem] flex-1 px-4 py-8">
+        <main id="main" className="mx-auto w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] flex-1 px-4 py-8 2xl:px-12">
           <ErrorState
             title="Something went wrong"
             action={
