@@ -586,108 +586,155 @@ html[data-theme="dark"][data-palette="bioluminescence"] {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   White Tern (Dhondheeni) Maldivian Seabird Soaring Animations
+   Hyper-Realistic White Tern (Dhondheeni) Avian Kinematics
+   10-frame high-resolution vector flight sprite sheet
    ───────────────────────────────────────────────────────────────────────── */
-@keyframes tern-flap-upper {
-  0%, 100% {
-    transform: rotate(0deg) scaleY(1);
-  }
-  35% {
-    transform: rotate(-22deg) scaleY(0.72);
-  }
-  70% {
-    transform: rotate(14deg) scaleY(1.08);
-  }
+:root {
+  --tern-sprite-b64: url('data:image/svg+xml;base64,PHN2ZyBpZD0iYmlyZC1jZWxscyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMzY3MSA1MTAiPgogIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICA8Zz4KICAgICAgPHBhdGggY2xhc3M9ImNlbGwtY29udGFpbmVyIiBzdHJva2U9Im5vbmUiIGQ9Ik0uNS41aDM1OXY1MDlILjV6Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjZWxsLWNvbnRhaW5lciIgc3Ryb2tlPSJub25lIiBkPSJNMzU5LjUuNWgzNTl2NTA5aC0zNTl6Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjZWxsLWNvbnRhaW5lciIgc3Ryb2tlPSJub25lIiBkPSJNNzE4LjUuNWgzNTl2NTA5aC0zNTl6Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjZWxsLWNvbnRhaW5lciIgc3Ryb2tlPSJub25lIiBkPSJNMTA3Ny41LjVoMzcwdjUwOWgtMzcweiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2VsbC1jb250YWluZXIiIHN0cm9rZT0ibm9uZSIgZD0iTTE0NDguNS41aDM3MHY1MDloLTM3MHoiLz4KICAgICAgPHBhdGggY2xhc3M9ImNlbGwtY29udGFpbmVyIiBzdHJva2U9Im5vbmUiIGQ9Ik0xODE4LjUuNWgzNzB2NTA5aC0zNzB6Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjZWxsLWNvbnRhaW5lciIgc3Ryb2tlPSJub25lIiBkPSJNMjE4OS41LjVoMzcwdjUwOWgtMzcweiIvPgogICAgICA8cGF0aCBjbGFzcz0iY2VsbC1jb250YWluZXIiIHN0cm9rZT0ibm9uZSIgZD0iTTI1NTkuNS41aDM3MHY1MDloLTM3MHoiLz4KICAgICAgPHBhdGggY2xhc3M9ImNlbGwtY29udGFpbmVyIiBzdHJva2U9Im5vbmUiIGQ9Ik0yOTMwLjUuNWgzNzB2NTA5aC0zNzB6Ii8+CiAgICAgIDxwYXRoIGNsYXNzPSJjZWxsLWNvbnRhaW5lciIgc3Ryb2tlPSJub25lIiBkPSJNMzMwMC41LjVoMzcwdjUwOWgtMzcweiIvPgogICAgICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNTEgMjg4LjM4YzEzLjMzLTUuMzQgMzUuMzMtOS4zNCA2Ni0xMiAwIDAgMTguNDQtOS45NSA1NS0xNSAxLjA0LS4xNSA3LjUtOCAzNi0xMyAxNiAwIDIxLTMuODggMzAgNSAzLjUzLTEzLjUzIDE5LjEzLTE2LjU4IDI5LTE1IDYuOSAxLjEgMTEuMyA1LjkzIDEyIDggNCAxMiAyMSA1IDMwIDEyLTIzIDYtMjMgNy0zMiAxMS0xNiAxNC0zMSAzMS00NyAzMS0xNiA0LTMyLjgzIDUuMzMtNTAuNSA0LTEgNC0zLjUgNi42Ni03LjUgOC02IDItMS05LTQtMTJzLTMgMTAtMTcgMThjLTEtMTQtNS0xMC01LTE4czQgMTMtMTcgMThjLTE0IDMuMzMtMzEuNjcgNC01MyAyIDI2LTguNjcgNDEuMzMtMTYuMzQgNDYtMjMtNSAwLTE4LTEtMjEtOS0xNC00LjUtMzAuNjctNC41LTUwIDB6Ii8+CiAgICAgIDxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik02MzkgMjczYzAgMi4wNy0xMCAzLTE2IDUtOSAxLTggOC0xNCA3cy01IDgtMTkgMTRjMiAxMSAyMSA5IDM2IDE5IDI5IDMwLjYyIDE4IDE5IDM3IDYzIDE0IDI4IDE4IDMwIDI3IDU3LTEgMS0xMS0xLTE0LTctMSA1LTUgMS00IDctNS0xLTgtOC0xMi0xMS00LTEgMSA3LTIgOC00IDAtNS04LTktOC00IDEgMSA2LTIgNy0zMy0zMC00My0yMS00My0zNi04IDEwLTEwLTItMTkgMy00LTUtNi0xMC0yLTE3LTEtNS03IDUtMTEgMy0xLjMzLTYgMS0xMi42NyA3LTIwLTYuNjcgNi42Ny0xNCAxMC0yMiAxMCAxLTEwLTEtNi41IDUtMTYtNiA3LjUtMTMgOC0xOSA2LTQuNDMtMi4xIDQtOCAyLTExLjUtOCAwLTIyLjc2LS4zLTI0LTMuNS0zLjI2LTguNCA4LTE5IDQtMjUtMy4xMi00LjY3LTEyIDktMTUtMyAwLTEyLTQuNjctMTctMTQtMTUtOC42Ny0xLjMzLTE5LjMzLTEuMzMtMzIgMC0xOSAyLTI3LTUtNTgtNSAxMC01IDktMTMgMjctMTMtMjEtMy0xMC0xMC00NS0xMyAzMC04IDMyIDAgNTQgNyA2OC03IDIyLTE1IDk0LTIyIDE0LTIgMzYtNCA1OCAyIDUtMiA2LTUgMTUtNiA4IDAgMTIuNjcgMy42NyAxNCAxMSAxMC42Ny43MiAxNiAxLjcyIDE2IDN6Ii8+CiAgICAgIDxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik03MjkgMjk5LjAzYzMyLTE0IDU2LTI2IDkwLTQwIDIwLTYgMzctNSA1Ni04IDI4IDAgMTctOCA1NS0zIDgtMSAxMC45NS03LjUgMTktNyA4LjY3IDAgMTMuMzMgMi42NiAxNCA4bDI2IDUtMjQgNWMtMi42NyA1LjMzLTggOC4zMy0xNiA5LTEyIDEyLTExIDE4LTI5IDIxIDIyIDEzIDIzIDE3IDY0IDM4IDEzIDExIDEzIDE1IDE3IDMxIDQgMTUuOTggMTQuMDYgMjUuNzQgMjEgMzUgMjYgNDYgMjMgNTkgNDUgODAtMTEtMS0yMy04LTI4LTEzLTQtMS0zIDUtMyA4LTYtMi04LTE1LTE2LTEzLTMuNDYgMCA0IDUgMCAxMy0xMy01LTE0LTctMTYtMTMtMy00LTctMTEtMy0xMi0yIDggMCAxMi02IDEyLTUtMTAtNy0zLTExLTEyLTgtMTQtMTctMTItMTctMjktNCAwLTcgNC0xMCA5LTMtNCAwLTktMS0xMi0yIC42Ni00LjMzIDEuNjYtNyAzLTItMTIuNjctMi0yMS42NyAwLTI3LTggMi00IDYtMTUgMTAtNS02LTQtMTItMi0yMS01IDYtNS0zLTEyIDItOS05LTEwLTE4LTI1LTE4LTUtMTItMy0yMC0xMS0yMi0zLjIzLjg2LTQgMTAtNiA3cy0yLTEwLTUtMTJjLTItMy02IDYtOSAzIDAtNS0yLTExLTYtMTQtMy00LTUgMC0xMCAzLTItNS0yLTktMS0xNC00LTEtMTQgNS0xMi0yIDAtNy00LTQtOC00LTUgMCAxLTUtMS02LTUtMi0xMyAyLTIxIDYtNS0yIDQtMTAgMC0xMC0zMS0xLTM4IDctNzYgNHoiLz4KICAgICAgPHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTEzNjcgMjU0LjFsLTE4LTNjLTItNi01LjMzLTkuMzUtMTAtMTAtMTQtMS0xNyA3LTIyIDEwLTIxLTMtMTktMS0zNSAwLTMwLTUtMzYgNC01MCA3LTM2IDUtMzMgOS00OCAxNi0zNCAxOC00MSAxOS03NSAyOSA2LjY3LjY1IDE0IDAgMjItMi0xNC42NyA0LTIxIDYuMzItMTkgNyAzMS01IDI5LjAyIDQuMjMgNTIgMCAxMS0zIDEwLTkgMTMtMTIgMiA3IDEgNyAyIDEzIDE2LTMgMjEtMiAzMC0yIDMgNC0zLjY2IDguNiAwIDEwIDQtMS4zNSA5LjMzLTIuNjggMTYtNC00IDQuNjUtNS42NyA4LjMyLTUgMTEgMTUgMiAxMiA0IDI0IDEtMTEgNC0xMSA0LTE2IDEwIDE2IDMgMTQgMSAyNCAyLTQgNC0zIDgtMSAxMSA2LTMgOS41My00LjUgMTItMy0zIDMuNDQtNSA3LTIgOSAxMC0yIDEyLjQtNS4yOCAxNS0yLTMgOCAwIDExIDEgMjIgNSAwIDEwLTIgMTUtNCAxIDgtMyA4LTMgMTYgNiAzIDEzLTMgMTctMS03IDQtNyA2LTggOSA3IDMgNiAyIDE0IDAtNS4zMyA0LTcgNy42NS01IDExIDUuMzMtMy4zNSA4LjMzLTMuMzUgOSAwLTIgNiAwIDcgMSAxNSAxMC01IDEwIDIgMjEgNSA1Ljk3IDMuMjcgNi40IDEwLjU0IDExIDE0IDkgNi43NCAyMCA5IDE5IDlzLTktMTEtNS0xMGMzLjMzIDQgNy42NyA4LjMyIDEzIDEzIDAtOC0uNjctMTMuNjgtMi0xNyA5IDE0IDEyIDEyIDI4IDIzIDMtMTMtNi0xOC0xNS0yOCAxOSAyMiAxOSAyMCAzMCAyNC0yNC0zMC0yMC0yNi0yOS01My0xNC0yNi0yNC02MS0zOS03NS0xOC0xMi0xOS0xNy0zOC0yNi0zLjMzLTQuNjgtNy4zMy04LTEyLTEwIDEyLTIgMjEuMzMtNS42OCAyOC0xMSAyLTUgNy01IDExLTkgNi0xLjM1IDkuNjctNC4zNSAxMS05bDE4LTZ6Ii8+CiAgICAgIDxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik0xNzUxIDI1NmMtMTEtMS0xMi00LTI0LTYtMy02LTQtNS0xMC03LTE0IDAtMjEgNy0yOSAxMi0yNC0zLTMxLTEtNDQgMi00NiAxMi00MyAxMi03MCAyMy00NiAyNy0zOSAzMC01OCA0MCAyMyA2IDMxLTMgNDctNy02LjY3IDIuNjctOC42NyA2LTYgMTAgNi42Ny0yLjY3IDExLTMuNjcgMTMtMy01IDItOS43IDEwLjU3LTUgMTAgMjctMiAzMC43LTE0LjI3IDQ2LTE1LTQgNS02IDgtNCAxMyAxMi0zIDExLTIgMTgtNC0yIDYtMyA2IDAgMTUgOC41IDIgMTMtNSAxMy01IDQgNCAwIDExIDAgMjAgMTEgMCAxMSAyIDE1IDAtMiA4IDIgOCA1IDE0IDQtOCA3LTUgMTQtMTItMiAxMyA1IDEyIDYgMjEgMTAtOSAxMS0xMSAxMy0yMS00IDE1IDIgMTcgNSAyOCA0LTcgNy03IDgtMTYgMSA1IDMuOTggNy44NyA1IDYgMy0xMCAzLjMyLTguMTIgNC02LTMgMTMgMiAxNiA1IDI3IDctMTIgNS0xOCA1LTE5IDIgMTUgMTUgOCAyOCAzMyA0LTE0LTE2LTM4LTIzLTczLTQtMjMtMy0yOC0xNC00My0zLTctMTAtOC0xMy03IDgtNCA3LTggMTItMTUgMTUtMiAxMS01IDE1LTEwLTEgMCA1LTQgMjMtNXoiLz4KICAgICAgPHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTIxMTkuNjYgMjcwLjM2YzAtMy0xMS02LTIwLTYtMS4zNC0yLjY3LTMuNjctNS03LTctNS4zNC0yLjY3LTEyLjM0LTIuNjctMjEgMC04IDEtMTYtMTMtOC0yNiA3LTMgMTAtOSAxMS0xNC04LTQtMTEtNS0yMi00LTY1IDQtODUgMjgtMTEwIDUwLTggNyAxMCA1IDE4IDUtNDIgMC03OCA0MS03MiAzN3MxNiA2IDM1LTExYzItMS03IDUtMTUgMTUgMjEtMyAyMS02IDM5LTQtMiA3IDMuNiA3LjIyIDkgOCA0LjMzLjYyIDkuMi0uNDQgMTUgMCAxMi41MyAxLjQgMTMtMSAxOC0xIDYgMCA1LjM1LjYgOSAwIDktMiA3LTMgMTAtNy0zIDggMSAxMSA2IDIxIDctNiA2LTE0IDYtMTkgMCAxMy0xIDkgMiAxNyA2LTUgNi00IDgtMTItMyAxMC0xIDE3IDMgMjggNSAwIDYuODQtNC42NiAxMC0zIDAgNSAwIDMgNiAxMyA1LTUgMiAzIDctOC0xIDEwIDQgNCAxMCAxOCA1LTEwIDMtMTQtMS0yMyA2IDEzIDggMTIgMTMgMTkgMi0xOS0xLTIzLTctMzYgMy0xOS02LTIwLTUtMzMuNSA4LTEwLjUgMTUgMiAyNC02LjUgNy0xIDQtNCA5LTcgOC01IDE5IDEgMjAtM3oiLz4KICAgICAgPHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTI0ODUgMjc4Ljg0Yy02LTMtNy0xLTE2LTMgMS01LTQuNjYtMTAtMTEtMTAtOS4xNiAwLTkuNSA1LjItMjEgOC05IDIuMi0xMi43IDMuMDMtMTgtMi0yNC0xNS0xMS0xOS0zMi00NC05LTctMTItMTEtNC0yMSAxMy0xNCAxNy0yMiAxNy0zMi00LTctODUtMy0xMTMgMzQgNS4wNiAxLjE1IDE2LjgtNi43IDIwLjY1LTYgNC4zNSAxLTE4LjY1IDEzLTkuNjUgMTEgOS0yIDE1LTcgMjEtNyAyLjY3LS4wNS0yIDItMyA3IDMuNzguOSA5LjgtMS44NSAxNi0zIDMuNTItLjY1IDcuOS4zNCAxMCAwLTQgMy0xMCAxLTIwIDE3IDYgNS41IDE0LTEuNSAyMC0xLjUtMyA1LjUtMTEgMi41LTE1IDIwLjUgMiA0IDExLTYgOS0yIDAgNC03IDItOSAxOCA2IDAgOC03IDktMi0yIDMtNSAzLTUgOSAzIDMgOS00IDExLTQtMSAyLTYgMi02IDEwLTM4IDktNDkgMTgtNjggMzAgNyA0LjkgMjMtNSAyNS0xLTEuNDYgMy4yMi0xMSA1LjktMjggMTEgMTcgMiAzMSAyIDQyLjY1LTUuMSAxMC4zNSAxLjEgMTguNTctMS45IDIxLjM1LTEuOSA0IDYgMCAxMyA3IDE1IDMtNSA4LTEyIDktMTUgMy0yLTUgMTEgMyAxMyA5IDAgMTkgNyAzNiA3IDE4IDAgMjItNiA0Mi0xMyAxMi0xIDIwLTUgMjUtMTggMy04IDktNCAxOC0xMyAyLTIgMTItMyAxNi02eiIvPgogICAgICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjg1OSAyNzUuNzRjLS41Mi0yLjM1LTgtMy0yMC01LTYuNjItMy4xLTcuNjgtOS0xNC05LTEzIDAtNy44MyA2LjE2LTIxIDktNy43IDEuNjctMTUgMi0yMCAwcy02LjMyLTMuNy0xMC02Yy0xOS4yLTExLjktMTAuMTcuMjUtMTkuMTctMjAtMTAuNTQtMTItMTAuNi0yNC41NS02LjgzLTQyIC45Ny00LjUgMi4yNy04LjE1IDQtMTEgNi05LjgzIDEyLjY3LTMwLjYgMTEtNDUtMS40LTEyLjE2LTExLTE0LTI3LTE3LTIxLTQtMzMtNS01OC0yLTkgOC0yMSA1LTMzIDIxIDktMSA3LTMgMTQgMyA4LTQgMTUuNDgtMS4zIDE2LTEgNy4xNiA0LjEzLTMuNTQgMy43MyAxIDYgNiAwIDIgNCAwIDkgNS0uNSA4LTEgNiA0IDQuNCAzLjIyIDguMzYtMy4yNCA5IDEgLjg2IDUuNzYtMTEuNyA5LjQtOSAxNyAxOCAzIDIwIDUgMjIgNy00IDEgMyAyLTI2IDExIDMgMTAgMTQgNiAxNSAxNiAwIDctOSA0LTEyIDE3IDEyIDIgOSA2IDIzIDYtNSAwLTE4IDQtMjYgMTIgOSAyIDYgNiAxNCA3IDcgMyA2IDMuMzYgNCA3LTYuNSAxMS44Ni01IDE1LTIwIDIzcy0yNi4zIDE1Ljc4LTM1IDIyYy00LjYzIDMuMzItNy40OCA4LjIzLTExIDEyIDEyLTIgMTItMyAxNS0yIDIgNCAxLTMgMCAxMSA2LTUgMTYtMTIgMjItMTYgNSAwIDEzLTMgMTcgMCA1IDAgMC03IDAtOC45NiAwLTEuOTYgMy40OCA1LjggNSAzLjk2IDUtNiA0LTkgMy0xNCA0IDMgMSAxMC45IDYgMTIgMTkgNiAyMSA1IDQyLTEgMS4yLS4wNyAyLjk1LS45MiA0LjMtLjk2IDEuMiAxLjQyLjcgMyAzLjcgMy45NiAxLjU3LTIuMzUgNC45My0zLjA2IDYuODMtMy4xLjUyIDAtLjI0LS45MyAwLS44NiAxMCAzIDE3LjE3IDMuOTYgMzIuMTcuOTYgMTMtOCAyNC01IDM1LTE3IDE0LTYgMTQtMTAgMTctMTYgNC0zIDkgMCAyMC00eiIvPgogICAgICA8cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzI0MyAyODZjLTgtMy03LTItMTctNC03LjYtMy4yOC01LTExLTIxLTEzLTE2LjEgMS4wMy0xNSAxNC0zMSAxMy0xMC40My0uNjUtMTMtNy0yMS0xMXMtMTMtNS0xOS0xMmMtMTMtNDItMS4yNy05LjU2LTMtNTktLjI3LTcuNTYtNi00NC0xLTU0IDgtMyA0Ljg0LTEzLjggMC0yMi0zMi0zNC00MC4yMi01OC4wMy02MC03OS00LTEgNSAxMi0yIDctOC44LTUuMDgtNy0xNC0yMy0yMiAxIDUgNCAxMiAyIDE1LTUtMy0xNC0yMy0yMC0yMyAxIDQgOCAxMSA4IDIzIDAgNC0xNC02LTktMXM3IDEzIDkgMTljNy4yNSAxMy4xOCAyMiAyMyAyMiAyMi0zLTEtMTctMTItMjYtMTEgMiA1IDggNyAxMCAxNy0yIDIgMCAzLTggMCA0IDE5IDE0IDI4IDM1IDQxIDIuNiA0LjI0LTExLjEtNC4xOC0xNC0xLTIuNiAyLjgyIDEuNjcgOC42IDUgMTUgOS4xNyAxNy42IDE4LjMyIDE4LjkyIDIwIDMwLTEgNC05Ljc3LTEuMjYtMTQgMi0yLjI3IDEuNzQgNC43NSA1Ljc0IDQgMTAtLjc1IDQuMjQtOS4yMiAxLjY4LTggNiAyLjQ4IDIuOTgtMiAxMi0xIDE3czQgNiA0IDExIDctMiA4IDZjNSA0LTEgNC04IDEyIDUgNSAxMCA0IDggMTRzLTcgNi0xMiAxMmMtNSA3LTMgMTEtMTAgMTctOSA4LTE1IDQtMzEgMTYtMTMgNy0xNCAyLTMwIDEzIDE4IDIgMzYgMTIgNjggNSA1IDItNSA1LTIgNyAxNCAxIDE2IDMgMjMgMC00IDMtMTAuNjIgOC43LTcgOSA4LjUzLjc0IDIzLjM4LS45NSAzMCAwIDguNCAxLjIgMTIuNzUgNSAyNyA1IDcuNyAwIDE2LjI1LTguMTggMjEtNyA3LjMgMS44IDYgMi45MyAxNyAwIDE5LjMzLTUuMTUgMjQtOSAzOS0xOSA4LTEyIDEzLTkgMjAtMjEgMTEtMiAxOC0yIDE4LTV6Ii8+CiAgICAgIDxwYXRoIGZpbGw9IiNmZmZmZmYiIGQ9Ik0zNTk1LjIgMjc0YzAtMi41Ni01LTQtMTMtNy00LjI1LTMuMTMgMC04LTEwLTEwLTE3IDAtMTEuMDMgOC45OC0yMSAxMi0xMC0xLTktMi0yMSAxLTQuMTUgMS4wNC0zLjktMTAuOC02LTEzLTIuOTctMy4wNi01LTMtMTAtOC0zLTExIDYtMjQgMy00NS0xLjM0LTkuMzItNC42OC0yMS41Ni05LTMzLTIuNDUtMTMuMS0yLTEwLTEzLTIzLTIxLTI4LTM3LTM3LTQ3LTY3LTQuOTYtNC41Ni0uNjggMTIuNDQtNSAxMS03LjY4LTIuNTYtMTUuNC0xOS0xOS0xOS0yLjkgMCA3LjUgMTcuOSA0IDIzLTMgNC40LTE3LTcuNjctMTctNSAwIDMuMzMgOCAxNiAxNSAxOS00IDQtOS41LTQuNi0xMS0xIDcgOSAxIDExIDYgMjQgNS43NyAxMi4wNSAxMSA4IDE2IDE4LTMuNjIgNC4xNy0yNC41LTYuOC0yNi0zLTEuMDIgMi41MyA5LjcgMi43IDE3IDEwIDYgNiAxLjggMTMuNDggNiAxNiA1IDMgMiA2IDggMTNzMTAtMiA4IDhjLS45NCA0LjY2LTQgNC4zNC00IDkgMCA1LjM0IDgtMSA2IDUgMCAyLjU3LTQgNC02IDggMCAuNzIgNy41OC0xLjQ3IDggMSAxLjA4IDYuNTMtNy4yMyAxMS44LTQgMTcgMy4yNyA1LjMgMTIgNCAxNyAzLTUgNC0xMyAzLjk1LTEzIDkgMCA5LjQ1IDEwIDEzIDQgMTggMiA1LTUgOS00IDEzczUuMTcgOC40NyAxMCAxMGMzLjI0IDEuMDMgOSAyIDYgMy02IDItNy0xLTEyIDMtNC4yNSAwLTItNi0xMC00LTI0IDQtNjAgMjAtNzMgMzQtMiAzIDEyLTMgMjEtNC04IDMtMjAgNy01IDYgMTEgMSAyOCAwIDU3LTUgMjEuNDYtLjY2IDE3IDcgMzkgMiAxMSAzIDI4IDYgNDMtNSAxNC0yIDE1LjU4LTkuODUgMzMtMjMgNi0yIDExLTExIDE0LTE3IDcuOC0zLjUzIDEyLTEgMTgtNHoiLz4KICAgIDwvZz4KICA8L2c+Cjwvc3ZnPg==');
 }
 
-@keyframes tern-flap-lower {
-  0%, 100% {
-    transform: rotate(0deg) scaleY(1);
-  }
-  35% {
-    transform: rotate(22deg) scaleY(0.72);
-  }
-  70% {
-    transform: rotate(-14deg) scaleY(1.08);
-  }
+.real-tern {
+  background-image: var(--tern-sprite-b64);
+  background-size: auto 100%;
+  width: 72px;
+  height: 100px;
+  will-change: background-position;
+  animation-name: fly-cycle;
+  animation-timing-function: steps(10);
+  animation-iteration-count: infinite;
+  filter: drop-shadow(0 8px 18px rgba(0, 15, 24, 0.45));
 }
 
-@keyframes tern-flight-lead {
+@keyframes fly-cycle {
   0% {
-    transform: translate3d(-140px, 40px, 0) rotate(5deg);
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -720px 0;
+  }
+}
+
+/* Primary Tern flight across hero */
+@keyframes tern-flight-one {
+  0% {
+    transform: translate3d(-100px, 60px, 0) rotate(5deg) scale(0.85);
     opacity: 0;
   }
   3% {
     opacity: 1;
   }
   20% {
-    transform: translate3d(20vw, 15px, 0) rotate(-4deg);
+    transform: translate3d(20vw, 25px, 0) rotate(-6deg) scale(0.85);
   }
   42% {
-    transform: translate3d(45vw, 75px, 0) rotate(7deg);
+    transform: translate3d(45vw, 95px, 0) rotate(7deg) scale(0.85);
   }
   65% {
-    transform: translate3d(68vw, 25px, 0) rotate(-3deg);
+    transform: translate3d(68vw, 35px, 0) rotate(-4deg) scale(0.85);
   }
   85% {
-    transform: translate3d(88vw, 55px, 0) rotate(4deg);
+    transform: translate3d(88vw, 75px, 0) rotate(5deg) scale(0.85);
   }
   97% {
     opacity: 1;
   }
   100% {
-    transform: translate3d(calc(100vw + 120px), 20px, 0) rotate(-6deg);
+    transform: translate3d(calc(100vw + 100px), 25px, 0) rotate(-5deg) scale(0.85);
     opacity: 0;
   }
 }
 
-@keyframes tern-flight-companion {
+/* Companion Tern flight - slightly higher and faster */
+@keyframes tern-flight-two {
   0% {
-    transform: translate3d(-140px, 90px, 0) rotate(3deg) scale(0.75);
+    transform: translate3d(-100px, 30px, 0) rotate(3deg) scale(0.64);
     opacity: 0;
   }
   4% {
     opacity: 0.9;
   }
   25% {
-    transform: translate3d(24vw, 110px, 0) rotate(5deg) scale(0.75);
+    transform: translate3d(25vw, 85px, 0) rotate(5deg) scale(0.64);
   }
   50% {
-    transform: translate3d(52vw, 35px, 0) rotate(-5deg) scale(0.75);
+    transform: translate3d(55vw, 20px, 0) rotate(-5deg) scale(0.64);
   }
   75% {
-    transform: translate3d(78vw, 75px, 0) rotate(3deg) scale(0.75);
+    transform: translate3d(80vw, 65px, 0) rotate(3deg) scale(0.64);
   }
   96% {
     opacity: 0.9;
   }
   100% {
-    transform: translate3d(calc(100vw + 120px), 45px, 0) rotate(-3deg) scale(0.75);
+    transform: translate3d(calc(100vw + 100px), 35px, 0) rotate(-2deg) scale(0.64);
     opacity: 0;
   }
 }
 
-.tern-lead {
-  animation: tern-flight-lead 14s cubic-bezier(0.38, 0, 0.24, 1) infinite;
+/* Distant Tern high over atolls */
+@keyframes tern-flight-three {
+  0% {
+    transform: translate3d(-80px, 15px, 0) rotate(2deg) scale(0.45);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.75;
+  }
+  30% {
+    transform: translate3d(30vw, 40px, 0) rotate(3deg) scale(0.45);
+  }
+  60% {
+    transform: translate3d(65vw, 10px, 0) rotate(-3deg) scale(0.45);
+  }
+  95% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(calc(100vw + 80px), 25px, 0) rotate(0deg) scale(0.45);
+    opacity: 0;
+  }
+}
+
+.tern-container-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  animation: tern-flight-one 14s cubic-bezier(0.38, 0, 0.24, 1) infinite;
   animation-fill-mode: both;
 }
 
-.tern-companion {
-  animation: tern-flight-companion 16s cubic-bezier(0.38, 0, 0.24, 1) infinite;
-  animation-delay: 5s;
+.tern-container-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  animation: tern-flight-two 16s cubic-bezier(0.38, 0, 0.24, 1) infinite;
+  animation-delay: 4.5s;
   animation-fill-mode: both;
 }
 
-.tern-wing-up {
-  animation: tern-flap-upper 0.8s ease-in-out infinite;
-  transform-origin: 65px 28px;
-  transform-box: fill-box;
+.tern-container-3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  animation: tern-flight-three 18s cubic-bezier(0.38, 0, 0.24, 1) infinite;
+  animation-delay: 9s;
+  animation-fill-mode: both;
 }
 
-.tern-wing-down {
-  animation: tern-flap-lower 0.8s ease-in-out infinite;
-  transform-origin: 65px 38px;
-  transform-box: fill-box;
+.tern-flap-1 {
+  animation-duration: 0.95s;
 }
+
+.tern-flap-2 {
+  animation-duration: 0.8s;
+}
+
+.tern-flap-3 {
+  animation-duration: 1.1s;
+}
+
 
 
