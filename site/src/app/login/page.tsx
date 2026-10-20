@@ -19,13 +19,14 @@ export const metadata: Metadata = publicMetadata({
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; sent?: string; next?: string; claim?: string }>;
+  searchParams: Promise<{ error?: string; sent?: string; next?: string; claim?: string; uat?: string; dev?: string }>;
 }) {
   const params = await searchParams;
   const message = params.error ? messages[params.error] : undefined;
   const next = safeAccountPath(params.next ?? "");
   const claim = claimToken(params.claim ?? "");
   const registerHref = claim ? `/register?claim=${encodeURIComponent(claim)}` : "/register";
+  const showUat = params.uat === "1" || params.dev === "1";
 
   return (
     <div className="py-6 sm:py-12">
@@ -35,6 +36,7 @@ export default async function LoginPage({
         next={next}
         claim={claim}
         registerHref={registerHref}
+        showUat={showUat}
         passwordSignInAction={passwordSignIn}
         requestMagicLinkAction={requestMagicLink}
       />
