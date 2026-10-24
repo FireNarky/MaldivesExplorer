@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FieldError } from "@/components/ui/field-error";
 import { SocialOAuthButtons } from "@/components/auth/social-oauth-buttons";
+import type { OAuthProviderId } from "@/lib/auth/oauth-providers";
 
 interface LoginFormProps {
   message?: string;
@@ -27,7 +28,11 @@ interface LoginFormProps {
   next?: string | null;
   claim?: string | null;
   registerHref: string;
-  showUat?: boolean;
+  /** Present only when the server-side local UAT gate is open (see lib/auth/uat.ts). */
+  uatCredentials?: { email: string; password: string } | null;
+  /** Provider ids the server reports as configured; empty hides social sign-in entirely. */
+  oauthProviders?: readonly OAuthProviderId[];
+  oauthSignInAction?: (formData: FormData) => Promise<void>;
   passwordSignInAction: (formData: FormData) => Promise<void>;
   requestMagicLinkAction: (formData: FormData) => Promise<void>;
 }
@@ -38,7 +43,9 @@ export function LoginForm({
   next,
   claim,
   registerHref,
-  showUat = false,
+  uatCredentials = null,
+  oauthProviders = [],
+  oauthSignInAction,
   passwordSignInAction,
   requestMagicLinkAction,
 }: LoginFormProps) {
@@ -94,8 +101,8 @@ export function LoginForm({
           </div>
         ) : null}
 
-        {/* Quick UAT Test Credential Bar (Admin/QA only via ?uat=1) */}
-        {showUat ? (
+        {/* Local-only quick fill: rendered only when the server opened the UAT gate. */}
+        {uatCredentials ? (
           <div className="mb-6 rounded-2xl border border-border-subtle/80 bg-sand/70 dark:bg-white/5 p-3.5">
             <div className="mb-2 flex items-center justify-between text-xs">
               <span className="font-semibold uppercase tracking-wider text-muted flex items-center gap-1">
@@ -108,31 +115,19 @@ export function LoginForm({
                 </span>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid gap-2">
               <button
                 type="button"
                 onClick={() =>
-                  fillCredentials("browser-admin@example.com", "AdminPassword123!", "Admin")
+                  fillCredentials(uatCredentials.email, uatCredentials.password, "Admin")
                 }
                 className="flex items-center justify-between rounded-xl border border-border-subtle bg-white dark:bg-white/5 px-3 py-2 text-left text-xs font-medium text-ink transition hover:border-lagoon-ink hover:bg-mist/40 dark:hover:bg-white/10 active:scale-95"
               >
                 <div className="min-w-0">
-                  <span className="block font-semibold text-ocean">Admin Portal</span>
-                  <span className="block truncate text-[11px] text-muted">browser-admin@...</span>
-                </div>
-                <span className="text-[10px] text-lagoon-ink dark:text-cyan-400 font-bold">
-                  FILL
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => fillCredentials("traveler@example.com", "Traveler123!", "Traveler")}
-                className="flex items-center justify-between rounded-xl border border-border-subtle bg-white dark:bg-white/5 px-3 py-2 text-left text-xs font-medium text-ink transition hover:border-lagoon-ink hover:bg-mist/40 dark:hover:bg-white/10 active:scale-95"
-              >
-                <div className="min-w-0">
-                  <span className="block font-semibold text-ocean">Traveler Guest</span>
-                  <span className="block truncate text-[11px] text-muted">traveler@...</span>
+                  <span className="block font-semibold text-ocean">Local admin</span>
+                  <span className="block truncate text-[11px] text-muted">
+                    {uatCredentials.email}
+                  </span>
                 </div>
                 <span className="text-[10px] text-lagoon-ink dark:text-cyan-400 font-bold">
                   FILL
@@ -142,8 +137,15 @@ export function LoginForm({
           </div>
         ) : null}
 
-        {/* Social OAuth Integration */}
-        <SocialOAuthButtons mode="login" />
+        {/* Social sign-in: only providers configured on the server are rendered. */}
+        {oauthSignInAction ? (
+          <SocialOAuthButtons
+            providers={oauthProviders}
+            action={oauthSignInAction}
+            next={next}
+            claim={claim}
+          />
+        ) : null}
 
         {/* Tab Switcher */}
         <div className="mb-6 grid grid-cols-2 gap-1 rounded-2xl border border-border-subtle bg-sand/60 dark:bg-white/5 p-1">

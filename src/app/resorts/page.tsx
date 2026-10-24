@@ -8,10 +8,12 @@ import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { listLeadResortImages, listPublishedResorts } from "@/modules/catalog";
 import { db } from "@/lib/db";
+import { publishedPublic } from "@/modules/discovery/visibility";
 
 export const metadata: Metadata = publicMetadata({
   title: "Maldives Luxury Resorts Collection",
-  description: "Curated collection of the Maldives' premier private island resorts, overwater villas, and house reefs.",
+  description:
+    "Curated collection of the Maldives' premier private island resorts, overwater villas, and house reefs.",
   path: "/resorts",
 });
 
@@ -29,7 +31,7 @@ export default async function ResortsPage({ searchParams }: PageProps) {
     const [allResorts, atolls] = await Promise.all([
       listPublishedResorts(),
       db.atoll.findMany({
-        where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
+        where: publishedPublic(),
         select: { slug: true, name: true },
         orderBy: { name: "asc" },
       }),
@@ -74,7 +76,9 @@ export default async function ResortsPage({ searchParams }: PageProps) {
 
         {/* Atoll Filter Pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap border-b border-border-subtle/80">
-          <span className="text-xs font-bold uppercase tracking-wider text-muted mr-1 shrink-0">Filter Atoll:</span>
+          <span className="text-xs font-bold uppercase tracking-wider text-muted mr-1 shrink-0">
+            Filter Atoll:
+          </span>
           <Link
             href="/resorts"
             className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
@@ -106,7 +110,10 @@ export default async function ResortsPage({ searchParams }: PageProps) {
         {resorts.length === 0 ? (
           <EmptyState title="No resorts in this atoll">
             <p>We do not have published resorts in this atoll yet.</p>
-            <Link href="/resorts" className="mt-3 inline-block font-semibold text-lagoon-ink underline">
+            <Link
+              href="/resorts"
+              className="mt-3 inline-block font-semibold text-lagoon-ink underline"
+            >
               View all resorts
             </Link>
           </EmptyState>

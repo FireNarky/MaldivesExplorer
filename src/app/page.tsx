@@ -25,6 +25,8 @@ import { websiteSearchData } from "@/lib/seo/structured";
 import { listPublishedResorts, listLeadResortImages } from "@/modules/catalog";
 import { listTestimonials, type PublicReview } from "@/modules/reviews/service";
 import { db } from "@/lib/db";
+import { publishedPublic } from "@/modules/discovery/visibility";
+import { listLeadMedia } from "@/modules/media";
 
 export const metadata: Metadata = {
   ...publicMetadata({
@@ -134,16 +136,13 @@ export default async function HomePage() {
     const [imagesData, expData, guidesData, reviewsData] = await Promise.all([
       listLeadResortImages(resortsData.map((r) => r.id)),
       db.experience.findMany({
-        where: {
-          status: "PUBLISHED",
-          NOT: { slug: { startsWith: "browser-" } },
-        },
+        where: publishedPublic(),
         include: { category: true },
         take: 3,
         orderBy: { name: "asc" },
       }),
       db.article.findMany({
-        where: { status: "PUBLISHED" },
+        where: publishedPublic(),
         include: { category: true, author: true },
         take: 2,
         orderBy: { publishedAt: "desc" },
@@ -162,24 +161,16 @@ export default async function HomePage() {
   }
 
   // Get experience images
-  const expMediaLinks = await db.mediaLink.findMany({
-    where: {
-      ownerType: "EXPERIENCE",
-      ownerId: { in: experiences.map((e) => e.id) },
-    },
-    include: { media: { select: { id: true, altText: true } } },
-  });
-  const expImageMap = new Map(expMediaLinks.map((l) => [l.ownerId, l.media]));
+  const expImageMap = await listLeadMedia(
+    "EXPERIENCE",
+    experiences.map((e) => e.id),
+  );
 
   // Get guide images
-  const guideMediaLinks = await db.mediaLink.findMany({
-    where: {
-      ownerType: "ARTICLE",
-      ownerId: { in: guides.map((g) => g.id) },
-    },
-    include: { media: { select: { id: true, altText: true } } },
-  });
-  const guideImageMap = new Map(guideMediaLinks.map((l) => [l.ownerId, l.media]));
+  const guideImageMap = await listLeadMedia(
+    "ARTICLE",
+    guides.map((g) => g.id),
+  );
 
   return (
     <div className="-mt-8 grid gap-20 lg:gap-28">
@@ -495,12 +486,7 @@ export default async function HomePage() {
                     durationGuidance: exp.durationGuidance,
                     seasonality: exp.seasonality,
                     categoryName: exp.category?.name,
-                    image: expImageMap.get(exp.id)
-                      ? {
-                          id: expImageMap.get(exp.id)!.id,
-                          altText: expImageMap.get(exp.id)!.altText ?? exp.name,
-                        }
-                      : null,
+                    image: expImageMap.get(exp.id) ?? null,
                   }}
                 />
               </div>
@@ -577,12 +563,7 @@ export default async function HomePage() {
                   excerpt: guide.excerpt,
                   categoryName: guide.category?.name,
                   authorName: guide.author?.name,
-                  image: guideImageMap.get(guide.id)
-                    ? {
-                        id: guideImageMap.get(guide.id)!.id,
-                        altText: guideImageMap.get(guide.id)!.altText ?? guide.title,
-                      }
-                    : null,
+                  image: guideImageMap.get(guide.id) ?? null,
                 }}
               />
             ))}

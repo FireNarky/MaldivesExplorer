@@ -1,13 +1,13 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import Facebook from "next-auth/providers/facebook";
 import { randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
 import { decryptSecret, verifyTotp } from "@/lib/auth/mfa";
 import { verifyPassword } from "@/lib/auth/password";
 import { isStaffUser } from "@/modules/identity/service";
 import { readChallenge } from "@/lib/auth/challenge";
+import { oauthCredentials, verifiedOAuthEmail } from "@/lib/auth/oauth";
 
 const staffSessionMs = 12 * 60 * 60 * 1000;
 const customerSessionMs = 30 * 24 * 60 * 60 * 1000;
@@ -20,9 +20,34 @@ function configuredSecret(): string | null {
 
 let cached: ReturnType<typeof NextAuth> | null = null;
 
+async function startSession(userId: string, staff: boolean): Promise<string> {
+  const sessionToken = randomBytes(32).toString("base64url");
+  await db.session.create({
+    data: {
+      sessionToken,
+      userId,
+      expires: new Date(Date.now() + (staff ? staffSessionMs : customerSessionMs)),
+    },
+  });
+  await db.user.update({ where: { id: userId }, data: { lastLoginAt: new Date() } });
+  return sessionToken;
+}
+
+async function oauthCustomer(
+  provider: string,
+  profile: Record<string, unknown> | null | undefined,
+) {
+  const email = verifiedOAuthEmail(provider, profile);
+  if (!email) return null;
+  const user = await db.user.findUnique({ where: { email } });
+  if (!user || user.status !== "ACTIVE" || (await isStaffUser(user.id))) return null;
+  return user;
+}
+
 function authInstance() {
   const secret = configuredSecret();
   if (!secret) return null;
+  const googleCredentials = oauthCredentials("google");
   cached ??= NextAuth({
     secret,
     trustHost: true,
@@ -98,15 +123,7 @@ function authInstance() {
           }
 
           const staff = await isStaffUser(user.id);
-          const sessionToken = randomBytes(32).toString("base64url");
-          await db.session.create({
-            data: {
-              sessionToken,
-              userId: user.id,
-              expires: new Date(Date.now() + (staff ? staffSessionMs : customerSessionMs)),
-            },
-          });
-          await db.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+          const sessionToken = await startSession(user.id, staff);
           return {
             id: user.id,
             email: user.email,
@@ -116,33 +133,44 @@ function authInstance() {
           };
         },
       }),
-      ...(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET
+      ...(googleCredentials
         ? [
             Google({
-              clientId: process.env.AUTH_GOOGLE_ID,
-              clientSecret: process.env.AUTH_GOOGLE_SECRET,
-            }),
-          ]
-        : []),
-      ...(process.env.AUTH_FACEBOOK_ID && process.env.AUTH_FACEBOOK_SECRET
-        ? [
-            Facebook({
-              clientId: process.env.AUTH_FACEBOOK_ID,
-              clientSecret: process.env.AUTH_FACEBOOK_SECRET,
+              clientId: googleCredentials.clientId,
+              clientSecret: googleCredentials.clientSecret,
             }),
           ]
         : []),
     ],
     callbacks: {
-      jwt({ token, user }) {
+      // Social sign-in only links to an existing, active, non-staff customer by provider-verified email.
+      async signIn({ account, profile }) {
+        if (!account || account.provider === "credentials") return true;
+        return (await oauthCustomer(account.provider, profile)) ? true : "/login?error=oauth";
+      },
+      async jwt({ token, user, account, profile }) {
         if (user && "sessionToken" in user && typeof user.sessionToken === "string") {
           token.sessionToken = user.sessionToken;
+        } else if (account && account.provider !== "credentials") {
+          const customer = await oauthCustomer(account.provider, profile);
+          if (customer) {
+            token.sub = customer.id;
+            token.sessionToken = await startSession(customer.id, false);
+          } else {
+            delete token.sessionToken;
+          }
         }
         return token;
       },
       async session({ session, token }) {
         const sessionToken = typeof token.sessionToken === "string" ? token.sessionToken : "";
-        if (!sessionToken) return session;
+        if (!sessionToken) {
+          // Never expose a provider profile id as an account id: no database session, no session.
+          return {
+            expires: new Date(0).toISOString(),
+            user: { id: "", email: "", name: "", emailVerified: null, staff: false },
+          };
+        }
         const row = await db.session.findUnique({
           where: { sessionToken },
           include: { user: { select: { id: true, email: true, name: true, status: true } } },

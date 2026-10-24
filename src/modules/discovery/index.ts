@@ -17,6 +17,7 @@ export {
   listPublishedExperiencesForIsland,
   listPublishedExperiencesForResort,
   listPublishedGuides,
+  listRecentPublishedGuides,
   listPublishedIslandsForAtoll,
   listPublishedPlacesForExperience,
   listPublishedResortsForAtoll,
@@ -24,4 +25,5 @@ export {
   listRelatedGuides,
   listSitemapEntries,
 } from "./public";
+export type { RecentGuide } from "./public";
 export type { PublicFaq, PublicLink, SitemapEntry } from "./types";

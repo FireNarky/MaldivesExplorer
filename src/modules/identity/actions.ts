@@ -9,6 +9,7 @@ import { sealChallenge } from "@/lib/auth/challenge";
 import { createTotpSecret, totpFor } from "@/lib/auth/mfa";
 import { hashPassword, passwordError } from "@/lib/auth/password";
 import { signIn } from "@/auth";
+import { configuredOAuthProviders, isOAuthProviderId } from "@/lib/auth/oauth";
 import { enqueueJob } from "@/jobs/worker";
 import { redeemClaim } from "@/modules/customers/service";
 import { claimToken, safeAccountPath } from "@/modules/customers/rules";
@@ -72,6 +73,25 @@ export async function passwordSignIn(formData: FormData): Promise<void> {
     await signIn("credentials", { email, password, redirectTo: destination });
   } catch (error) {
     if (error instanceof AuthError) redirect("/login?error=credentials");
+    throw error;
+  }
+}
+
+/**
+ * Starts social sign-in. Only providers that are configured on the server are accepted, so a
+ * forged `provider` value cannot reach Auth.js. No credential or secret is read here or sent to
+ * the client.
+ */
+export async function oauthSignIn(formData: FormData): Promise<void> {
+  const provider = String(formData.get("provider") ?? "");
+  if (!isOAuthProviderId(provider) || !configuredOAuthProviders().includes(provider)) {
+    redirect("/login?error=oauth");
+  }
+  const destination = accountDestination(formData);
+  try {
+    await signIn(provider, { redirectTo: destination });
+  } catch (error) {
+    if (error instanceof AuthError) redirect("/login?error=oauth");
     throw error;
   }
 }

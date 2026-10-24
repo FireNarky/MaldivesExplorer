@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
+import { DetailHero } from "@/components/discovery/detail-hero";
 import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { Prose } from "@/components/discovery/prose";
@@ -12,6 +13,7 @@ import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { attractionData } from "@/lib/seo/structured";
 import { notePublicView } from "@/modules/analytics/service";
+import { listLeadMedia, type LeadMedia } from "@/modules/media";
 import {
   getPublishedExperience,
   listOwnerFaqs,
@@ -53,10 +55,11 @@ export default async function ExperiencePage({ params }: PageProps) {
     const experience = await getPublishedExperience(slug);
     if (!experience) notFound();
     await notePublicView("experience", `/experiences/${experience.slug}`);
-    const [places, guides, faqs] = await Promise.all([
+    const [places, guides, faqs, media] = await Promise.all([
       listPublishedPlacesForExperience(experience.id),
       listRelatedGuides("EXPERIENCE", experience.id),
       listOwnerFaqs("EXPERIENCE", experience.id),
+      listLeadMedia("EXPERIENCE", [experience.id]).catch(() => new Map<string, LeadMedia>()),
     ]);
     const seasonVisible = Boolean(
       experience.seasonality && experience.seasonSourceNote && experience.seasonReviewedAt,
@@ -79,6 +82,7 @@ export default async function ExperiencePage({ params }: PageProps) {
         />
         <h1>{experience.name}</h1>
         <ListingActions entityType="EXPERIENCE" entityId={experience.id} save />
+        <DetailHero media={media.get(experience.id)} />
         <p>{experience.summary}</p>
         {experience.category.status === "PUBLISHED" ? <p>{experience.category.name}</p> : null}
         <Prose text={experience.description} />

@@ -2,6 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { writeAudit } from "@/modules/audit/service";
 import { canReadOwnCustomer } from "@/modules/customers/policies";
+import { publishedPublic } from "@/modules/discovery/visibility";
 import {
   enquiryStatusLabel,
   formatAmount,
@@ -424,7 +425,7 @@ async function publishedNames(
   if (ids.length === 0) return [];
   if (kind === "resort") {
     const rows = await db.resort.findMany({
-      where: { id: { in: ids }, status: "PUBLISHED" },
+      where: { id: { in: ids }, ...publishedPublic() },
       select: { id: true, name: true, slug: true },
     });
     const found = new Map(rows.map((row) => [row.id, row]));
@@ -437,7 +438,7 @@ async function publishedNames(
   }
   if (kind === "experience") {
     const rows = await db.experience.findMany({
-      where: { id: { in: ids }, status: "PUBLISHED" },
+      where: { id: { in: ids }, ...publishedPublic() },
       select: { id: true, name: true, slug: true },
     });
     const found = new Map(rows.map((row) => [row.id, row]));
@@ -449,7 +450,7 @@ async function publishedNames(
     });
   }
   const rows = await db.offer.findMany({
-    where: { id: { in: ids }, status: "PUBLISHED" },
+    where: { id: { in: ids }, ...publishedPublic() },
     select: { id: true, title: true },
   });
   const found = new Map(rows.map((row) => [row.id, row.title]));

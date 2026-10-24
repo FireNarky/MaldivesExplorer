@@ -1,13 +1,11 @@
 import { db } from "@/lib/db";
+import { publishedPublic } from "@/modules/discovery/visibility";
 
 const publishedStatus = {
   status: "PUBLISHED" as const,
 };
 
-const publishedResort = {
-  status: "PUBLISHED" as const,
-  NOT: { slug: { startsWith: "browser-" } },
-};
+const publishedResort = publishedPublic;
 
 export function listResorts() {
   return db.resort.findMany({
@@ -22,7 +20,7 @@ export function getResort(id: string) {
 
 export function listPublishedResorts() {
   return db.resort.findMany({
-    where: publishedResort,
+    where: publishedResort(),
     orderBy: [{ popularityRank: "asc" }, { name: "asc" }],
     select: {
       id: true,
@@ -32,7 +30,11 @@ export function listPublishedResorts() {
       seoTitle: true,
       seoDescription: true,
       island: {
-        select: { name: true, status: true, atoll: { select: { name: true, slug: true, status: true } } },
+        select: {
+          name: true,
+          status: true,
+          atoll: { select: { name: true, slug: true, status: true } },
+        },
       },
     },
   });
@@ -40,7 +42,7 @@ export function listPublishedResorts() {
 
 export function getPublishedResort(slug: string) {
   return db.resort.findFirst({
-    where: { slug, ...publishedResort },
+    where: { slug, ...publishedResort() },
     select: {
       id: true,
       name: true,
@@ -50,6 +52,10 @@ export function getPublishedResort(slug: string) {
       propertyType: true,
       seoTitle: true,
       seoDescription: true,
+      checkInNotes: true,
+      hasHouseReef: true,
+      reefSummary: true,
+      diveCenterSummary: true,
       island: {
         select: {
           name: true,
@@ -61,12 +67,25 @@ export function getPublishedResort(slug: string) {
       roomTypes: {
         where: publishedStatus,
         orderBy: { sortOrder: "asc" },
-        select: { id: true, name: true, description: true, maxAdults: true },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          maxAdults: true,
+          maxChildren: true,
+          sizeSqm: true,
+        },
       },
       diningVenues: {
         where: publishedStatus,
         orderBy: { sortOrder: "asc" },
-        select: { id: true, name: true, description: true, cuisine: true },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          cuisine: true,
+          mealPlans: { select: { mealPlan: { select: { label: true } } } },
+        },
       },
       transfers: {
         orderBy: { sortOrder: "asc" },
@@ -74,6 +93,8 @@ export function getPublishedResort(slug: string) {
           id: true,
           label: true,
           durationMinutes: true,
+          durationBasis: true,
+          notes: true,
           transferType: { select: { label: true } },
         },
       },

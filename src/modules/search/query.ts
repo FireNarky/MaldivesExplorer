@@ -1,3 +1,5 @@
+import { fixtureGuardSql } from "@/modules/discovery/visibility";
+
 export const searchKinds = [
   "resorts",
   "offers",
@@ -24,11 +26,12 @@ export type SearchSuggestion = {
   kind: SearchKind;
 };
 
+// Every statement applies the central test-fixture policy (see discovery/visibility.ts).
 export const resortSearchSql = `
   SELECT id, name, slug, summary,
          ts_rank(search_vector, websearch_to_tsquery('english', $1))::float8 AS rank
   FROM resorts
-  WHERE status = 'PUBLISHED'
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")}
     AND search_vector @@ websearch_to_tsquery('english', $1)
   ORDER BY rank DESC
   LIMIT 8
@@ -38,7 +41,7 @@ export const atollSearchSql = `
   SELECT id, name, slug, summary,
          ts_rank(search_vector, websearch_to_tsquery('english', $1))::float8 AS rank
   FROM atolls
-  WHERE status = 'PUBLISHED'
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")}
     AND search_vector @@ websearch_to_tsquery('english', $1)
   ORDER BY rank DESC
   LIMIT 8
@@ -48,7 +51,7 @@ export const islandSearchSql = `
   SELECT id, name, slug, summary,
          ts_rank(search_vector, websearch_to_tsquery('english', $1))::float8 AS rank
   FROM islands
-  WHERE status = 'PUBLISHED'
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")}
     AND search_vector @@ websearch_to_tsquery('english', $1)
   ORDER BY rank DESC
   LIMIT 8
@@ -58,7 +61,7 @@ export const experienceSearchSql = `
   SELECT id, name, slug, summary,
          ts_rank(search_vector, websearch_to_tsquery('english', $1))::float8 AS rank
   FROM experiences
-  WHERE status = 'PUBLISHED'
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")}
     AND search_vector @@ websearch_to_tsquery('english', $1)
   ORDER BY rank DESC
   LIMIT 8
@@ -68,7 +71,7 @@ export const guideSearchSql = `
   SELECT id, title, slug, excerpt,
          ts_rank(search_vector, websearch_to_tsquery('english', $1))::float8 AS rank
   FROM articles
-  WHERE status = 'PUBLISHED'
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")}
     AND search_vector @@ websearch_to_tsquery('english', $1)
   ORDER BY rank DESC
   LIMIT 8
@@ -78,8 +81,8 @@ export const offerSearchSql = `
   SELECT offers.id, offers.title AS name, offers.slug, offers.summary
   FROM offers
   JOIN resorts ON resorts.id = offers.resort_id
-  WHERE offers.status = 'PUBLISHED'
-    AND resorts.status = 'PUBLISHED'
+  WHERE offers.status = 'PUBLISHED'${fixtureGuardSql("offers.slug")}
+    AND resorts.status = 'PUBLISHED'${fixtureGuardSql("resorts.slug")}
     AND offers.valid_from <= CURRENT_DATE
     AND offers.valid_until >= CURRENT_DATE
     AND (offers.title ILIKE $1 ESCAPE '\\' OR offers.summary ILIKE $1 ESCAPE '\\')
@@ -91,8 +94,8 @@ export const offerSuggestSql = `
   SELECT offers.title AS name, offers.slug
   FROM offers
   JOIN resorts ON resorts.id = offers.resort_id
-  WHERE offers.status = 'PUBLISHED'
-    AND resorts.status = 'PUBLISHED'
+  WHERE offers.status = 'PUBLISHED'${fixtureGuardSql("offers.slug")}
+    AND resorts.status = 'PUBLISHED'${fixtureGuardSql("resorts.slug")}
     AND offers.valid_from <= CURRENT_DATE
     AND offers.valid_until >= CURRENT_DATE
     AND similarity(offers.title, $1) > 0.2
@@ -103,7 +106,7 @@ export const offerSuggestSql = `
 export const collectionSearchSql = `
   SELECT id, title, slug, summary
   FROM collections
-  WHERE status = 'PUBLISHED'
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")}
     AND (title ILIKE $1 ESCAPE '\\' OR summary ILIKE $1 ESCAPE '\\')
   ORDER BY title ASC
   LIMIT 8
@@ -112,7 +115,7 @@ export const collectionSearchSql = `
 export const resortSuggestSql = `
   SELECT name, slug
   FROM resorts
-  WHERE status = 'PUBLISHED' AND similarity(name, $1) > 0.2
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")} AND similarity(name, $1) > 0.2
   ORDER BY similarity(name, $1) DESC
   LIMIT 5
 `;
@@ -120,7 +123,7 @@ export const resortSuggestSql = `
 export const atollSuggestSql = `
   SELECT name, slug
   FROM atolls
-  WHERE status = 'PUBLISHED' AND similarity(name, $1) > 0.2
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")} AND similarity(name, $1) > 0.2
   ORDER BY similarity(name, $1) DESC
   LIMIT 5
 `;
@@ -128,7 +131,7 @@ export const atollSuggestSql = `
 export const islandSuggestSql = `
   SELECT name, slug
   FROM islands
-  WHERE status = 'PUBLISHED' AND similarity(name, $1) > 0.2
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")} AND similarity(name, $1) > 0.2
   ORDER BY similarity(name, $1) DESC
   LIMIT 5
 `;
@@ -136,7 +139,7 @@ export const islandSuggestSql = `
 export const experienceSuggestSql = `
   SELECT name, slug
   FROM experiences
-  WHERE status = 'PUBLISHED' AND similarity(name, $1) > 0.2
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")} AND similarity(name, $1) > 0.2
   ORDER BY similarity(name, $1) DESC
   LIMIT 5
 `;
@@ -144,7 +147,7 @@ export const experienceSuggestSql = `
 export const guideSuggestSql = `
   SELECT title, slug
   FROM articles
-  WHERE status = 'PUBLISHED' AND similarity(title, $1) > 0.2
+  WHERE status = 'PUBLISHED'${fixtureGuardSql("slug")} AND similarity(title, $1) > 0.2
   ORDER BY similarity(title, $1) DESC
   LIMIT 5
 `;
