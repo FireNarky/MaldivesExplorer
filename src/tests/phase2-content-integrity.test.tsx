@@ -558,7 +558,9 @@ describe("Phase 2 — experience and guide hero media (F-07)", () => {
       <DetailHero media={{ id: "m1", altText: "Manta rays at dusk", caption: "Hanifaru Bay." }} />,
     );
     const image = screen.getByAltText("Manta rays at dusk");
-    expect(image.getAttribute("src")).toContain("/media/m1");
+    // Next Image Optimization may rewrite to /_next/image?url=%2Fmedia%2Fm1&… while still targeting the media route.
+    const src = image.getAttribute("src") ?? "";
+    expect(src.includes("/media/m1") || src.includes("%2Fmedia%2Fm1")).toBe(true);
     expect(container.querySelector("figcaption")?.textContent).toBe("Hanifaru Bay.");
     rerender(<DetailHero media={{ id: "m2", altText: "Alt only", caption: null }} />);
     expect(container.querySelector("figcaption")).toBeNull();

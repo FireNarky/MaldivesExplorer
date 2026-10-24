@@ -75,3 +75,22 @@ Branch `fix/phase-2-content-integrity`, started from `4f2a4ef` (Merge Phase 1 la
 | **F-07.1** (OAuth buttons non-functional) | **Resolved** | Buttons render only for a provider whose credentials are set on the server, and submit a real server action. With none configured, no button, notice, or divider is rendered. Registration no longer shows social buttons because social sign-in cannot create accounts. Facebook is not offered (its profile carries no verified-email assertion). | OAuth availability, action, and rendering tests | Business must decide on a verified-link policy before Facebook or sign-up-by-social is enabled. |
 | **F-07.2** (UAT traveller quick-fill) | **Resolved** | The dead traveller option was removed. The remaining admin helper is gated on the server (`APP_ENV` set to exactly `local` plus `ENABLE_UAT_QUICK_FILL=true` plus `?uat=1`; an unset `APP_ENV` fails closed) and takes its credentials from `SEED_ADMIN_*`, not from source. | UAT gate tests | None. |
 | **Persona 3** (no hero image on experience and guide detail) | **Resolved** | Both detail pages render a hero from the canonical media link query with the stored alt text and optional caption, and degrade to no image when none is linked. Index and home cards use the same query. | Media query and hero rendering tests | Real photography licensing remains `D-013`. |
+
+---
+
+## 6. Phase 3 Remediation Status (Appended 24 October 2026)
+
+Branch `fix/phase-3-ux-accessibility`, started from `7702b3f` (Merge Phase 2 content integrity remediation). Full detail, including measurements and deferred items, is in [`Phase_3_UX_Accessibility_Remediation.md`](./Phase_3_UX_Accessibility_Remediation.md). Phase 1 and Phase 2 protections were not reopened.
+
+| Finding ID | Implementation Status | Summary of Change | Tests Added | Remaining Notes |
+| --- | --- | --- | --- | --- |
+| **F-06.1** (dark-mode `/plan` trip-type select contrast) | **Resolved** | Trip-type `<select>` uses opaque dark surface/text tokens. Measured dark contrast **17.4:1** (audit before ≈1.11:1). | `phase3-ux-accessibility.test.tsx` | None. |
+| **F-06.2** (analytics consent dark surface) | **Resolved** | Theme surfaces (`bg-sand` / dark panel) replace fixed white. Measured dark copy contrast ≈**19:1**. | Phase 3 consent token test | None. |
+| **F-06.3** (compare tray vs palette/chat collision) | **Resolved** | CompareTray publishes `--me-compare-tray-h`; palette and chat offset from it. Tray actions remain clickable. | Phase 3 tray CSS-var test; browser non-overlap check | Chat live-collision deferred when messaging channels are unconfigured. |
+| **F-06.4** (child ages cannot be removed) | **Resolved** | Accessible **Remove child N** per row; draft and validation update. | Add/remove/middle/last/draft/validation tests | None. |
+| **F-06.5** (single-photo gallery empty column) | **Resolved** | `ResortGallery` composes by image count (0/1/2/3+). | Gallery composition tests | None. |
+| **F-06.6** (register password Eye non-interactive) | **Resolved** | Shared `PasswordField` on register and login. | Password toggle / label / no-submit tests | None. |
+| **Overlay keyboard** (Quick Search and related) | **Resolved (semantics-appropriate)** | Modal Quick Search focus trap + Escape restore; palette/chat Escape; mobile menu trap. Login mode uses `aria-pressed` group (not tabs). | Quick Search + login semantics tests | Full WCAG conformance not claimed. |
+| **Heading skips** (plan/newsletter/reviews) | **Resolved for confirmed defects** | Perk and review card titles demoted from misuse as headings; visuals preserved via CSS. | Heading hierarchy tests | Broader marketing-card outline left unchanged. |
+| **Persona 15** (mobile catalog image bytes / hero duplicate / media cache) | **Resolved within current architecture** | Next Image Optimization enabled for `/media/[id]`; homepage hero CSS-only (one fetch); media `Cache-Control` day + SWR + ETag (not immutable). At 390px, sample lead image **324 KB → 93 KB** via `/_next/image?w=828`. | Phase 2 hero assertion accepts optimized URLs; browser measurements recorded in Phase 3 doc | Static hero JPG itself still large; CDN redesign deferred. |
+| **F-08** (`run-dev.mjs`) | **Deferred** | Not in Phase 3 scope. | — | Separate follow-up. |

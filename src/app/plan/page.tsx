@@ -82,7 +82,7 @@ export default async function PlanPage() {
               <span className="flex size-9 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 mb-2.5">
                 <p.icon size={17} strokeWidth={1.75} />
               </span>
-              <h3 className="font-display text-xs font-semibold text-ocean mb-0.5">{p.title}</h3>
+              <p className="font-display text-xs font-semibold text-ocean mb-0.5">{p.title}</p>
               <p className="text-[11px] text-muted leading-relaxed">{p.desc}</p>
             </div>
           ))}

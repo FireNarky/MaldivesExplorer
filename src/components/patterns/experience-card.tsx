@@ -22,7 +22,6 @@ export function ExperienceCard({ item }: { item: ExperienceCardData }) {
             src={`/media/${item.image.id}`}
             alt={item.image.altText}
             fill
-            unoptimized
             sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />

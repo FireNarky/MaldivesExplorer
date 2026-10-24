@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Compass, FileText, MapPin, Search, Sparkles, Waves, X } from "lucide-react";
+import { trapFocusKeydown } from "@/lib/a11y/focus-trap";
 
 interface Suggestion {
   title: string;
@@ -14,11 +15,23 @@ interface Suggestion {
 const QUICK_LINKS: Suggestion[] = [
   { title: "Soneva Jani", href: "/resorts/soneva-jani", kind: "resort" },
   { title: "Soneva Fushi", href: "/resorts/soneva-fushi", kind: "resort" },
-  { title: "The Ritz-Carlton Maldives", href: "/resorts/the-ritz-carlton-maldives", kind: "resort" },
+  {
+    title: "The Ritz-Carlton Maldives",
+    href: "/resorts/the-ritz-carlton-maldives",
+    kind: "resort",
+  },
   { title: "Cheval Blanc Randheli", href: "/resorts/cheval-blanc-randheli", kind: "resort" },
   { title: "Baa Atoll (UNESCO Biosphere)", href: "/atolls/baa-atoll", kind: "atoll" },
-  { title: "Manta Rays in Hanifaru Bay", href: "/experiences/hanifaru-bay-manta-snorkeling", kind: "experience" },
-  { title: "First-Timer's Guide to the Maldives", href: "/guides/first-timers-guide-to-the-maldives", kind: "article" },
+  {
+    title: "Manta Rays in Hanifaru Bay",
+    href: "/experiences/hanifaru-bay-manta-snorkeling",
+    kind: "experience",
+  },
+  {
+    title: "First-Timer's Guide to the Maldives",
+    href: "/guides/first-timers-guide-to-the-maldives",
+    kind: "article",
+  },
 ];
 
 export function QuickSearchDialog() {
@@ -27,21 +40,36 @@ export function QuickSearchDialog() {
   const [results, setResults] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Keyboard shortcut listener (/ or Cmd+K / Ctrl+K)
+  const closeDialog = () => {
+    setIsOpen(false);
+    setQuery("");
+    setResults([]);
+    queueMicrotask(() => triggerRef.current?.focus());
+  };
+
+  // Keyboard shortcut listener (/ or Cmd+K / Ctrl+K) and Escape / focus trap while open
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
         (e.key === "k" && (e.metaKey || e.ctrlKey)) ||
-        (e.key === "/" && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement))
+        (e.key === "/" &&
+          !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement))
       ) {
         e.preventDefault();
         setIsOpen((prev) => !prev);
+        return;
       }
-      if (e.key === "Escape" && isOpen) {
-        setIsOpen(false);
+      if (!isOpen) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeDialog();
+        return;
       }
+      if (dialogRef.current) trapFocusKeydown(e, dialogRef.current);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -58,14 +86,14 @@ export function QuickSearchDialog() {
     };
   }, [isOpen]);
 
-  // Focus input when opened
+  // Focus the search field when opened
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
-    } else {
-      setQuery("");
-      setResults([]);
+      const timer = window.setTimeout(() => inputRef.current?.focus(), 50);
+      return () => window.clearTimeout(timer);
     }
+    setQuery("");
+    setResults([]);
   }, [isOpen]);
 
   // Live search query
@@ -96,7 +124,7 @@ export function QuickSearchDialog() {
   }, [query]);
 
   const handleSelect = (href: string) => {
-    setIsOpen(false);
+    closeDialog();
     router.push(href);
   };
 
@@ -119,10 +147,13 @@ export function QuickSearchDialog() {
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setIsOpen(true)}
         aria-label="Search site (Press / or Cmd+K)"
-        className="inline-flex size-11 items-center justify-center rounded-md text-ink hover:bg-mist transition-colors"
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        className="inline-flex size-11 items-center justify-center rounded-md text-ink hover:bg-mist transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
       >
         <Search aria-hidden="true" size={20} strokeWidth={1.75} />
       </button>
@@ -133,9 +164,10 @@ export function QuickSearchDialog() {
           aria-modal="true"
           aria-label="Quick Search"
           className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-3 pt-6 backdrop-blur-md sm:p-4 sm:pt-24 animate-in fade-in"
-          onClick={() => setIsOpen(false)}
+          onClick={closeDialog}
         >
           <div
+            ref={dialogRef}
             className="w-full max-w-xl overflow-hidden rounded-2xl border border-border-subtle bg-white dark:bg-[#0c1b22] dark:border-white/15 shadow-3 animate-in zoom-in-95"
             onClick={(e) => e.stopPropagation()}
           >
@@ -154,7 +186,8 @@ export function QuickSearchDialog() {
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="rounded-full p-1 text-muted hover:text-ink mr-2"
+                  aria-label="Clear search"
+                  className="mr-2 inline-flex size-11 items-center justify-center rounded-full text-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 >
                   <X size={16} aria-hidden="true" />
                 </button>
@@ -199,7 +232,7 @@ export function QuickSearchDialog() {
                     <p>No results found for &ldquo;{query}&rdquo;</p>
                     <Link
                       href={`/search?q=${encodeURIComponent(query)}`}
-                      onClick={() => setIsOpen(false)}
+                      onClick={closeDialog}
                       className="mt-2 inline-block font-semibold text-lagoon-ink hover:underline"
                     >
                       View full search page &rarr;
@@ -233,10 +266,16 @@ export function QuickSearchDialog() {
 
             {/* Footer */}
             <div className="flex items-center justify-between border-t border-border-subtle bg-sand/60 dark:bg-white/5 dark:border-white/10 px-4 py-2.5 text-xs text-muted dark:text-slate-300">
-              <span>Tip: press <kbd className="font-mono text-[10px] rounded bg-white dark:bg-white/10 px-1 py-0.5 border border-border-subtle dark:border-white/10">/</kbd> anywhere to open</span>
+              <span>
+                Tip: press{" "}
+                <kbd className="font-mono text-[10px] rounded bg-white dark:bg-white/10 px-1 py-0.5 border border-border-subtle dark:border-white/10">
+                  /
+                </kbd>{" "}
+                anywhere to open
+              </span>
               <Link
                 href="/search"
-                onClick={() => setIsOpen(false)}
+                onClick={closeDialog}
                 className="font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline"
               >
                 Advanced Search &rarr;

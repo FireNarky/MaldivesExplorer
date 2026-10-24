@@ -6,8 +6,6 @@ import {
   ArrowRight,
   Check,
   Compass,
-  Eye,
-  EyeOff,
   KeyRound,
   Lock,
   Mail,
@@ -18,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordField } from "@/components/ui/password-field";
 import { FieldError } from "@/components/ui/field-error";
 import { SocialOAuthButtons } from "@/components/auth/social-oauth-buttons";
 import type { OAuthProviderId } from "@/lib/auth/oauth-providers";
@@ -52,7 +51,6 @@ export function LoginForm({
   const [tab, setTab] = useState<"password" | "magic">("password");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [filledTarget, setFilledTarget] = useState<string | null>(null);
 
   const fillCredentials = (e: string, p: string, label: string) => {
@@ -147,30 +145,36 @@ export function LoginForm({
           />
         ) : null}
 
-        {/* Tab Switcher */}
-        <div className="mb-6 grid grid-cols-2 gap-1 rounded-2xl border border-border-subtle bg-sand/60 dark:bg-white/5 p-1">
+        {/* Mode switcher — two exclusive modes, not a tablist (content swaps; no tabpanels). */}
+        <div
+          className="mb-6 grid grid-cols-2 gap-1 rounded-2xl border border-border-subtle bg-sand/60 dark:bg-white/5 p-1"
+          role="group"
+          aria-label="Sign-in method"
+        >
           <button
             type="button"
             onClick={() => setTab("password")}
-            className={`flex items-center justify-center gap-2 rounded-xl py-2 text-xs sm:text-sm font-semibold transition-all ${
+            aria-pressed={tab === "password"}
+            className={`flex min-h-11 items-center justify-center gap-2 rounded-xl py-2 text-xs sm:text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
               tab === "password"
                 ? "bg-white dark:bg-white/10 text-ocean shadow-sm ring-1 ring-border-subtle/50"
                 : "text-muted hover:text-ink"
             }`}
           >
-            <Lock size={14} />
+            <Lock size={14} aria-hidden="true" />
             Password
           </button>
           <button
             type="button"
             onClick={() => setTab("magic")}
-            className={`flex items-center justify-center gap-2 rounded-xl py-2 text-xs sm:text-sm font-semibold transition-all ${
+            aria-pressed={tab === "magic"}
+            className={`flex min-h-11 items-center justify-center gap-2 rounded-xl py-2 text-xs sm:text-sm font-semibold transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus ${
               tab === "magic"
                 ? "bg-white dark:bg-white/10 text-ocean shadow-sm ring-1 ring-border-subtle/50"
                 : "text-muted hover:text-ink"
             }`}
           >
-            <Mail size={14} />
+            <Mail size={14} aria-hidden="true" />
             Magic Link
           </button>
         </div>
@@ -225,31 +229,17 @@ export function LoginForm({
                   Forgot password?
                 </Link>
               </div>
-              <div className="relative">
-                <Lock
-                  size={16}
-                  className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
-                />
-                <Input
-                  id="login-password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  className="min-h-12 w-full rounded-xl border border-border bg-white dark:bg-white/5 pl-10 pr-11 text-sm text-ink transition focus:border-lagoon focus:ring-2 focus:ring-lagoon/20"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-muted hover:text-ink transition"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
+              <PasswordField
+                id="login-password"
+                name="password"
+                autoComplete="current-password"
+                required
+                withIcon
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••••••"
+                className="min-h-12 w-full rounded-xl border border-border bg-white dark:bg-white/5 text-sm text-ink transition focus:border-lagoon focus:ring-2 focus:ring-lagoon/20"
+              />
             </div>
 
             <Button

@@ -6,12 +6,17 @@ export async function AnalyticsConsent() {
   const store = await cookies();
   if (store.get("me_analytics")?.value) return null;
   return (
-    <section aria-label="Search analytics" className="border-t border-border-subtle bg-white">
+    <section
+      aria-label="Search analytics"
+      className="border-t border-border-subtle bg-sand text-ink dark:bg-[#071318] dark:text-slate-100 dark:border-white/15"
+    >
       <form
         action={setAnalyticsConsent}
         className="mx-auto grid w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] gap-3 px-4 py-4 lg:px-8 2xl:px-12"
       >
-        <p>Search analytics stays off until you allow it.</p>
+        <p className="text-ink dark:text-slate-100">
+          Search analytics stays off until you allow it.
+        </p>
         <div className="flex flex-wrap gap-3">
           <Button type="submit" name="choice" value="granted">
             Allow search analytics

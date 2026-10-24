@@ -20,7 +20,6 @@ export function ResortCard({ resort }: { resort: ResortCardData }) {
             src={`/media/${resort.image.id}`}
             alt={resort.image.altText}
             fill
-            unoptimized
             sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 45vw, 100vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
