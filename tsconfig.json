@@ -27,7 +27,9 @@
     "playwright.config.ts",
     "vitest.config.ts",
     "prisma/seed.ts",
-    "scripts/**/*.ts",
+    "scripts/lib/**/*.ts",
+    "scripts/run-dev.ts",
+    "scripts/start-db.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]

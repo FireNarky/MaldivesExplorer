@@ -93,4 +93,14 @@ Branch `fix/phase-3-ux-accessibility`, started from `7702b3f` (Merge Phase 2 con
 | **Overlay keyboard** (Quick Search and related) | **Resolved (semantics-appropriate)** | Modal Quick Search focus trap + Escape restore; palette/chat Escape; mobile menu trap. Login mode uses `aria-pressed` group (not tabs). | Quick Search + login semantics tests | Full WCAG conformance not claimed. |
 | **Heading skips** (plan/newsletter/reviews) | **Resolved for confirmed defects** | Perk and review card titles demoted from misuse as headings; visuals preserved via CSS. | Heading hierarchy tests | Broader marketing-card outline left unchanged. |
 | **Persona 15** (mobile catalog image bytes / hero duplicate / media cache) | **Resolved within current architecture** | Next Image Optimization enabled for `/media/[id]`; homepage hero CSS-only (one fetch); media `Cache-Control` day + SWR + ETag (not immutable). At 390px, sample lead image **324 KB → 93 KB** via `/_next/image?w=828`. | Phase 2 hero assertion accepts optimized URLs; browser measurements recorded in Phase 3 doc | Static hero JPG itself still large; CDN redesign deferred. |
-| **F-08** (`run-dev.mjs`) | **Deferred** | Not in Phase 3 scope. | — | Separate follow-up. |
+| **F-08** (`run-dev.mjs`) | **Deferred (at Phase 3 close)** | Not in Phase 3 scope. | — | Remediatied in Phase 4 — see §7. |
+
+---
+
+## 7. Phase 4 Remediation Status (Appended 25 October 2026)
+
+Branch `fix/phase-4-dev-runtime-hardening`, started from `20d8f6d` (Merge Phase 3 UX accessibility and performance remediation). Full detail is in [`Phase_4_Dev_Runtime_Hardening.md`](./Phase_4_Dev_Runtime_Hardening.md). Phase 1–3 application protections were not reopened.
+
+| Finding ID | Implementation Status | Summary of Change | Tests Added | Remaining Notes |
+| --- | --- | --- | --- | --- |
+| **F-08** (dev launcher overwrites `.env`, machine path, production-style `AUTH_URL`, always-on tunnel framing) | **Resolved** | Launcher moved to `scripts/run-dev.ts` + `scripts/lib/dev-runtime.ts`. Root `.env` never written (only `.data/stage1-browser.env`). `AUTH_URL` defaults to `http://127.0.0.1:3000`. Machine-specific Team Board path removed (`ME_TEAM_BOARD_DIR` opt-in). Tunnel proxy requires `ENABLE_DEV_TUNNEL=true` plus `DEV_TUNNEL_PUBLIC_URL`/`AUTH_URL`. Port conflicts fail clearly without killing other processes. Secrets redacted from launcher summary. Fixture/UAT gates remain fail-closed. | `src/tests/phase4-dev-runtime.test.ts` | `siteOrigin()` SEO fallback when `AUTH_URL` unset remains application-level and was left unchanged. |
