@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { isRoleCode, permissionsForRole, type PermissionCode } from "@/lib/auth/permissions";
 import { writeAudit } from "@/modules/audit/service";
 import { permissionsForUser, isStaffUser } from "@/modules/identity/service";
+import { partySupplied } from "@/modules/enquiries/party";
 import { openEnquiryStatuses } from "@/modules/enquiries/rules";
 import {
   canAssignEnquiries,
@@ -120,6 +121,8 @@ export type EnquiryDetail = {
   travel: string;
   flexibility: string | null;
   adultCount: number;
+  /** False when adultCount is a system placeholder, not a customer-provided party size. */
+  partySupplied: boolean;
   childCount: number;
   travelers: string[];
   requirements: string | null;
@@ -194,6 +197,7 @@ const enquirySelect = {
   flexibility: true,
   adultCount: true,
   childCount: true,
+  submittedSnapshot: true,
   budgetMin: true,
   budgetMax: true,
   budgetCurrency: true,
@@ -504,6 +508,7 @@ export async function readEnquiry(userId: string, reference: string): Promise<En
     if ((status === "LOST" || status === "CLOSED") && next === "CONTACTED") return canAssign;
     return true;
   });
+  const supplied = partySupplied(enquiry.submittedSnapshot);
   const start = dateLabel(enquiry.travelStart);
   const end = dateLabel(enquiry.travelEnd);
   return {
@@ -520,10 +525,11 @@ export async function readEnquiry(userId: string, reference: string): Promise<En
     travel: start && end ? `${start} to ${end}` : "Not added",
     flexibility: enquiry.flexibility,
     adultCount: enquiry.adultCount,
+    partySupplied: supplied,
     childCount: enquiry.childCount,
-    travelers: travelers.map((traveler) =>
-      travelerLabel(traveler.travelerType, traveler.ageAtArrival),
-    ),
+    travelers: supplied
+      ? travelers.map((traveler) => travelerLabel(traveler.travelerType, traveler.ageAtArrival))
+      : [],
     requirements: enquiry.requirements,
     accessibilityNeeds: enquiry.accessibilityNeeds,
     budget: budgetLabel(enquiry.budgetMin, enquiry.budgetMax, enquiry.budgetCurrency),

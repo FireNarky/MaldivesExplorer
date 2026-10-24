@@ -41,7 +41,7 @@ export default async function EnquiryPage({ params }: Context) {
         ) : null}
         <div>
           <dt className="font-semibold">Adults</dt>
-          <dd>{enquiry.adultCount}</dd>
+          <dd>{enquiry.partySupplied ? enquiry.adultCount : "Not added"}</dd>
         </div>
         {enquiry.childAges.length > 0 ? (
           <div>

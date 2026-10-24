@@ -1,21 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  BookOpen,
-  CheckCircle2,
-  Plane,
-  ShieldCheck,
-  Sparkles,
-  Waves,
-} from "lucide-react";
+import { BookOpen, CheckCircle2, Plane, ShieldCheck, Sparkles, Waves } from "lucide-react";
 import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { FieldError } from "@/components/ui/field-error";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { currentNoticeVersion } from "@/modules/newsletter/service";
 
 export const metadata: Metadata = publicMetadata({
-  title: "The Island Gazette · Maldives Explorer Newsletter",
-  description: "Subscribe to occasional dispatches on private island offers, seaplane transfer guides, and marine encounter seasons.",
+  title: "The Island Gazette Newsletter",
+  description:
+    "Subscribe to occasional dispatches on private island offers, seaplane transfer guides, and marine encounter seasons.",
   path: "/newsletter",
 });
 
@@ -80,7 +74,8 @@ export default async function NewsletterPage({
           The Private Island Gazette
         </h1>
         <p className="mx-auto max-w-2xl text-base sm:text-lg text-muted font-light leading-relaxed">
-          Occasional insider dispatches covering unpublished resort privileges, secret sandbank coordinates, seasonal seaplane transfer alerts, and marine biologist field notes.
+          Occasional insider dispatches covering unpublished resort privileges, secret sandbank
+          coordinates, seasonal seaplane transfer alerts, and marine biologist field notes.
         </p>
       </div>
 
@@ -103,12 +98,12 @@ export default async function NewsletterPage({
       {/* Subscription Card */}
       <div className="relative overflow-hidden rounded-3xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-6 sm:p-10 shadow-2 backdrop-blur-xl">
         <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-lagoon/15 dark:bg-cyan-500/10 blur-3xl" />
-        
+
         <div className="max-w-xl mx-auto space-y-6">
           <div className="text-center">
             <h2 className="text-2xl font-display text-ocean">Join Discerning Island Travelers</h2>
             <p className="text-sm text-muted mt-1">
-              Delivered straight to your personal inbox. No clutter, only verified knowledge.
+              Delivered straight to your personal inbox. Unsubscribe at any time.
             </p>
           </div>
 
@@ -121,7 +116,10 @@ export default async function NewsletterPage({
           {query.notice ? (
             <div className="flex items-center gap-2 rounded-xl border border-success/20 bg-success-surface p-3.5 text-sm font-medium text-success animate-in fade-in">
               <CheckCircle2 size={18} className="shrink-0" />
-              <span>You are now subscribed to The Private Island Gazette! Check your inbox for confirmation.</span>
+              <span>
+                You are now subscribed to The Private Island Gazette! Check your inbox for
+                confirmation.
+              </span>
             </div>
           ) : null}
 
@@ -143,7 +141,10 @@ export default async function NewsletterPage({
             <BookOpen size={14} className="text-lagoon-ink dark:text-cyan-400" />
             Recent Gazette Dispatches
           </span>
-          <Link href="/guides" className="text-xs font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline">
+          <Link
+            href="/guides"
+            className="text-xs font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline"
+          >
             View All Guides &rarr;
           </Link>
         </div>

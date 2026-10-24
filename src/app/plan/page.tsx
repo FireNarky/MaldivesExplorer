@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Clock,
-  Plane,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { Clock, Plane, ShieldCheck, Sparkles } from "lucide-react";
 import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
 import { PlannerForm } from "@/components/planner/planner-form";
 import { ErrorState } from "@/components/ui/error-state";
@@ -18,15 +13,16 @@ import { listSavedItems } from "@/modules/wishlist/service";
 
 export const metadata: Metadata = publicMetadata({
   title: "Plan Your Maldives Stay · Bespoke Itinerary Builder",
-  description: "Craft your dream Maldives trip with resident island specialists. Verified seaplane transfers and direct quotes.",
+  description:
+    "Craft your Maldives trip plan with our travel team and receive a tailored written quote.",
   path: "/plan",
 });
 
 const plannerPerks = [
   {
     icon: Clock,
-    title: "Written Quote in 4 Hours",
-    desc: "Direct communication with senior Maldivian island directors.",
+    title: "Written Quotation",
+    desc: "Itemized USD proposals prepared by our travel team.",
   },
   {
     icon: ShieldCheck,
@@ -36,12 +32,12 @@ const plannerPerks = [
   {
     icon: Plane,
     title: "Transfer Coordination",
-    desc: "Seaplane and luxury yacht arrivals timed seamlessly with international flights.",
+    desc: "Seaplane and speedboat options matched to your itinerary.",
   },
   {
     icon: Sparkles,
-    title: "Exclusive Partner Privileges",
-    desc: "Complimentary champagne sunset cruises, half-board upgrades, and reef excursions.",
+    title: "Tailored Options",
+    desc: "Recommendations matched to your travel dates, party size, and interests.",
   },
 ];
 
@@ -69,7 +65,9 @@ export default async function PlanPage() {
               Bespoke Maldives Trip Planner
             </h1>
             <p className="text-sm sm:text-base text-slate-200 font-light leading-relaxed">
-              Tell us your desired travel dates, island style, and companion preferences. Within 4 hours, our specialists will deliver a comprehensive, written quote with verified resort privileges and seaplane flights.
+              Tell us your desired travel dates, island style, and companion preferences. Our travel
+              team will review your requirements and prepare a written quote covering accommodation,
+              transfers, and inclusions.
             </p>
           </div>
         </div>

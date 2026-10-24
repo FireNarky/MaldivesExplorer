@@ -1,16 +1,16 @@
 export interface ContactSettings {
   // WhatsApp settings
   whatsappEnabled: boolean;
-  whatsappNumber: string; // e.g. "+960 799 1234"
-  whatsappMessage: string; // Default greeting message
+  whatsappNumber: string;
+  whatsappMessage: string;
 
   // Messenger settings
   messengerEnabled: boolean;
-  messengerUsername: string; // e.g. "maldivesexplorer" or URL
+  messengerUsername: string;
 
   // Telegram settings
   telegramEnabled: boolean;
-  telegramUsername: string; // e.g. "maldivesexplorer" or URL
+  telegramUsername: string;
 
   // General Direct Contact details
   email: string;
@@ -21,19 +21,42 @@ export interface ContactSettings {
 }
 
 export const DEFAULT_CONTACT_SETTINGS: ContactSettings = {
-  whatsappEnabled: true,
-  whatsappNumber: "+960 799 1234",
-  whatsappMessage: "Hello Maldives Explorer, I would like to inquire about planning a bespoke Maldives trip.",
-  messengerEnabled: true,
-  messengerUsername: "maldivesexplorer",
-  telegramEnabled: true,
-  telegramUsername: "maldivesexplorer",
-  email: "concierge@xplorer.itnvend.com",
-  phone: "+960 332 4500",
-  officeHours: "24/7 Island Concierge & Transfer Coordination Desk",
-  address: "Waterfront Executive Building, Boduthakurufaanu Magu, Malé 20026, Maldives",
-  emergencyDesk: "Velana International Airport (VIA) · Seaplane Terminal Private Desk 4B",
+  whatsappEnabled: false,
+  whatsappNumber: "",
+  whatsappMessage: "",
+  messengerEnabled: false,
+  messengerUsername: "",
+  telegramEnabled: false,
+  telegramUsername: "",
+  email: "",
+  phone: "",
+  officeHours: "",
+  address: "",
+  emergencyDesk: "",
 };
+
+export function activeContactChannels(settings: ContactSettings) {
+  const whatsapp = settings.whatsappEnabled && Boolean(settings.whatsappNumber.trim());
+  const messenger = settings.messengerEnabled && Boolean(settings.messengerUsername.trim());
+  const telegram = settings.telegramEnabled && Boolean(settings.telegramUsername.trim());
+  const email = Boolean(settings.email.trim());
+  const phone = Boolean(settings.phone.trim());
+  const officeHours = Boolean(settings.officeHours.trim());
+  const address = Boolean(settings.address.trim());
+  const emergencyDesk = Boolean(settings.emergencyDesk.trim());
+  return {
+    whatsapp,
+    messenger,
+    telegram,
+    hasMessaging: whatsapp || messenger || telegram,
+    email,
+    phone,
+    officeHours,
+    address,
+    emergencyDesk,
+    hasDirectDetails: email || phone || officeHours || address || emergencyDesk,
+  };
+}
 
 export function cleanPhoneForUrl(phone: string): string {
   return phone.replace(/[^\d+]/g, "").replace(/^\+/, "");

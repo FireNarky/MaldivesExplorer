@@ -11,15 +11,22 @@ const messages: Record<string, string> = {
 };
 
 export const metadata: Metadata = publicMetadata({
-  title: "Sign In · Maldives Explorer",
-  description: "Sign in to manage your luxury Maldives bookings, itinerary drafts, and bespoke quotes.",
+  title: "Sign In",
+  description: "Sign in to manage your saved resorts, trip enquiries, and written quotes.",
   path: "/login",
 });
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; sent?: string; next?: string; claim?: string; uat?: string; dev?: string }>;
+  searchParams: Promise<{
+    error?: string;
+    sent?: string;
+    next?: string;
+    claim?: string;
+    uat?: string;
+    dev?: string;
+  }>;
 }) {
   const params = await searchParams;
   const message = params.error ? messages[params.error] : undefined;

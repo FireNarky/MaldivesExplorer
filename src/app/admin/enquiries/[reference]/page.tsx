@@ -6,6 +6,7 @@ import { EnquiryWorkspace } from "@/components/crm/enquiry-workspace";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { CrmError, readEnquiry } from "@/modules/crm/service";
+import { PARTY_NOT_SUPPLIED_LABEL } from "@/modules/enquiries/party";
 import { createQuoteForm } from "@/modules/quotes/actions";
 import { QuoteError, listEnquiryQuotes } from "@/modules/quotes/service";
 
@@ -71,7 +72,9 @@ export default async function EnquiryDetailPage({ params, searchParams }: Contex
         <div>
           <dt className="font-semibold">Party</dt>
           <dd>
-            {detail.adultCount} adults, {detail.childCount} children
+            {detail.partySupplied
+              ? `${detail.adultCount} adults, ${detail.childCount} children`
+              : PARTY_NOT_SUPPLIED_LABEL}
           </dd>
         </div>
         {detail.travelers.length > 0 ? (
