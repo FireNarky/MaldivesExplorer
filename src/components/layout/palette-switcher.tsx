@@ -1,17 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Laptop, Moon, Palette, Sun, X } from "lucide-react";
+import { trapFocusKeydown } from "@/lib/a11y/focus-trap";
 
 export type PaletteId =
-  | "ocean"
-  | "sunset"
-  | "midnight"
-  | "daylight"
-  | "reef"
-  | "palm"
-  | "twilight"
-  | "bioluminescence";
+  "ocean" | "sunset" | "midnight" | "daylight" | "reef" | "palm" | "twilight" | "bioluminescence";
 
 export type ThemeMode = "light" | "dark" | "system";
 
@@ -137,6 +131,26 @@ export function PaletteSwitcher() {
   const [mode, setMode] = useState<ThemeMode>("system");
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const openButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        openButtonRef.current?.focus();
+        return;
+      }
+      if (panelRef.current) trapFocusKeydown(event, panelRef.current);
+    };
+    document.addEventListener("keydown", onKey);
+    const first = panelRef.current?.querySelector<HTMLElement>(
+      'button,a[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',
+    );
+    first?.focus();
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen]);
 
   useEffect(() => {
     setMounted(true);
@@ -144,7 +158,8 @@ export function PaletteSwitcher() {
       const savedPalette = localStorage.getItem("mdv-palette") as PaletteId | null;
       const savedMode = localStorage.getItem("mdv-mode") as ThemeMode | null;
 
-      const p = savedPalette && PALETTES.some((item) => item.id === savedPalette) ? savedPalette : "ocean";
+      const p =
+        savedPalette && PALETTES.some((item) => item.id === savedPalette) ? savedPalette : "ocean";
       const m = savedMode && ["light", "dark", "system"].includes(savedMode) ? savedMode : "system";
 
       setActivePalette(p);
@@ -192,9 +207,13 @@ export function PaletteSwitcher() {
   const isDark = getResolvedMode(mode) === "dark";
 
   return (
-    <aside aria-label="Design Palette & Theme Switcher" className="hidden lg:block fixed bottom-6 right-6 z-40">
+    <aside
+      aria-label="Design Palette & Theme Switcher"
+      className="hidden lg:block fixed z-40 right-6 bottom-[calc(1.5rem+var(--me-compare-tray-h,0px))]"
+    >
       {isOpen ? (
         <div
+          ref={panelRef}
           role="dialog"
           aria-modal="true"
           aria-label="Select website theme and palette"
@@ -202,13 +221,22 @@ export function PaletteSwitcher() {
         >
           <div className="mb-3 flex items-center justify-between border-b border-border-subtle dark:border-white/10 pb-2">
             <div className="flex items-center gap-2">
-              <Palette size={18} className="text-lagoon-ink dark:text-cyan-400" aria-hidden="true" />
-              <span className="text-sm font-bold text-ocean dark:text-cyan-300">Theme &amp; Palettes</span>
+              <Palette
+                size={18}
+                className="text-lagoon-ink dark:text-cyan-400"
+                aria-hidden="true"
+              />
+              <span className="text-sm font-bold text-ocean dark:text-cyan-300">
+                Theme &amp; Palettes
+              </span>
             </div>
             <button
               type="button"
-              onClick={() => setIsOpen(false)}
-              className="rounded-full p-1 text-muted hover:bg-mist dark:hover:bg-white/10 hover:text-ink dark:hover:text-white transition"
+              onClick={() => {
+                setIsOpen(false);
+                openButtonRef.current?.focus();
+              }}
+              className="inline-flex size-11 items-center justify-center rounded-full text-muted hover:bg-mist dark:hover:bg-white/10 hover:text-ink dark:hover:text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
               aria-label="Close palette selector"
             >
               <X size={16} aria-hidden="true" />
@@ -217,7 +245,9 @@ export function PaletteSwitcher() {
 
           {/* Mode Switcher */}
           <div className="mb-4">
-            <p className="mb-1.5 text-xs font-semibold text-muted dark:text-slate-300">Display Mode</p>
+            <p className="mb-1.5 text-xs font-semibold text-muted dark:text-slate-300">
+              Display Mode
+            </p>
             <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-border-subtle dark:border-white/10 bg-sand/60 dark:bg-white/5 p-1">
               <button
                 type="button"
@@ -295,12 +325,20 @@ export function PaletteSwitcher() {
                       />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-ink dark:text-white leading-tight">{palette.name}</p>
-                      <p className="text-xs text-muted dark:text-slate-300 leading-tight">{palette.tagline}</p>
+                      <p className="text-sm font-semibold text-ink dark:text-white leading-tight">
+                        {palette.name}
+                      </p>
+                      <p className="text-xs text-muted dark:text-slate-300 leading-tight">
+                        {palette.tagline}
+                      </p>
                     </div>
                   </div>
                   {isSelected ? (
-                    <Check size={16} className="text-lagoon-ink dark:text-cyan-400" aria-hidden="true" />
+                    <Check
+                      size={16}
+                      className="text-lagoon-ink dark:text-cyan-400"
+                      aria-hidden="true"
+                    />
                   ) : null}
                 </button>
               );
@@ -314,21 +352,26 @@ export function PaletteSwitcher() {
           type="button"
           onClick={handleToggleMode}
           title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
-          className="flex size-10 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95"
+          className="flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           aria-label="Toggle dark and light mode"
         >
           {isDark ? (
-            <Sun size={17} className="text-amber-400 rotate-0 transition-transform hover:rotate-45" />
+            <Sun
+              size={17}
+              className="text-amber-400 rotate-0 transition-transform hover:rotate-45"
+            />
           ) : (
             <Moon size={17} className="text-slate-700 -rotate-12 transition-transform" />
           )}
         </button>
 
         <button
+          ref={openButtonRef}
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
-          className="group flex items-center gap-2 rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 px-3.5 py-2.5 text-sm font-semibold text-ocean dark:text-cyan-300 shadow-2 backdrop-blur hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95 transition-all"
+          aria-haspopup="dialog"
+          className="group flex min-h-11 items-center gap-2 rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 px-3.5 py-2.5 text-sm font-semibold text-ocean dark:text-cyan-300 shadow-2 backdrop-blur hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           <span
             className="inline-block h-3.5 w-3.5 rounded-full shadow-sm ring-1 ring-black/10"
@@ -336,7 +379,11 @@ export function PaletteSwitcher() {
           />
           <span className="hidden sm:inline">{current.name}</span>
           <span className="text-xs text-muted font-normal">Theme</span>
-          <Palette size={15} className="text-lagoon-ink transition-transform group-hover:rotate-12" aria-hidden="true" />
+          <Palette
+            size={15}
+            className="text-lagoon-ink transition-transform group-hover:rotate-12"
+            aria-hidden="true"
+          />
         </button>
       </div>
     </aside>

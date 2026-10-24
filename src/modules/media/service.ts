@@ -192,10 +192,10 @@ export async function linkMedia(
 
 export async function readPublishedMedia(
   id: string,
-): Promise<{ storageKey: string; mimeType: string } | null> {
+): Promise<{ storageKey: string; mimeType: string; updatedAt: Date; byteSize: number } | null> {
   const row = await db.mediaAsset.findFirst({
     where: { id, status: "PUBLISHED" },
-    select: { storageKey: true, mimeType: true },
+    select: { storageKey: true, mimeType: true, updatedAt: true, byteSize: true },
   });
   return row;
 }

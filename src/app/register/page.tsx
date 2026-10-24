@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Compass, Eye, Lock, Mail, ShieldCheck, Sparkles, User, Waves } from "lucide-react";
+import { Compass, Mail, ShieldCheck, Sparkles, User, Waves } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordField } from "@/components/ui/password-field";
 import { registerAccount } from "@/modules/identity/actions";
 import { claimToken } from "@/modules/customers/rules";
 import { publicMetadata } from "@/lib/seo/metadata";
@@ -125,27 +126,15 @@ export default async function RegisterPage({
               >
                 Password
               </Label>
-              <div className="relative">
-                <Lock
-                  size={16}
-                  className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted"
-                />
-                <Input
-                  id="reg-password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  placeholder="Minimum 12 characters"
-                  className="min-h-12 w-full rounded-xl border border-border bg-white dark:bg-white/5 pl-10 pr-11 text-sm text-ink transition focus:border-lagoon focus:ring-2 focus:ring-lagoon/20"
-                />
-                <span
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted"
-                  aria-hidden="true"
-                >
-                  <Eye size={16} />
-                </span>
-              </div>
+              <PasswordField
+                id="reg-password"
+                name="password"
+                withIcon
+                autoComplete="new-password"
+                required
+                placeholder="Minimum 12 characters"
+                className="min-h-12 w-full rounded-xl border border-border bg-white dark:bg-white/5 text-sm text-ink transition focus:border-lagoon focus:ring-2 focus:ring-lagoon/20"
+              />
               <p className="text-[11px] text-muted leading-relaxed">
                 Use at least 12 characters, mixing letters and numbers.
               </p>

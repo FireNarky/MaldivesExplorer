@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { MessageSquare, X, ChevronRight, Sparkles } from "lucide-react";
 import { WhatsAppIcon, MessengerIcon, TelegramIcon } from "./social-icons";
+import { trapFocusKeydown } from "@/lib/a11y/focus-trap";
 import {
   activeContactChannels,
   ContactSettings,
@@ -15,24 +16,32 @@ import {
 export function FloatingChatWidget({ settings }: { settings: ContactSettings }) {
   const [isOpen, setIsOpen] = useState(false);
   const widgetRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
 
-  // Close on Escape or click outside
+  // Close on Escape or click outside; restore focus to the toggle when closing via Escape.
   useEffect(() => {
+    if (!isOpen) return;
     const handleClickOutside = (e: MouseEvent) => {
       if (widgetRef.current && !widgetRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     };
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
+      if (e.key === "Escape") {
         setIsOpen(false);
+        toggleRef.current?.focus();
+        return;
       }
+      if (panelRef.current) trapFocusKeydown(e, panelRef.current);
     };
-
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleKeyDown);
-    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    const first = panelRef.current?.querySelector<HTMLElement>(
+      'button,a[href],input,select,textarea,[tabindex]:not([tabindex="-1"])',
+    );
+    first?.focus();
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
@@ -51,13 +60,14 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
   return (
     <div
       ref={widgetRef}
-      className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 select-none"
+      className="fixed z-40 select-none bottom-[calc(5rem+env(safe-area-inset-bottom))] right-4 lg:bottom-[calc(1.5rem+var(--me-compare-tray-h,0px))] lg:right-[calc(1.5rem+13.5rem)]"
     >
-      {/* Expanded Chat Drawer / Card */}
+      {/* Expanded Chat Drawer / Card — non-modal popover (page remains usable). */}
       {isOpen ? (
         <div
+          ref={panelRef}
           role="dialog"
-          aria-label="Direct Messaging Channels"
+          aria-labelledby={titleId}
           className="mb-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border-subtle/80 bg-white dark:bg-[#071318] dark:border-white/15 shadow-3 animate-in zoom-in-95 slide-in-from-bottom-2 duration-200"
         >
           {/* Card Header */}
@@ -75,9 +85,9 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
                 <X size={18} />
               </button>
             </div>
-            <h3 className="mt-1 font-display text-lg font-medium text-white">
+            <p id={titleId} className="mt-1 font-display text-lg font-medium text-white">
               Maldives Explorer Team
-            </h3>
+            </p>
             <p className="mt-0.5 text-xs text-slate-200">
               Questions on resorts, transfers, and custom quotations.
             </p>
@@ -188,11 +198,13 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
 
       {/* Floating Toggle Button */}
       <button
+        ref={toggleRef}
         type="button"
         onClick={() => setIsOpen((v) => !v)}
         aria-expanded={isOpen}
+        aria-haspopup="dialog"
         aria-label="Chat with island concierge"
-        className="group relative flex h-12 sm:h-13 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#083b4c] to-[#0d5970] px-4 sm:px-5 text-white shadow-3 ring-2 ring-white/20 hover:scale-105 active:scale-95 transition-all duration-200"
+        className="group relative flex min-h-12 sm:min-h-13 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#083b4c] to-[#0d5970] px-4 sm:px-5 text-white shadow-3 ring-2 ring-white/20 hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
       >
         <MessageSquare size={19} className="text-cyan-200" />
         <span className="hidden sm:inline text-xs font-semibold tracking-wide">Concierge Chat</span>

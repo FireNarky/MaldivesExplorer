@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import {
   Award,
@@ -231,16 +230,13 @@ export default async function HomePage() {
               </Button>
             </div>
 
-            {/* Mobile Hero Visual Preview */}
+            {/* Mobile preview reuses the same CSS background URL as the hero plane (one fetch). */}
             <div className="lg:hidden mt-2 rounded-2xl border border-white/15 bg-white/10 p-3 backdrop-blur-md flex items-center gap-3.5">
-              <div className="relative size-16 shrink-0 overflow-hidden rounded-xl border border-white/20">
-                <Image
-                  src="/images/hero-maldives.jpg"
-                  alt="Maldives Overwater Resort"
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              <div
+                className="size-16 shrink-0 overflow-hidden rounded-xl border border-white/20 bg-[url('/images/hero-maldives.jpg')] bg-cover bg-center"
+                role="img"
+                aria-label="Maldives overwater resort"
+              />
               <div className="min-w-0">
                 <p className="text-xs uppercase tracking-wider text-cyan-300 font-semibold">
                   Bespoke Island Travel

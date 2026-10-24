@@ -21,7 +21,6 @@ export function GuideCard({ item }: { item: GuideCardData }) {
             src={`/media/${item.image.id}`}
             alt={item.image.altText}
             fill
-            unoptimized
             sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -39,7 +38,10 @@ export function GuideCard({ item }: { item: GuideCardData }) {
 
       <div className="flex flex-1 flex-col p-5 lg:p-6">
         <h2 className="mb-2 font-display text-xl text-ocean line-clamp-2">
-          <Link href={`/guides/${item.slug}`} className="after:absolute after:inset-0 hover:underline">
+          <Link
+            href={`/guides/${item.slug}`}
+            className="after:absolute after:inset-0 hover:underline"
+          >
             {item.title}
           </Link>
         </h2>
@@ -58,7 +60,9 @@ export function GuideCard({ item }: { item: GuideCardData }) {
               Maldives Explorer Editorial Team
             </span>
           )}
-          <span className="font-semibold text-lagoon-ink group-hover:underline">Read Guide &rarr;</span>
+          <span className="font-semibold text-lagoon-ink group-hover:underline">
+            Read Guide &rarr;
+          </span>
         </div>
       </div>
     </article>

@@ -12,6 +12,8 @@
 
 :root {
   --sbw: 0px;
+  /* Published by CompareTray when visible so floating chrome can clear it. */
+  --me-compare-tray-h: 0px;
 }
 
 :root,

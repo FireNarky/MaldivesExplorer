@@ -14,7 +14,6 @@ export function DetailHero({ media }: { media: LeadMedia | null | undefined }) {
           src={`/media/${media.id}`}
           alt={media.altText}
           fill
-          unoptimized
           sizes="(min-width: 64rem) 65ch, 100vw"
           className="object-cover"
         />

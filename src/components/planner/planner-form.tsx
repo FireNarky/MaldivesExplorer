@@ -193,8 +193,8 @@ export function PlannerForm(props: PlannerFormProps) {
                     isCurrent
                       ? "bg-lagoon-ink text-white shadow-sm ring-2 ring-lagoon-ink/30"
                       : isCompleted
-                      ? "border border-border-subtle bg-mist/60 dark:bg-white/10 text-lagoon-ink dark:text-cyan-400 hover:bg-mist cursor-pointer"
-                      : "border border-border-subtle/50 text-muted opacity-50 cursor-not-allowed"
+                        ? "border border-border-subtle bg-mist/60 dark:bg-white/10 text-lagoon-ink dark:text-cyan-400 hover:bg-mist cursor-pointer"
+                        : "border border-border-subtle/50 text-muted opacity-50 cursor-not-allowed"
                   }`}
                 >
                   {isCompleted ? <Check size={12} strokeWidth={2.5} /> : null}
@@ -209,7 +209,10 @@ export function PlannerForm(props: PlannerFormProps) {
       </div>
 
       {expired ? (
-        <div className="rounded-xl border border-warning/20 bg-warning-surface p-3 text-xs text-warning animate-in fade-in" role="status">
+        <div
+          className="rounded-xl border border-warning/20 bg-warning-surface p-3 text-xs text-warning animate-in fade-in"
+          role="status"
+        >
           This draft has expired and was reset to fresh values.
         </div>
       ) : null}
@@ -219,7 +222,12 @@ export function PlannerForm(props: PlannerFormProps) {
       </p>
 
       {Object.keys(issues).length > 0 ? (
-        <div ref={summaryRef} tabIndex={-1} role="alert" className="rounded-2xl border border-danger/20 bg-danger-surface p-4 text-xs text-danger space-y-2 animate-in fade-in">
+        <div
+          ref={summaryRef}
+          tabIndex={-1}
+          role="alert"
+          className="rounded-2xl border border-danger/20 bg-danger-surface p-4 text-xs text-danger space-y-2 animate-in fade-in"
+        >
           <h2 className="font-semibold text-sm">Please verify the following:</h2>
           <ul className="list-disc pl-5 space-y-1">
             {Object.entries(issues).map(([field, message]) => (
@@ -236,7 +244,9 @@ export function PlannerForm(props: PlannerFormProps) {
       {/* Step Content Container */}
       <div key={current} className="animate-in fade-in slide-in-from-right-3 duration-300">
         {current === "dates" ? <DatesStep draft={draft} issues={issues} onChange={update} /> : null}
-        {current === "budget" ? <BudgetStep draft={draft} issues={issues} onChange={update} /> : null}
+        {current === "budget" ? (
+          <BudgetStep draft={draft} issues={issues} onChange={update} />
+        ) : null}
         {current === "party" ? (
           <PartyStep draft={draft} issues={issues} tripTypes={props.tripTypes} onChange={update} />
         ) : null}
@@ -448,24 +458,37 @@ function PartyStep({
           Ages from 0 through 11. An age of 0 or 1 is an infant. Ages 12 and over count as adults.
         </p>
         {draft.childAges.map((age, index) => (
-          <Field
-            key={`child-${index}`}
-            id={fieldId(`childAges.${index}`)}
-            label={`Child ${index + 1} age`}
-            error={issues[`childAges.${index}`]}
-          >
-            <Input
+          <div key={`child-${index}`} className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+            <Field
               id={fieldId(`childAges.${index}`)}
-              inputMode="numeric"
-              value={age}
-              invalid={Boolean(issues[`childAges.${index}`])}
-              onChange={(event) => {
-                const childAges = [...draft.childAges];
-                childAges[index] = event.target.value;
-                onChange({ childAges });
-              }}
-            />
-          </Field>
+              label={`Child ${index + 1} age`}
+              error={issues[`childAges.${index}`]}
+            >
+              <Input
+                id={fieldId(`childAges.${index}`)}
+                inputMode="numeric"
+                value={age}
+                invalid={Boolean(issues[`childAges.${index}`])}
+                onChange={(event) => {
+                  const childAges = [...draft.childAges];
+                  childAges[index] = event.target.value;
+                  onChange({ childAges });
+                }}
+              />
+            </Field>
+            <Button
+              type="button"
+              variant="secondary"
+              className="min-h-11"
+              onClick={() =>
+                onChange({
+                  childAges: draft.childAges.filter((_, childIndex) => childIndex !== index),
+                })
+              }
+            >
+              {`Remove child ${index + 1}`}
+            </Button>
+          </div>
         ))}
         <Button
           type="button"
@@ -478,7 +501,7 @@ function PartyStep({
       <Field id="tripTypeId" label="Trip type" optional error={issues.tripTypeId}>
         <select
           id="tripTypeId"
-          className="min-h-11 w-full rounded-sm border border-border bg-white px-4 text-base"
+          className="min-h-11 w-full rounded-sm border border-border bg-white px-4 text-base text-ink focus-visible:border-focus dark:bg-[#0c1c24] dark:border-[#223d4d] dark:text-white dark:focus-visible:border-cyan-400"
           value={draft.tripTypeId}
           onChange={(event) => onChange({ tripTypeId: event.target.value })}
         >

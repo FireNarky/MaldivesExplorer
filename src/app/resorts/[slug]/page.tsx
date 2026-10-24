@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Compass, MapPin } from "lucide-react";
@@ -7,6 +6,7 @@ import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
 import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { RelatedList } from "@/components/discovery/related-list";
+import { ResortGallery } from "@/components/discovery/resort-gallery";
 import { PriceDisclosure } from "@/components/patterns/price-disclosure";
 import { ReviewList } from "@/components/reviews/review-list";
 import { ListingActions } from "@/components/shortlist/listing-actions";
@@ -117,28 +117,7 @@ export default async function ResortPage({ params }: PageProps) {
           <p className="max-w-[65ch] text-lg">{resort.summary}</p>
         </header>
 
-        {gallery.length > 0 ? (
-          <section
-            aria-label="Photos"
-            className="grid gap-2 sm:grid-cols-3 sm:grid-rows-2 [&>*:first-child]:sm:col-span-2 [&>*:first-child]:sm:row-span-2"
-          >
-            {gallery.slice(0, 5).map((image) => (
-              <div
-                key={image.media.id}
-                className="relative aspect-[3/2] overflow-hidden rounded-lg bg-mist"
-              >
-                <Image
-                  src={`/media/${image.media.id}`}
-                  alt={image.media.altText ?? ""}
-                  fill
-                  unoptimized
-                  sizes="(min-width: 64rem) 60vw, 100vw"
-                  className="object-cover"
-                />
-              </div>
-            ))}
-          </section>
-        ) : null}
+        <ResortGallery images={gallery} />
 
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
           <div className="grid content-start gap-10 lg:col-span-8">

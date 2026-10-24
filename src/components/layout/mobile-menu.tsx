@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Compass, Menu, Moon, Sun, X } from "lucide-react";
+import { trapFocusKeydown } from "@/lib/a11y/focus-trap";
 
 type MenuLink = { href: string; label: string };
 
@@ -23,11 +24,15 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
     if (nextDark) {
       document.documentElement.classList.add("dark");
       document.documentElement.setAttribute("data-theme", "dark");
-      try { localStorage.setItem("mdv-mode", "dark"); } catch {}
+      try {
+        localStorage.setItem("mdv-mode", "dark");
+      } catch {}
     } else {
       document.documentElement.classList.remove("dark");
       document.documentElement.removeAttribute("data-theme");
-      try { localStorage.setItem("mdv-mode", "light"); } catch {}
+      try {
+        localStorage.setItem("mdv-mode", "light");
+      } catch {}
     }
   };
 
@@ -39,13 +44,20 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
     if (!open) return;
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    const panel = document.getElementById("mobile-menu");
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
         buttonRef.current?.focus();
+        return;
       }
+      if (panel) trapFocusKeydown(event, panel);
     };
     document.addEventListener("keydown", onKey);
+    const first = panel?.querySelector<HTMLElement>(
+      'a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])',
+    );
+    first?.focus();
     return () => {
       document.body.style.overflow = originalOverflow;
       document.removeEventListener("keydown", onKey);
