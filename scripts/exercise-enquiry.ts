@@ -2,6 +2,9 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { db } from "../src/lib/db";
 import { runDueJobs } from "../src/jobs/worker";
+import { saveContactSettings, submitContactEnquiry } from "../src/modules/contact/service";
+import { DEFAULT_CONTACT_SETTINGS } from "../src/modules/contact/types";
+import { readEnquiry } from "../src/modules/crm/service";
 import { EnquiryError, submitEnquiry } from "../src/modules/enquiries/service";
 import { emptyDraft, type PlannerDraft } from "../src/modules/enquiries/rules";
 
@@ -164,6 +167,112 @@ async function main(): Promise<void> {
     where: { id: delivery.id, status: "QUEUED" },
   });
   if (!stillQueued) throw new Error("The queued message was marked sent without a provider.");
+
+  const rejectedContact = await submitContactEnquiry({
+    name: "Contact Exercise Guest",
+    email: "contact-exercise@example.com",
+    message: "Testing contact submission without consent.",
+    consent: false,
+  });
+  if (rejectedContact.success) {
+    throw new Error("Contact enquiry succeeded without explicit consent.");
+  }
+
+  const contactKey = "contact-exercise-1";
+  const createdContact = await submitContactEnquiry({
+    name: "Contact Exercise Guest",
+    email: "contact-exercise@example.com",
+    phone: "+960 7000001",
+    topic: "Resort Booking",
+    dates: "November 2026 (5 nights)",
+    message: "Testing canonical contact enquiry creation and status history.",
+    consent: true,
+    noticeVersion: "2026-10-10",
+    idempotencyKey: contactKey,
+  });
+  if (!createdContact.success || !/^ME-E-\d{6}$/.test(createdContact.reference)) {
+    throw new Error("Contact enquiry did not produce a valid ME-E reference.");
+  }
+  const contactEnquiry = await db.enquiry.findUniqueOrThrow({
+    where: { idempotencyKey: contactKey },
+    include: { statusHistory: true, customer: true },
+  });
+  if (
+    contactEnquiry.adultCount !== 1 ||
+    contactEnquiry.source !== "contact_page" ||
+    contactEnquiry.statusHistory.length !== 1 ||
+    contactEnquiry.statusHistory[0]?.toStatus !== "NEW"
+  ) {
+    throw new Error("Contact enquiry did not record canonical party, source, or status history.");
+  }
+  const contactConsent = await db.consentRecord.findFirst({
+    where: {
+      subjectId: contactEnquiry.customerId,
+      purpose: "ENQUIRY_CONTACT",
+      status: "GRANTED",
+      source: "contact_page",
+    },
+  });
+  if (!contactConsent) {
+    throw new Error("Contact enquiry did not record explicit contact consent.");
+  }
+  const contactDelivery = await db.emailDelivery.findFirst({
+    where: { relatedId: contactEnquiry.id, templateCode: "enquiry.received", status: "QUEUED" },
+  });
+  if (!contactDelivery) {
+    throw new Error("Contact enquiry did not queue an acknowledgement.");
+  }
+
+  const adminRole = await db.userRole.findFirstOrThrow({
+    where: { role: { code: "ADMINISTRATOR" } },
+    select: { userId: true },
+  });
+  const auditorRole = await db.role.findUniqueOrThrow({ where: { code: "AUDITOR" } });
+  const auditorUser = await db.user.create({
+    data: {
+      email: "contact-auditor@example.com",
+      name: "Contact Auditor",
+      roles: { create: { roleId: auditorRole.id } },
+    },
+  });
+  await expectFailure(
+    () => saveContactSettings(DEFAULT_CONTACT_SETTINGS, auditorUser.id),
+    /cannot manage settings/i,
+  );
+  await saveContactSettings(
+    { ...DEFAULT_CONTACT_SETTINGS, email: "team@example.com" },
+    adminRole.userId,
+  );
+  const settingAudit = await db.auditLog.findFirst({
+    where: {
+      actorId: adminRole.userId,
+      action: "setting.update",
+      entityType: "system_setting",
+      entityId: adminRole.userId,
+    },
+  });
+  if (!settingAudit) {
+    throw new Error("Authorized contact settings update did not write an audit row.");
+  }
+  await saveContactSettings(DEFAULT_CONTACT_SETTINGS, adminRole.userId);
+
+  const contactDetail = await readEnquiry(adminRole.userId, createdContact.reference);
+  if (
+    contactDetail.partySupplied ||
+    contactDetail.travelers.length !== 0 ||
+    contactDetail.adultCount !== 1
+  ) {
+    throw new Error("Contact enquiry party size was presented as customer-supplied to staff.");
+  }
+  const plannerDetail = await readEnquiry(adminRole.userId, first.reference);
+  if (
+    !plannerDetail.partySupplied ||
+    plannerDetail.adultCount !== 2 ||
+    plannerDetail.travelers.length !== 4
+  ) {
+    throw new Error("Trip planner party size was not presented as customer-supplied to staff.");
+  }
+
   await expectIntegrity();
   console.log("Enquiry exercise passed.");
   await db.$disconnect();

@@ -46,6 +46,7 @@ function snapshot(
   duplicateOf: string[],
   accepted: { resorts: string[]; offers: string[]; experiences: string[] },
   requestHash: string,
+  partySupplied: boolean,
 ): Prisma.InputJsonObject {
   const gaps = qualification({
     ...blankDraft(submission),
@@ -66,7 +67,11 @@ function snapshot(
       phone: submission.phone,
       countryCode: submission.countryCode,
     },
-    party: { adults: submission.adultCount, childAges: submission.childAges },
+    party: {
+      adults: submission.adultCount,
+      childAges: submission.childAges,
+      supplied: partySupplied,
+    },
     budget: {
       min: submission.budgetMin,
       max: submission.budgetMax,
@@ -195,12 +200,21 @@ async function publishedIds(
 
 export async function submitEnquiry(
   draft: PlannerDraft,
-  context: { userId: string | null; ipHash: string | null; idempotencyKey: string },
+  context: {
+    userId: string | null;
+    ipHash: string | null;
+    idempotencyKey: string;
+    consentSource?: string;
+    noticeVersion?: string;
+    /** False when the entry point does not collect a party size and adultCount is a placeholder. */
+    partySupplied?: boolean;
+  },
 ): Promise<EnquiryResult> {
   const keyError = idempotencyKeyError(context.idempotencyKey);
   if (keyError) throw new EnquiryError(keyError, 400, { idempotencyKey: keyError });
   const notice = await db.systemSetting.findUnique({ where: { key: "notice.version" } });
-  const noticeVersion = typeof notice?.value === "string" ? notice.value : "2026-10-10";
+  const configuredNotice = typeof notice?.value === "string" ? notice.value : "2026-10-10";
+  const noticeVersion = context.noticeVersion?.trim() || configuredNotice;
   const parsed = parseSubmission(draft, noticeVersion);
   if ("errors" in parsed) {
     const first = Object.values(parsed.errors)[0] ?? "Check the plan.";
@@ -318,6 +332,7 @@ export async function submitEnquiry(
             duplicateOf,
             { resorts, offers, experiences },
             requestHash,
+            context.partySupplied ?? true,
           ),
           idempotencyKey: context.idempotencyKey,
           travelers: {
@@ -347,7 +362,7 @@ export async function submitEnquiry(
           purpose: "ENQUIRY_CONTACT",
           status: "GRANTED",
           noticeVersion: submission.noticeVersion,
-          source: "planner",
+          source: context.consentSource ?? "planner",
           ipHash: context.ipHash,
         },
         select: { id: true },

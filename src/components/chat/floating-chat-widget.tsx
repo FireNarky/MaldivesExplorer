@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MessageSquare, X, ChevronRight, Sparkles } from "lucide-react";
 import { WhatsAppIcon, MessengerIcon, TelegramIcon } from "./social-icons";
 import {
+  activeContactChannels,
   ContactSettings,
   formatWhatsAppUrl,
   formatMessengerUrl,
@@ -38,10 +39,8 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
     };
   }, [isOpen]);
 
-  const hasAnyChannel =
-    settings.whatsappEnabled || settings.messengerEnabled || settings.telegramEnabled;
-
-  if (!hasAnyChannel) {
+  const active = activeContactChannels(settings);
+  if (!active.hasMessaging) {
     return null;
   }
 
@@ -50,26 +49,23 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
   const telegramUrl = formatTelegramUrl(settings.telegramUsername);
 
   return (
-    <div ref={widgetRef} className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 select-none">
+    <div
+      ref={widgetRef}
+      className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 select-none"
+    >
       {/* Expanded Chat Drawer / Card */}
       {isOpen ? (
         <div
           role="dialog"
-          aria-label="Island Concierge Direct Chat"
+          aria-label="Direct Messaging Channels"
           className="mb-3 w-80 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border-subtle/80 bg-white dark:bg-[#071318] dark:border-white/15 shadow-3 animate-in zoom-in-95 slide-in-from-bottom-2 duration-200"
         >
           {/* Card Header */}
           <div className="bg-gradient-to-r from-[#083b4c] to-[#0a4a5c] p-4 text-white">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="relative flex size-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex size-2.5 rounded-full bg-emerald-500"></span>
-                </span>
-                <span className="text-xs font-bold uppercase tracking-wider text-cyan-200">
-                  Concierge Desk Online
-                </span>
-              </div>
+              <span className="text-xs font-bold uppercase tracking-wider text-cyan-200">
+                Direct Messaging
+              </span>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
@@ -80,17 +76,17 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
               </button>
             </div>
             <h3 className="mt-1 font-display text-lg font-medium text-white">
-              Instant Maldives Concierge
+              Maldives Explorer Team
             </h3>
             <p className="mt-0.5 text-xs text-slate-200">
-              Direct answers on villa rates, seaplane transfers &amp; availability.
+              Questions on resorts, transfers, and custom quotations.
             </p>
           </div>
 
           {/* Channel Actions */}
           <div className="p-3 grid gap-2">
             {/* WhatsApp */}
-            {settings.whatsappEnabled ? (
+            {active.whatsapp ? (
               <a
                 href={whatsappUrl}
                 target="_blank"
@@ -106,17 +102,18 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
                     <div className="text-xs font-bold text-emerald-950 dark:text-emerald-300">
                       WhatsApp
                     </div>
-                    <div className="text-[11px] text-muted">
-                      {settings.whatsappNumber || "Instant specialist reply"}
-                    </div>
+                    <div className="text-[11px] text-muted">{settings.whatsappNumber}</div>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-muted group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight
+                  size={16}
+                  className="text-muted group-hover:translate-x-0.5 transition-transform"
+                />
               </a>
             ) : null}
 
             {/* Messenger */}
-            {settings.messengerEnabled ? (
+            {active.messenger ? (
               <a
                 href={messengerUrl}
                 target="_blank"
@@ -133,16 +130,19 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
                       Messenger
                     </div>
                     <div className="text-[11px] text-muted">
-                      @{settings.messengerUsername || "maldivesexplorer"}
+                      @{settings.messengerUsername.replace(/^@/, "")}
                     </div>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-muted group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight
+                  size={16}
+                  className="text-muted group-hover:translate-x-0.5 transition-transform"
+                />
               </a>
             ) : null}
 
             {/* Telegram */}
-            {settings.telegramEnabled ? (
+            {active.telegram ? (
               <a
                 href={telegramUrl}
                 target="_blank"
@@ -155,52 +155,47 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
                     <TelegramIcon className="size-5" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-sky-950 dark:text-sky-300">
-                      Telegram
-                    </div>
+                    <div className="text-xs font-bold text-sky-950 dark:text-sky-300">Telegram</div>
                     <div className="text-[11px] text-muted">
-                      @{settings.telegramUsername || "maldivesexplorer"}
+                      @{settings.telegramUsername.replace(/^@/, "")}
                     </div>
                   </div>
                 </div>
-                <ChevronRight size={16} className="text-muted group-hover:translate-x-0.5 transition-transform" />
+                <ChevronRight
+                  size={16}
+                  className="text-muted group-hover:translate-x-0.5 transition-transform"
+                />
               </a>
             ) : null}
-          </div>
 
-          {/* Footer Action */}
-          <div className="border-t border-border-subtle/80 bg-sand/60 dark:bg-white/5 p-2.5 text-center">
-            <Link
-              href="/contact"
-              onClick={() => setIsOpen(false)}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline"
-            >
-              <Sparkles size={13} />
-              Full Contact &amp; Written Enquiries &rarr;
-            </Link>
+            {/* Divider + Custom Quote Form Link */}
+            <div className="mt-1 border-t border-border-subtle/80 dark:border-white/10 pt-2">
+              <Link
+                href="/contact"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center justify-between rounded-xl bg-mist/70 dark:bg-white/5 px-3 py-2.5 text-xs font-semibold text-ocean dark:text-cyan-300 hover:bg-mist dark:hover:bg-white/10 transition-colors"
+              >
+                <span className="flex items-center gap-1.5">
+                  <Sparkles size={14} className="text-coral" />
+                  Send a Travel Enquiry
+                </span>
+                <ChevronRight size={14} />
+              </Link>
+            </div>
           </div>
         </div>
       ) : null}
 
-      {/* Floating Speed-Dial Button */}
+      {/* Floating Toggle Button */}
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={() => setIsOpen((v) => !v)}
         aria-expanded={isOpen}
-        aria-label={isOpen ? "Close messaging options" : "Chat with island concierge"}
-        className="group relative flex size-13 items-center justify-center rounded-full bg-gradient-to-tr from-[#083b4c] via-[#006c7c] to-[#009fb7] text-white shadow-3 hover:scale-105 active:scale-95 transition-all duration-200 ring-2 ring-white/30 dark:ring-white/10"
+        aria-label="Chat with island concierge"
+        className="group relative flex h-12 sm:h-13 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#083b4c] to-[#0d5970] px-4 sm:px-5 text-white shadow-3 ring-2 ring-white/20 hover:scale-105 active:scale-95 transition-all duration-200"
       >
-        {/* Pulsing online status ring */}
-        <span className="absolute -top-0.5 -right-0.5 flex size-3.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-          <span className="relative inline-flex size-3.5 rounded-full border-2 border-white dark:border-[#071318] bg-emerald-500"></span>
-        </span>
-
-        {isOpen ? (
-          <X size={24} className="transition-transform group-hover:rotate-90 duration-200" />
-        ) : (
-          <MessageSquare size={24} className="transition-transform group-hover:scale-110 duration-200" />
-        )}
+        <MessageSquare size={19} className="text-cyan-200" />
+        <span className="hidden sm:inline text-xs font-semibold tracking-wide">Concierge Chat</span>
       </button>
     </div>
   );

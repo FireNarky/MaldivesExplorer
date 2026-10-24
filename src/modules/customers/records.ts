@@ -10,6 +10,7 @@ import {
   quoteStatusLabel,
 } from "@/modules/customers/rules";
 import { openAccount, PortalError } from "@/modules/customers/service";
+import { partySupplied } from "@/modules/enquiries/party";
 
 const unavailable = "That record is not available.";
 const unpublished = "This listing is not currently published.";
@@ -34,6 +35,8 @@ export type QuoteSummary = {
 export type EnquiryDetail = EnquirySummary & {
   flexibility: string | null;
   adultCount: number;
+  /** False when adultCount is a system placeholder, not a party size the customer gave. */
+  partySupplied: boolean;
   childAges: number[];
   budget: string | null;
   tripType: string | null;
@@ -172,6 +175,7 @@ export async function readOwnEnquiry(
     createdAt: row.createdAt.toISOString(),
     flexibility: row.flexibility,
     adultCount: row.adultCount,
+    partySupplied: partySupplied(row.submittedSnapshot),
     childAges: row.travelers.flatMap((traveler) =>
       traveler.travelerType === "ADULT" || traveler.ageAtArrival === null
         ? []

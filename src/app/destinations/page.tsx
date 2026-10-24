@@ -11,7 +11,8 @@ import { db } from "@/lib/db";
 
 export const metadata: Metadata = publicMetadata({
   title: "Maldives Destinations & Atolls",
-  description: "Explore 26 natural geographic atolls, UNESCO Biosphere Reserves, and pristine island channels.",
+  description:
+    "Explore 26 natural geographic atolls, UNESCO Biosphere Reserves, and pristine island channels.",
   path: "/destinations",
 });
 
@@ -64,10 +65,17 @@ export default async function DestinationsPage({
 
     // Simple filter matching
     const filteredAtolls = atollsWithData.filter((a) => {
-      if (filter === "unesco") return a.slug.includes("baa") || a.summary.toLowerCase().includes("unesco");
-      if (filter === "speedboat") return a.slug.includes("male") || a.summary.toLowerCase().includes("speedboat");
+      if (filter === "unesco")
+        return a.slug.includes("baa") || a.summary.toLowerCase().includes("unesco");
+      if (filter === "speedboat")
+        return a.slug.includes("male") || a.summary.toLowerCase().includes("speedboat");
       if (filter === "seaplane") return !a.slug.includes("male");
-      if (filter === "diving") return a.slug.includes("ari") || a.summary.toLowerCase().includes("shark") || a.summary.toLowerCase().includes("dive");
+      if (filter === "diving")
+        return (
+          a.slug.includes("ari") ||
+          a.summary.toLowerCase().includes("shark") ||
+          a.summary.toLowerCase().includes("dive")
+        );
       return true;
     });
 
@@ -93,25 +101,43 @@ export default async function DestinationsPage({
               26 Natural Geographic Atolls Spanning the Equator
             </h2>
             <p className="text-sm sm:text-base text-slate-200 font-light leading-relaxed">
-              From North Malé&apos;s convenient luxury speedboat corridors to Baa Atoll&apos;s protected UNESCO biosphere and South Ari&apos;s whale shark sanctuaries, discover where to stay for your travel vision.
+              From North Malé&apos;s convenient luxury speedboat corridors to Baa Atoll&apos;s
+              protected UNESCO biosphere and South Ari&apos;s whale shark sanctuaries, discover
+              where to stay for your travel vision.
             </p>
 
             <div className="grid grid-cols-2 gap-3 pt-2 sm:grid-cols-4">
               <div className="rounded-2xl bg-white/10 p-3 backdrop-blur-sm border border-white/15">
-                <span className="block font-display text-xl sm:text-2xl font-bold text-white">26</span>
-                <span className="text-[11px] uppercase tracking-wider text-slate-300">Natural Atolls</span>
+                <span className="block font-display text-xl sm:text-2xl font-bold text-white">
+                  26
+                </span>
+                <span className="text-[11px] uppercase tracking-wider text-slate-300">
+                  Natural Atolls
+                </span>
               </div>
               <div className="rounded-2xl bg-white/10 p-3 backdrop-blur-sm border border-white/15">
-                <span className="block font-display text-xl sm:text-2xl font-bold text-white">UNESCO</span>
-                <span className="text-[11px] uppercase tracking-wider text-slate-300">Baa Biosphere</span>
+                <span className="block font-display text-xl sm:text-2xl font-bold text-white">
+                  UNESCO
+                </span>
+                <span className="text-[11px] uppercase tracking-wider text-slate-300">
+                  Baa Biosphere
+                </span>
               </div>
               <div className="rounded-2xl bg-white/10 p-3 backdrop-blur-sm border border-white/15">
-                <span className="block font-display text-xl sm:text-2xl font-bold text-white">100%</span>
-                <span className="text-[11px] uppercase tracking-wider text-slate-300">Verified Flights</span>
+                <span className="block font-display text-xl sm:text-2xl font-bold text-white">
+                  Sea &amp; Air
+                </span>
+                <span className="text-[11px] uppercase tracking-wider text-slate-300">
+                  Transfer Modes
+                </span>
               </div>
               <div className="rounded-2xl bg-white/10 p-3 backdrop-blur-sm border border-white/15">
-                <span className="block font-display text-xl sm:text-2xl font-bold text-white">35m</span>
-                <span className="text-[11px] uppercase tracking-wider text-slate-300">Avg Seaplane</span>
+                <span className="block font-display text-xl sm:text-2xl font-bold text-white">
+                  35m
+                </span>
+                <span className="text-[11px] uppercase tracking-wider text-slate-300">
+                  Avg Seaplane
+                </span>
               </div>
             </div>
           </div>

@@ -42,7 +42,11 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
               : "border border-rose-500/30 bg-rose-50 text-rose-900 dark:bg-rose-950/30 dark:text-rose-200"
           }`}
         >
-          {state.success ? <Check size={18} className="mt-0.5 text-emerald-600" /> : <AlertCircle size={18} className="mt-0.5 text-rose-600" />}
+          {state.success ? (
+            <Check size={18} className="mt-0.5 text-emerald-600" />
+          ) : (
+            <AlertCircle size={18} className="mt-0.5 text-rose-600" />
+          )}
           <span>{state.message}</span>
         </div>
       ) : null}
@@ -80,7 +84,10 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="grid gap-1.5">
-            <label htmlFor="whatsappNumber" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+            <label
+              htmlFor="whatsappNumber"
+              className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+            >
               WhatsApp Phone Number (with Country Code)
             </label>
             <input
@@ -89,14 +96,19 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
               type="text"
               value={whatsappNumber}
               onChange={(e) => setWhatsappNumber(e.target.value)}
-              placeholder="+960 799 1234"
+              placeholder="+44 7700 900123"
               className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-white dark:bg-white/5 px-4 text-sm text-ink dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
-            <p className="text-[11px] text-muted">Example: +960 799 1234 (Maldives) or +44 7700 900123</p>
+            <p className="text-[11px] text-muted">
+              Enter the full international number with country code.
+            </p>
           </div>
 
           <div className="grid gap-1.5">
-            <label htmlFor="whatsappMessage" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+            <label
+              htmlFor="whatsappMessage"
+              className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+            >
               Default Pre-Filled Greeting Message
             </label>
             <input
@@ -108,7 +120,9 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
               placeholder="Hello Maldives Explorer..."
               className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-white dark:bg-white/5 px-4 text-sm text-ink dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
-            <p className="text-[11px] text-muted">Pre-filled text in the traveler&apos;s WhatsApp composer.</p>
+            <p className="text-[11px] text-muted">
+              Pre-filled text in the traveler&apos;s WhatsApp composer.
+            </p>
           </div>
         </div>
 
@@ -159,7 +173,10 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
         </div>
 
         <div className="grid gap-1.5 max-w-md">
-          <label htmlFor="messengerUsername" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+          <label
+            htmlFor="messengerUsername"
+            className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+          >
             Facebook Page Username or m.me URL
           </label>
           <input
@@ -171,7 +188,9 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
             placeholder="maldivesexplorer"
             className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-white dark:bg-white/5 px-4 text-sm text-ink dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           />
-          <p className="text-[11px] text-muted">Enter your Facebook username (e.g. maldivesexplorer) or page ID.</p>
+          <p className="text-[11px] text-muted">
+            Enter your Facebook username (e.g. maldivesexplorer) or page ID.
+          </p>
         </div>
 
         {/* Live Test Link */}
@@ -221,7 +240,10 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
         </div>
 
         <div className="grid gap-1.5 max-w-md">
-          <label htmlFor="telegramUsername" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+          <label
+            htmlFor="telegramUsername"
+            className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+          >
             Telegram Username or t.me Handle
           </label>
           <input
@@ -233,7 +255,9 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
             placeholder="maldivesexplorer"
             className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-white dark:bg-white/5 px-4 text-sm text-ink dark:text-white focus:outline-none focus:ring-2 focus:ring-sky-500/20"
           />
-          <p className="text-[11px] text-muted">Enter your handle without @ (e.g. maldivesexplorer).</p>
+          <p className="text-[11px] text-muted">
+            Enter your handle without @ (e.g. maldivesexplorer).
+          </p>
         </div>
 
         {/* Live Test Link */}
@@ -264,7 +288,10 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
 
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="grid gap-1.5">
-            <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+            <label
+              htmlFor="email"
+              className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+            >
               Primary Concierge Email
             </label>
             <input
@@ -277,7 +304,10 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
           </div>
 
           <div className="grid gap-1.5">
-            <label htmlFor="phone" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+            <label
+              htmlFor="phone"
+              className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+            >
               Direct Telephone
             </label>
             <input
@@ -290,7 +320,10 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
           </div>
 
           <div className="grid gap-1.5">
-            <label htmlFor="officeHours" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+            <label
+              htmlFor="officeHours"
+              className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+            >
               Concierge Hours Notice
             </label>
             <input
@@ -303,7 +336,10 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
           </div>
 
           <div className="grid gap-1.5">
-            <label htmlFor="emergencyDesk" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+            <label
+              htmlFor="emergencyDesk"
+              className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+            >
               Airport Seaplane Desk
             </label>
             <input
@@ -316,7 +352,10 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
           </div>
 
           <div className="grid gap-1.5 sm:col-span-2">
-            <label htmlFor="address" className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white">
+            <label
+              htmlFor="address"
+              className="text-xs font-bold uppercase tracking-wider text-ink dark:text-white"
+            >
               Physical Head Office Address
             </label>
             <input

@@ -70,7 +70,7 @@ export function LoginForm({
           Welcome to Your Sanctuary
         </h1>
         <p className="mt-1 text-sm sm:text-base text-muted">
-          Access your bespoke itineraries, confirmed seaplane vouchers, and exclusive island quotes.
+          Access your saved shortlists, trip enquiries, and written quotes.
         </p>
       </div>
 
@@ -120,7 +120,9 @@ export function LoginForm({
                   <span className="block font-semibold text-ocean">Admin Portal</span>
                   <span className="block truncate text-[11px] text-muted">browser-admin@...</span>
                 </div>
-                <span className="text-[10px] text-lagoon-ink dark:text-cyan-400 font-bold">FILL</span>
+                <span className="text-[10px] text-lagoon-ink dark:text-cyan-400 font-bold">
+                  FILL
+                </span>
               </button>
 
               <button
@@ -132,7 +134,9 @@ export function LoginForm({
                   <span className="block font-semibold text-ocean">Traveler Guest</span>
                   <span className="block truncate text-[11px] text-muted">traveler@...</span>
                 </div>
-                <span className="text-[10px] text-lagoon-ink dark:text-cyan-400 font-bold">FILL</span>
+                <span className="text-[10px] text-lagoon-ink dark:text-cyan-400 font-bold">
+                  FILL
+                </span>
               </button>
             </div>
           </div>
@@ -179,7 +183,10 @@ export function LoginForm({
             {claim ? <input type="hidden" name="claim" value={claim} /> : null}
 
             <div className="grid gap-1.5">
-              <Label htmlFor="login-email" className="text-xs font-semibold uppercase tracking-wider text-muted">
+              <Label
+                htmlFor="login-email"
+                className="text-xs font-semibold uppercase tracking-wider text-muted"
+              >
                 Email Address
               </Label>
               <div className="relative">
@@ -203,7 +210,10 @@ export function LoginForm({
 
             <div className="grid gap-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="login-password" className="text-xs font-semibold uppercase tracking-wider text-muted">
+                <Label
+                  htmlFor="login-password"
+                  className="text-xs font-semibold uppercase tracking-wider text-muted"
+                >
                   Password
                 </Label>
                 <Link
@@ -258,10 +268,14 @@ export function LoginForm({
             className="grid gap-4 animate-in fade-in duration-200"
           >
             <p className="text-xs text-muted leading-relaxed">
-              We will send a one-time passwordless sign-in link directly to your inbox. No password needed.
+              We will send a one-time passwordless sign-in link directly to your inbox. No password
+              needed.
             </p>
             <div className="grid gap-1.5">
-              <Label htmlFor="magic-email" className="text-xs font-semibold uppercase tracking-wider text-muted">
+              <Label
+                htmlFor="magic-email"
+                className="text-xs font-semibold uppercase tracking-wider text-muted"
+              >
                 Email Address
               </Label>
               <div className="relative">
@@ -304,19 +318,19 @@ export function LoginForm({
         </div>
       </div>
 
-      {/* Trust reassurance pills */}
+      {/* Account feature summary */}
       <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-muted">
         <span className="flex items-center gap-1.5">
           <ShieldCheck size={14} className="text-emerald-500" />
-          End-to-End Encrypted
+          Password &amp; Magic Link Sign-In
         </span>
         <span className="flex items-center gap-1.5">
           <Waves size={14} className="text-lagoon-ink dark:text-cyan-400" />
-          Direct Resort Quotes
+          Saved Shortlists &amp; Plans
         </span>
         <span className="flex items-center gap-1.5">
           <Compass size={14} className="text-coral" />
-          24/7 Island Concierge
+          Written Resort Quotes
         </span>
       </div>
     </div>

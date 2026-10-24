@@ -10,14 +10,16 @@ type PublicMetadataInput = {
 };
 
 export function publicMetadata(input: PublicMetadataInput): Metadata {
+  const cleanTitle =
+    input.title.replace(/\s*[·|-]\s*Maldives Explorer\s*$/i, "").trim() || input.title;
   const description = input.description.trim() || "Maldives Explorer";
   const canonical = absoluteUrl(input.path);
   return {
-    title: input.title,
+    title: cleanTitle,
     description,
     alternates: { canonical },
     openGraph: {
-      title: input.title,
+      title: cleanTitle,
       description,
       url: canonical,
       siteName: "Maldives Explorer",

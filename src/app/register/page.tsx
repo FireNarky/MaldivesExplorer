@@ -1,15 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Compass,
-  Eye,
-  Lock,
-  Mail,
-  ShieldCheck,
-  Sparkles,
-  User,
-  Waves,
-} from "lucide-react";
+import { Compass, Eye, Lock, Mail, ShieldCheck, Sparkles, User, Waves } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { Input } from "@/components/ui/input";
@@ -20,8 +11,9 @@ import { claimToken } from "@/modules/customers/rules";
 import { publicMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = publicMetadata({
-  title: "Create Account · Maldives Explorer",
-  description: "Join Maldives Explorer to save itineraries, receive bespoke resort quotes, and manage your luxury island journey.",
+  title: "Create Account",
+  description:
+    "Join Maldives Explorer to save itineraries, receive written resort quotes, and manage your trip enquiries.",
   path: "/register",
 });
 
@@ -43,7 +35,6 @@ export default async function RegisterPage({
   return (
     <div className="py-6 sm:py-12">
       <div className="mx-auto w-full max-w-xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-
         {/* Brand Header */}
         <div className="mb-6 text-center">
           <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-lagoon to-ocean text-white shadow-2 ring-4 ring-mist/50 dark:ring-ocean/40 transition-transform hover:scale-105">
@@ -85,7 +76,10 @@ export default async function RegisterPage({
 
             {/* Name */}
             <div className="grid gap-1.5">
-              <Label htmlFor="reg-name" className="text-xs font-semibold uppercase tracking-wider text-muted">
+              <Label
+                htmlFor="reg-name"
+                className="text-xs font-semibold uppercase tracking-wider text-muted"
+              >
                 Full Name
               </Label>
               <div className="relative">
@@ -106,7 +100,10 @@ export default async function RegisterPage({
 
             {/* Email */}
             <div className="grid gap-1.5">
-              <Label htmlFor="reg-email" className="text-xs font-semibold uppercase tracking-wider text-muted">
+              <Label
+                htmlFor="reg-email"
+                className="text-xs font-semibold uppercase tracking-wider text-muted"
+              >
                 Email Address
               </Label>
               <div className="relative">
@@ -128,7 +125,10 @@ export default async function RegisterPage({
 
             {/* Password */}
             <div className="grid gap-1.5">
-              <Label htmlFor="reg-password" className="text-xs font-semibold uppercase tracking-wider text-muted">
+              <Label
+                htmlFor="reg-password"
+                className="text-xs font-semibold uppercase tracking-wider text-muted"
+              >
                 Password
               </Label>
               <div className="relative">
@@ -200,19 +200,19 @@ export default async function RegisterPage({
           </div>
         </div>
 
-        {/* Trust Pills */}
+        {/* Account feature summary */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-muted">
           <span className="flex items-center gap-1.5">
             <ShieldCheck size={14} className="text-emerald-500" />
-            End-to-End Encrypted
+            Password &amp; Magic Link Sign-In
           </span>
           <span className="flex items-center gap-1.5">
             <Waves size={14} className="text-lagoon-ink dark:text-cyan-400" />
-            Direct Resort Quotes
+            Saved Shortlists &amp; Plans
           </span>
           <span className="flex items-center gap-1.5">
             <Compass size={14} className="text-coral" />
-            24/7 Island Concierge
+            Written Resort Quotes
           </span>
         </div>
       </div>
