@@ -7,17 +7,19 @@ import { ErrorState } from "@/components/ui/error-state";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { db } from "@/lib/db";
+import { publishedPublic } from "@/modules/discovery/visibility";
 
 export const metadata: Metadata = publicMetadata({
   title: "Curated Maldives Collections",
-  description: "Hand-picked themes: iconic overwater villas, UNESCO biosphere sanctuaries, romantic sandbanks, and family island retreats.",
+  description:
+    "Hand-picked themes: iconic overwater villas, UNESCO biosphere sanctuaries, romantic sandbanks, and family island retreats.",
   path: "/collections",
 });
 
 export default async function CollectionsPage() {
   try {
     const collections = await db.collection.findMany({
-      where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
+      where: publishedPublic(),
       orderBy: { title: "asc" },
       include: {
         items: true,
@@ -54,12 +56,17 @@ export default async function CollectionsPage() {
                   </div>
 
                   <h2 className="mb-3 font-display text-2xl text-ocean dark:text-cyan-300">
-                    <Link href={`/collections/${col.slug}`} className="after:absolute after:inset-0 hover:underline">
+                    <Link
+                      href={`/collections/${col.slug}`}
+                      className="after:absolute after:inset-0 hover:underline"
+                    >
                       {col.title}
                     </Link>
                   </h2>
 
-                  <p className="text-sm text-ink dark:text-slate-200 leading-relaxed mb-6">{col.summary}</p>
+                  <p className="text-sm text-ink dark:text-slate-200 leading-relaxed mb-6">
+                    {col.summary}
+                  </p>
                 </div>
 
                 <div className="flex items-center justify-between border-t border-border-subtle/80 dark:border-white/10 pt-4 text-sm font-semibold text-lagoon-ink dark:text-cyan-400 group-hover:text-ocean dark:group-hover:text-cyan-300">

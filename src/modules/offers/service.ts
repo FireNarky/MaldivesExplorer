@@ -1,5 +1,6 @@
 import type { PublishStatus } from "@prisma/client";
 import { db } from "@/lib/db";
+import { publishedPublic } from "@/modules/discovery/visibility";
 import { recordSlugRedirect } from "@/modules/redirects/service";
 import {
   assertTransitionPermission,
@@ -126,10 +127,10 @@ function toPublic(row: {
 const currentWhere = () => {
   const today = utcToday();
   return {
-    status: "PUBLISHED" as const,
+    ...publishedPublic(),
     validFrom: { lte: today },
     validUntil: { gte: today },
-    resort: { status: "PUBLISHED" as const },
+    resort: publishedPublic(),
   };
 };
 
@@ -145,7 +146,7 @@ export async function listPublicOffers(): Promise<PublicOffer[]> {
 
 export async function readPublicOffer(slug: string): Promise<OfferPage> {
   const row = await db.offer.findFirst({
-    where: { slug, status: "PUBLISHED", resort: { status: "PUBLISHED" } },
+    where: { slug, ...publishedPublic(), resort: publishedPublic() },
     select: publicOfferSelect,
   });
   if (!row) return { state: "absent" };

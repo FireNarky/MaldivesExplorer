@@ -3,7 +3,9 @@ import Link from "next/link";
 import { BookOpen, CheckCircle2, Plane, ShieldCheck, Sparkles, Waves } from "lucide-react";
 import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { FieldError } from "@/components/ui/field-error";
+import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
+import { listRecentPublishedGuides } from "@/modules/discovery";
 import { currentNoticeVersion } from "@/modules/newsletter/service";
 
 export const metadata: Metadata = publicMetadata({
@@ -36,24 +38,6 @@ const perks = [
   },
 ];
 
-const sampleDispatches = [
-  {
-    title: "Seaplane vs Speedboat: The Definitive Transfer Guide",
-    tag: "Transfer Guide",
-    readTime: "4 min read",
-  },
-  {
-    title: "Hanifaru Bay 2026: The Ultimate Manta Ray Season Forecast",
-    tag: "Marine Life",
-    readTime: "6 min read",
-  },
-  {
-    title: "Hidden Sandbanks of North Malé: Private Dining Coords",
-    tag: "Curated Stays",
-    readTime: "3 min read",
-  },
-];
-
 export default async function NewsletterPage({
   searchParams,
 }: {
@@ -61,6 +45,11 @@ export default async function NewsletterPage({
 }) {
   const query = await searchParams;
   const noticeVersion = await currentNoticeVersion();
+  // The same published, fixture-free articles as /guides. An unavailable list just hides the section.
+  const recentGuides = await listRecentPublishedGuides(3).catch((error: unknown) => {
+    logError(error instanceof Error ? error.message : "Recent guides could not be loaded.");
+    return [];
+  });
 
   return (
     <div className="mx-auto max-w-4xl space-y-12 py-4 sm:py-8">
@@ -134,41 +123,44 @@ export default async function NewsletterPage({
         </div>
       </div>
 
-      {/* Recent Dispatches Preview */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between border-b border-border-subtle pb-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
-            <BookOpen size={14} className="text-lagoon-ink dark:text-cyan-400" />
-            Recent Gazette Dispatches
-          </span>
-          <Link
-            href="/guides"
-            className="text-xs font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline"
-          >
-            View All Guides &rarr;
-          </Link>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-3">
-          {sampleDispatches.map((item) => (
+      {/* Recent published guides */}
+      {recentGuides.length > 0 ? (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between border-b border-border-subtle pb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
+              <BookOpen size={14} className="text-lagoon-ink dark:text-cyan-400" />
+              Recent guides
+            </span>
             <Link
-              key={item.title}
               href="/guides"
-              className="group rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-4 transition-all hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/40"
+              className="text-xs font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline"
             >
-              <div className="flex items-center justify-between text-[11px] text-muted mb-2">
-                <span className="rounded-full bg-mist dark:bg-white/10 px-2 py-0.5 font-semibold text-lagoon-ink dark:text-cyan-300">
-                  {item.tag}
-                </span>
-                <span>{item.readTime}</span>
-              </div>
-              <p className="text-sm font-semibold text-ocean group-hover:underline line-clamp-2">
-                {item.title}
-              </p>
+              View All Guides &rarr;
             </Link>
-          ))}
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            {recentGuides.map((item) => (
+              <Link
+                key={item.id}
+                href={item.href}
+                className="group rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-4 transition-all hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/40"
+              >
+                {item.categoryName ? (
+                  <div className="mb-2 text-[11px] text-muted">
+                    <span className="rounded-full bg-mist dark:bg-white/10 px-2 py-0.5 font-semibold text-lagoon-ink dark:text-cyan-300">
+                      {item.categoryName}
+                    </span>
+                  </div>
+                ) : null}
+                <p className="text-sm font-semibold text-ocean group-hover:underline line-clamp-2">
+                  {item.title}
+                </p>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

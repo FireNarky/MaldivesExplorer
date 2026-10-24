@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field-error";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SocialOAuthButtons } from "@/components/auth/social-oauth-buttons";
 import { registerAccount } from "@/modules/identity/actions";
 import { claimToken } from "@/modules/customers/rules";
 import { publicMetadata } from "@/lib/seo/metadata";
@@ -64,11 +63,6 @@ export default async function RegisterPage({
               <FieldError>{message}</FieldError>
             </div>
           ) : null}
-
-          {/* Social OAuth Integration */}
-          <div className="mb-6">
-            <SocialOAuthButtons mode="register" />
-          </div>
 
           {/* Registration Form */}
           <form action={registerAccount} className="grid gap-4">

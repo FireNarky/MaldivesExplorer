@@ -8,6 +8,7 @@ import { ErrorState } from "@/components/ui/error-state";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { db } from "@/lib/db";
+import { publishedPublic } from "@/modules/discovery/visibility";
 
 export const metadata: Metadata = publicMetadata({
   title: "Maldives Destinations & Atolls",
@@ -26,7 +27,7 @@ export default async function DestinationsPage({
     const filter = params?.filter ?? "all";
 
     const atolls = await db.atoll.findMany({
-      where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
+      where: publishedPublic(),
       orderBy: { name: "asc" },
       select: {
         id: true,
@@ -36,11 +37,11 @@ export default async function DestinationsPage({
         latitude: true,
         longitude: true,
         islands: {
-          where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
+          where: publishedPublic(),
           select: {
             id: true,
             resorts: {
-              where: { status: "PUBLISHED", NOT: { slug: { startsWith: "browser-" } } },
+              where: publishedPublic(),
               select: { name: true, slug: true },
             },
           },

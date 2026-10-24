@@ -28,6 +28,17 @@ export function parseAppEnv(source: Record<string, string | undefined>): AppEnv 
   });
 }
 
+/**
+ * Fail-closed check for security-sensitive test/UAT gates. Unlike `parseAppEnv`, which defaults a
+ * missing `APP_ENV` to `local` for ordinary behaviour, this is true only when `APP_ENV` is set to
+ * exactly `local`. Unset, empty, padded, differently cased, or unrecognised values are all false.
+ */
+export function isExplicitLocalEnvironment(
+  source: Record<string, string | undefined> = process.env,
+): boolean {
+  return source.APP_ENV === "local";
+}
+
 export function readAppEnv(source: Record<string, string | undefined> = process.env): AppEnv {
   return parseAppEnv(source);
 }

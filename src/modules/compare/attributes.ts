@@ -35,8 +35,13 @@ export const compareAttributes = [
 
 export type CompareAttribute = (typeof compareAttributes)[number];
 
+/** De-duplicated, trimmed labels. Shared by `/compare` and the resort detail page. */
+export function uniqueLabels(values: string[]): string[] {
+  return [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+}
+
 function list(values: string[]): string {
-  const unique = [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+  const unique = uniqueLabels(values);
   return unique.length > 0 ? unique.join("; ") : unknownValue;
 }
 

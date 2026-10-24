@@ -6,34 +6,30 @@ import { ErrorState } from "@/components/ui/error-state";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { db } from "@/lib/db";
+import { publishedPublic } from "@/modules/discovery/visibility";
+import { listLeadMedia } from "@/modules/media";
 
 export const metadata: Metadata = publicMetadata({
   title: "Maldives Signature Experiences",
-  description: "Manta ray snorkeling in Hanifaru Bay, whale shark encounters, sandbank castaway breakfasts, and undersea dining.",
+  description:
+    "Manta ray snorkeling in Hanifaru Bay, whale shark encounters, sandbank castaway breakfasts, and undersea dining.",
   path: "/experiences",
 });
 
 export default async function ExperiencesPage() {
   try {
     const experiences = await db.experience.findMany({
-      where: {
-        status: "PUBLISHED",
-        NOT: { slug: { startsWith: "browser-" } },
-      },
+      where: publishedPublic(),
       orderBy: { name: "asc" },
       include: {
         category: true,
       },
     });
 
-    const mediaLinks = await db.mediaLink.findMany({
-      where: {
-        ownerType: "EXPERIENCE",
-        ownerId: { in: experiences.map((e) => e.id) },
-      },
-      include: { media: { select: { id: true, altText: true } } },
-    });
-    const imageMap = new Map(mediaLinks.map((l) => [l.ownerId, l.media]));
+    const imageMap = await listLeadMedia(
+      "EXPERIENCE",
+      experiences.map((e) => e.id),
+    );
 
     return (
       <div className="grid gap-10">
@@ -60,9 +56,7 @@ export default async function ExperiencesPage() {
                   durationGuidance: exp.durationGuidance,
                   seasonality: exp.seasonality,
                   categoryName: exp.category?.name,
-                  image: imageMap.get(exp.id)
-                    ? { id: imageMap.get(exp.id)!.id, altText: imageMap.get(exp.id)!.altText ?? exp.name }
-                    : null,
+                  image: imageMap.get(exp.id) ?? null,
                 }}
               />
             ))}

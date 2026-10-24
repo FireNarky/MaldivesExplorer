@@ -18,6 +18,7 @@ import {
   transitionIsland,
 } from "../src/modules/destinations/service";
 import { saveExperience, transitionExperience } from "../src/modules/experiences/service";
+import { TEST_FIXTURE_FAQ_QUESTIONS } from "../src/modules/discovery/visibility";
 
 function assertDisposableDatabase(): void {
   const raw = process.env.DATABASE_URL;
@@ -183,7 +184,8 @@ async function main(): Promise<void> {
 
   const faqId = await saveFaq(editor.id, {
     ownerType: "GLOBAL",
-    question: "Browser question",
+    // FAQs have no slug, so the public visibility policy identifies this fixture by its text.
+    question: TEST_FIXTURE_FAQ_QUESTIONS[0],
     answer: "Browser answer.",
     sortOrder: 0,
   });

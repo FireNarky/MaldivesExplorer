@@ -5,6 +5,7 @@ import {
   type CompareColumn,
   type ResortFacts,
 } from "@/modules/compare/attributes";
+import { isHiddenFixtureSlug } from "@/modules/discovery/visibility";
 import { compareLimit, isUuid } from "@/modules/wishlist/rules";
 
 export async function loadCompareColumns(ids: string[]): Promise<CompareColumn[]> {
@@ -49,7 +50,7 @@ export async function loadCompareColumns(ids: string[]): Promise<CompareColumn[]
   const byId = new Map(rows.map((row) => [row.id, row]));
   return unique.map((id) => {
     const row = byId.get(id);
-    if (!row || row.status !== "PUBLISHED") {
+    if (!row || row.status !== "PUBLISHED" || isHiddenFixtureSlug(row.slug)) {
       return { id, name: "Unavailable", href: null, available: false, facts: null };
     }
     const facts: ResortFacts = {

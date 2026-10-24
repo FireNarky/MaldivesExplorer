@@ -6,17 +6,20 @@ import { ErrorState } from "@/components/ui/error-state";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { db } from "@/lib/db";
+import { publishedPublic } from "@/modules/discovery/visibility";
+import { listLeadMedia } from "@/modules/media";
 
 export const metadata: Metadata = publicMetadata({
   title: "Maldives Travel Guides & Insights",
-  description: "Curated editorial guides on seaplane transfers, monsoon seasons, atoll geography, and villa selection.",
+  description:
+    "Curated editorial guides on seaplane transfers, monsoon seasons, atoll geography, and villa selection.",
   path: "/guides",
 });
 
 export default async function GuidesPage() {
   try {
     const guides = await db.article.findMany({
-      where: { status: "PUBLISHED" },
+      where: publishedPublic(),
       orderBy: { publishedAt: "desc" },
       include: {
         category: true,
@@ -24,14 +27,10 @@ export default async function GuidesPage() {
       },
     });
 
-    const mediaLinks = await db.mediaLink.findMany({
-      where: {
-        ownerType: "ARTICLE",
-        ownerId: { in: guides.map((g) => g.id) },
-      },
-      include: { media: { select: { id: true, altText: true } } },
-    });
-    const imageMap = new Map(mediaLinks.map((l) => [l.ownerId, l.media]));
+    const imageMap = await listLeadMedia(
+      "ARTICLE",
+      guides.map((g) => g.id),
+    );
 
     return (
       <div className="grid gap-10">
@@ -57,9 +56,7 @@ export default async function GuidesPage() {
                   excerpt: guide.excerpt,
                   categoryName: guide.category?.name,
                   authorName: guide.author?.name,
-                  image: imageMap.get(guide.id)
-                    ? { id: imageMap.get(guide.id)!.id, altText: imageMap.get(guide.id)!.altText ?? guide.title }
-                    : null,
+                  image: imageMap.get(guide.id) ?? null,
                 }}
               />
             ))}

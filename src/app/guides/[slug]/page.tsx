@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
+import { DetailHero } from "@/components/discovery/detail-hero";
 import { FaqList } from "@/components/discovery/faq-list";
 import { JsonLd } from "@/components/discovery/json-ld";
 import { Prose } from "@/components/discovery/prose";
@@ -12,6 +13,7 @@ import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { articleData } from "@/lib/seo/structured";
 import { notePublicView } from "@/modules/analytics/service";
+import { listLeadMedia, type LeadMedia } from "@/modules/media";
 import { getPublishedGuide, listArticleRelations, listOwnerFaqs } from "@/modules/discovery";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -45,9 +47,10 @@ export default async function GuidePage({ params }: PageProps) {
     const guide = await getPublishedGuide(slug);
     if (!guide) notFound();
     await notePublicView("guide", `/guides/${guide.slug}`);
-    const [related, faqs] = await Promise.all([
+    const [related, faqs, media] = await Promise.all([
       listArticleRelations(guide.id),
       listOwnerFaqs("ARTICLE", guide.id),
+      listLeadMedia("ARTICLE", [guide.id]).catch(() => new Map<string, LeadMedia>()),
     ]);
     const authorName =
       guide.author.status === "PUBLISHED" && guide.author.name !== "Dr. Aminath Rasheed"
@@ -75,6 +78,7 @@ export default async function GuidePage({ params }: PageProps) {
         />
         <h1>{guide.title}</h1>
         <ListingActions entityType="ARTICLE" entityId={guide.id} save />
+        <DetailHero media={media.get(guide.id)} />
         {authorName ? <p>By {authorName}</p> : null}
         <p>{guide.category.name}</p>
         <p>{guide.excerpt}</p>

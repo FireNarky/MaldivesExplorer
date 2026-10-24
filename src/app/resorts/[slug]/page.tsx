@@ -19,6 +19,7 @@ import { publicMetadata } from "@/lib/seo/metadata";
 import { lodgingData, type Crumb } from "@/lib/seo/structured";
 import { notePublicView } from "@/modules/analytics/service";
 import { getPublishedResort, listPublishedResortImages } from "@/modules/catalog";
+import { uniqueLabels } from "@/modules/compare/attributes";
 import { listPublishedForResort } from "@/modules/reviews/service";
 import {
   listOwnerFaqs,
@@ -27,6 +28,22 @@ import {
 } from "@/modules/discovery";
 
 type PageProps = { params: Promise<{ slug: string }> };
+
+type RoomFactsProps = {
+  room: { maxAdults: number; maxChildren: number; sizeSqm: { toString(): string } | null };
+};
+
+/** Room size and guest limits. Only recorded values are shown; max adults is not total occupancy. */
+function RoomFacts({ room }: RoomFactsProps) {
+  const size = room.sizeSqm === null ? Number.NaN : Number(room.sizeSqm.toString());
+  return (
+    <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted">
+      {Number.isFinite(size) && size > 0 ? <li>Size: {size} m²</li> : null}
+      <li>Maximum adults: {room.maxAdults}</li>
+      {room.maxChildren > 0 ? <li>Maximum children: {room.maxChildren}</li> : null}
+    </ul>
+  );
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -76,6 +93,9 @@ export default async function ResortPage({ params }: PageProps) {
       .filter(Boolean)
       .join(", ");
     const gallery = images.filter((image) => image.media.altText);
+    const mealPlans = uniqueLabels(
+      resort.diningVenues.flatMap((venue) => venue.mealPlans.map((item) => item.mealPlan.label)),
+    );
     const page = (
       <article className="grid gap-8">
         <Breadcrumbs items={crumbs} />
@@ -169,8 +189,10 @@ export default async function ResortPage({ params }: PageProps) {
                       className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
                       <h3 className="text-ocean dark:text-cyan-300">{room.name}</h3>
-                      <p className="text-ink dark:text-slate-200">{room.description}</p>
-                      <p className="text-sm text-muted">Maximum adults: {room.maxAdults}</p>
+                      {room.description ? (
+                        <p className="text-ink dark:text-slate-200">{room.description}</p>
+                      ) : null}
+                      <RoomFacts room={room} />
                     </li>
                   ))}
                 </ul>
@@ -186,16 +208,23 @@ export default async function ResortPage({ params }: PageProps) {
                       className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
                       <h3 className="text-ocean dark:text-cyan-300">{venue.name}</h3>
-                      <p className="text-ink dark:text-slate-200">{venue.description}</p>
+                      {venue.description ? (
+                        <p className="text-ink dark:text-slate-200">{venue.description}</p>
+                      ) : null}
                       {venue.cuisine ? <p className="text-sm text-muted">{venue.cuisine}</p> : null}
                     </li>
                   ))}
                 </ul>
+                <p className="text-sm text-muted">
+                  {mealPlans.length > 0
+                    ? `Meal plans: ${mealPlans.join("; ")}`
+                    : "Meal plan details have not been published for this resort."}
+                </p>
               </section>
             ) : null}
-            {resort.transfers.length > 0 ? (
-              <section className="grid gap-4">
-                <h2>Transfers</h2>
+            <section className="grid gap-4">
+              <h2>Transfers</h2>
+              {resort.transfers.length > 0 ? (
                 <ul className="grid gap-4 md:grid-cols-2">
                   {resort.transfers.map((transfer) => (
                     <li
@@ -204,14 +233,46 @@ export default async function ResortPage({ params }: PageProps) {
                     >
                       <h3 className="text-ocean dark:text-cyan-300">{transfer.label}</h3>
                       <p className="text-ink dark:text-slate-200">{transfer.transferType.label}</p>
-                      {transfer.durationMinutes ? (
+                      {transfer.durationMinutes !== null ? (
                         <p className="text-sm text-muted">
                           Duration: {transfer.durationMinutes} minutes
+                          {transfer.durationBasis ? ` (${transfer.durationBasis})` : ""}
                         </p>
+                      ) : null}
+                      {transfer.notes ? (
+                        <p className="text-sm text-muted">{transfer.notes}</p>
                       ) : null}
                     </li>
                   ))}
                 </ul>
+              ) : (
+                <p className="max-w-[65ch] text-muted">
+                  Transfer details have not been published for this resort.
+                </p>
+              )}
+            </section>
+            {resort.checkInNotes ? (
+              <section className="grid max-w-[65ch] gap-4">
+                <h2>Check-in and arrival</h2>
+                <p className="whitespace-pre-line">{resort.checkInNotes}</p>
+              </section>
+            ) : null}
+            {resort.hasHouseReef !== null || resort.reefSummary || resort.diveCenterSummary ? (
+              <section className="grid max-w-[65ch] gap-4">
+                <h2>Reef and diving</h2>
+                {resort.hasHouseReef !== null ? (
+                  <p>
+                    <span className="text-sm text-muted">House reef: </span>
+                    <span className="font-semibold">{resort.hasHouseReef ? "Yes" : "No"}</span>
+                  </p>
+                ) : null}
+                {resort.reefSummary ? <p>{resort.reefSummary}</p> : null}
+                {resort.diveCenterSummary ? (
+                  <div className="grid gap-1">
+                    <h3 className="text-ocean dark:text-cyan-300">Dive centre</h3>
+                    <p>{resort.diveCenterSummary}</p>
+                  </div>
+                ) : null}
               </section>
             ) : null}
             {resort.amenities.length > 0 ? (

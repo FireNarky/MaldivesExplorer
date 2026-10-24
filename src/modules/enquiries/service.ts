@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { writeAudit } from "@/modules/audit/service";
 import { queueEnquiryAcknowledgement } from "@/modules/communications/service";
+import { publishedPublic } from "@/modules/discovery/visibility";
 import {
   classifyTravelerAge,
   enquiryRateLimit,
@@ -179,20 +180,20 @@ async function publishedIds(
   if (ids.length === 0) return [];
   if (kind === "resort") {
     const rows = await db.resort.findMany({
-      where: { id: { in: ids }, status: "PUBLISHED" },
+      where: { id: { in: ids }, ...publishedPublic() },
       select: { id: true },
     });
     return ids.filter((id) => rows.some((row) => row.id === id));
   }
   if (kind === "offer") {
     const rows = await db.offer.findMany({
-      where: { id: { in: ids }, status: "PUBLISHED" },
+      where: { id: { in: ids }, ...publishedPublic() },
       select: { id: true },
     });
     return ids.filter((id) => rows.some((row) => row.id === id));
   }
   const rows = await db.experience.findMany({
-    where: { id: { in: ids }, status: "PUBLISHED" },
+    where: { id: { in: ids }, ...publishedPublic() },
     select: { id: true },
   });
   return ids.filter((id) => rows.some((row) => row.id === id));
@@ -541,13 +542,13 @@ export async function plannerCatalog(): Promise<{
       select: { id: true, label: true },
     }),
     db.resort.findMany({
-      where: { status: "PUBLISHED" },
+      where: publishedPublic(),
       orderBy: { name: "asc" },
       take: 100,
       select: { id: true, name: true },
     }),
     db.experience.findMany({
-      where: { status: "PUBLISHED" },
+      where: publishedPublic(),
       orderBy: { name: "asc" },
       take: 100,
       select: { id: true, name: true },

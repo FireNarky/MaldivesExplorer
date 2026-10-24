@@ -1,6 +1,7 @@
 import type { Prisma, SavedEntityType } from "@prisma/client";
 import { db } from "@/lib/db";
 import { writeAudit } from "@/modules/audit/service";
+import { publishedPublic } from "@/modules/discovery/visibility";
 import {
   anonymousWishlistLimit,
   canWriteSavedItem,
@@ -36,7 +37,7 @@ async function publishedTarget(
 ): Promise<Target | null> {
   if (entityType === "RESORT") {
     const row = await db.resort.findFirst({
-      where: { id: entityId, status: "PUBLISHED" },
+      where: { id: entityId, ...publishedPublic() },
       select: { id: true, name: true, slug: true, summary: true },
     });
     return row
@@ -45,7 +46,7 @@ async function publishedTarget(
   }
   if (entityType === "EXPERIENCE") {
     const row = await db.experience.findFirst({
-      where: { id: entityId, status: "PUBLISHED" },
+      where: { id: entityId, ...publishedPublic() },
       select: { id: true, name: true, slug: true, summary: true },
     });
     return row
@@ -59,7 +60,7 @@ async function publishedTarget(
   }
   if (entityType === "ARTICLE") {
     const row = await db.article.findFirst({
-      where: { id: entityId, status: "PUBLISHED" },
+      where: { id: entityId, ...publishedPublic() },
       select: { id: true, title: true, slug: true, excerpt: true },
     });
     return row
@@ -73,10 +74,10 @@ async function publishedTarget(
   const row = await db.offer.findFirst({
     where: {
       id: entityId,
-      status: "PUBLISHED",
+      ...publishedPublic(),
       validFrom: { lte: todayUtc },
       validUntil: { gte: todayUtc },
-      resort: { status: "PUBLISHED" },
+      resort: publishedPublic(),
     },
     select: { id: true, title: true, slug: true, summary: true },
   });
@@ -132,21 +133,21 @@ async function publishedViewTarget(
 ): Promise<{ name: string; href: string; summary: string } | null> {
   if (entityType === "ATOLL") {
     const row = await db.atoll.findFirst({
-      where: { id: entityId, status: "PUBLISHED" },
+      where: { id: entityId, ...publishedPublic() },
       select: { name: true, slug: true, summary: true },
     });
     return row ? { name: row.name, href: `/atolls/${row.slug}`, summary: row.summary } : null;
   }
   if (entityType === "ISLAND") {
     const row = await db.island.findFirst({
-      where: { id: entityId, status: "PUBLISHED" },
+      where: { id: entityId, ...publishedPublic() },
       select: { name: true, slug: true, summary: true },
     });
     return row ? { name: row.name, href: `/islands/${row.slug}`, summary: row.summary } : null;
   }
   if (entityType === "COLLECTION") {
     const row = await db.collection.findFirst({
-      where: { id: entityId, status: "PUBLISHED" },
+      where: { id: entityId, ...publishedPublic() },
       select: { title: true, slug: true, summary: true },
     });
     return row ? { name: row.title, href: `/collections/${row.slug}`, summary: row.summary } : null;

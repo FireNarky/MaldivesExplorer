@@ -829,6 +829,33 @@ async function main() {
     }
   }
 
+  // Audience tags are linked only where the stored resort copy above says so in as many words.
+  // Nothing is inferred from brand reputation, price band, or star category. Resort transfers and
+  // meal plans are deliberately NOT seeded: the prose in `checkInNotes` is not structured evidence
+  // and no meal-plan source exists in this repository (see Documentation/Phase_2_*).
+  const explicitAudiences: Array<{ resortSlug: string; code: string; evidence: string }> = [
+    {
+      resortSlug: "hurawalhi-island-resort",
+      code: "adults-only",
+      evidence: 'summary: "Adults-only sanctuary ..."',
+    },
+    {
+      resortSlug: "soneva-fushi",
+      code: "family",
+      evidence: 'editorialPositioning: "... family-friendly paradise."',
+    },
+  ];
+  for (const link of explicitAudiences) {
+    const resortId = resortRecords.get(link.resortSlug);
+    const tag = await db.audienceTag.findUnique({ where: { code: link.code } });
+    if (!resortId || !tag) continue;
+    await db.resortAudience.upsert({
+      where: { resortId_audienceTagId: { resortId, audienceTagId: tag.id } },
+      update: {},
+      create: { resortId, audienceTagId: tag.id },
+    });
+  }
+
   // 4. EXPERIENCES
   console.log("Seeding signature experiences...");
   const mantaCategory = await db.experienceCategory.findFirstOrThrow({
