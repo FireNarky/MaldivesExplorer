@@ -1,0 +1,626 @@
+[
+  {
+    "name": "Ocean & Coral",
+    "direction": "Current brand",
+    "tokens": {
+      "ocean": "#083b4c",
+      "lagoon": "#009fb7",
+      "lagoon-ink": "#006c7c",
+      "lagoon-ink-hover": "#005f6e",
+      "mist": "#dff6f4",
+      "coral": "#ff6f59",
+      "coral-hover": "#f56b55",
+      "sand": "#faf8f3",
+      "ink": "#20323a",
+      "muted": "#5e6b71",
+      "border": "#7e888d",
+      "border-subtle": "#d5dee0"
+    },
+    "contrast": [
+      {
+        "pair": "Body text on page",
+        "ratio": 12.53,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Body text on mist",
+        "ratio": 11.8,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Headings on page",
+        "ratio": 11.37,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on page",
+        "ratio": 5.76,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on mist",
+        "ratio": 5.42,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary button",
+        "ratio": 6.11,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary hover",
+        "ratio": 7.34,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent button",
+        "ratio": 4.86,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent hover",
+        "ratio": 4.51,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on page",
+        "ratio": 5.18,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on mist",
+        "ratio": 4.88,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Footer text on ocean",
+        "ratio": 11.37,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Input border on white",
+        "ratio": 3.62,
+        "required": 3,
+        "pass": true
+      },
+      {
+        "pair": "Input border on page",
+        "ratio": 3.42,
+        "required": 3,
+        "pass": true
+      }
+    ]
+  },
+  {
+    "name": "Lagoon Daylight",
+    "direction": "Brighter, airier",
+    "tokens": {
+      "ocean": "#0a4a5c",
+      "lagoon": "#2bbcd0",
+      "lagoon-ink": "#00697a",
+      "lagoon-ink-hover": "#005a69",
+      "mist": "#e3f7f8",
+      "coral": "#ff7a5c",
+      "coral-hover": "#f56f50",
+      "sand": "#fbfcfb",
+      "ink": "#1d3138",
+      "muted": "#576a70",
+      "border": "#78888d",
+      "border-subtle": "#d3e2e4"
+    },
+    "contrast": [
+      {
+        "pair": "Body text on page",
+        "ratio": 13.18,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Body text on mist",
+        "ratio": 12.22,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Headings on page",
+        "ratio": 9.51,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on page",
+        "ratio": 6.18,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on mist",
+        "ratio": 5.73,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary button",
+        "ratio": 6.36,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary hover",
+        "ratio": 7.88,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent button",
+        "ratio": 5.29,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent hover",
+        "ratio": 4.7,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on page",
+        "ratio": 5.52,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on mist",
+        "ratio": 5.11,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Footer text on ocean",
+        "ratio": 9.51,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Input border on white",
+        "ratio": 3.68,
+        "required": 3,
+        "pass": true
+      },
+      {
+        "pair": "Input border on page",
+        "ratio": 3.58,
+        "required": 3,
+        "pass": true
+      }
+    ]
+  },
+  {
+    "name": "Sunset Atoll",
+    "direction": "Warm, romantic",
+    "tokens": {
+      "ocean": "#1b2a4e",
+      "lagoon": "#2fb3c4",
+      "lagoon-ink": "#1e5f8a",
+      "lagoon-ink-hover": "#184f75",
+      "mist": "#e6ecf7",
+      "coral": "#ffa14a",
+      "coral-hover": "#f59638",
+      "sand": "#fcf7ef",
+      "ink": "#232a3d",
+      "muted": "#5f6577",
+      "border": "#838796",
+      "border-subtle": "#ddd9d0"
+    },
+    "contrast": [
+      {
+        "pair": "Body text on page",
+        "ratio": 13.39,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Body text on mist",
+        "ratio": 12.04,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Headings on page",
+        "ratio": 13.23,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on page",
+        "ratio": 6.44,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on mist",
+        "ratio": 5.79,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary button",
+        "ratio": 6.86,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary hover",
+        "ratio": 8.7,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent button",
+        "ratio": 7.11,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent hover",
+        "ratio": 6.33,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on page",
+        "ratio": 5.45,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on mist",
+        "ratio": 4.9,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Footer text on ocean",
+        "ratio": 13.23,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Input border on white",
+        "ratio": 3.58,
+        "required": 3,
+        "pass": true
+      },
+      {
+        "pair": "Input border on page",
+        "ratio": 3.35,
+        "required": 3,
+        "pass": true
+      }
+    ]
+  },
+  {
+    "name": "Coral Reef",
+    "direction": "Playful, energetic",
+    "tokens": {
+      "ocean": "#0a3d3f",
+      "lagoon": "#17b5a6",
+      "lagoon-ink": "#0b6b66",
+      "lagoon-ink-hover": "#085a56",
+      "mist": "#def5f1",
+      "coral": "#ff7f9c",
+      "coral-hover": "#f56f8e",
+      "sand": "#faf8f4",
+      "ink": "#1f3234",
+      "muted": "#586b6c",
+      "border": "#7a8a8a",
+      "border-subtle": "#d3dfdc"
+    },
+    "contrast": [
+      {
+        "pair": "Body text on page",
+        "ratio": 12.66,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Body text on mist",
+        "ratio": 11.79,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Headings on page",
+        "ratio": 11.3,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on page",
+        "ratio": 5.98,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on mist",
+        "ratio": 5.57,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary button",
+        "ratio": 6.35,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary hover",
+        "ratio": 8.05,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent button",
+        "ratio": 5.61,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent hover",
+        "ratio": 4.83,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on page",
+        "ratio": 5.3,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on mist",
+        "ratio": 4.94,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Footer text on ocean",
+        "ratio": 11.3,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Input border on white",
+        "ratio": 3.6,
+        "required": 3,
+        "pass": true
+      },
+      {
+        "pair": "Input border on page",
+        "ratio": 3.4,
+        "required": 3,
+        "pass": true
+      }
+    ]
+  },
+  {
+    "name": "Midnight Resort",
+    "direction": "Premium, quiet",
+    "tokens": {
+      "ocean": "#0b1f33",
+      "lagoon": "#3a9bb5",
+      "lagoon-ink": "#1c5f7c",
+      "lagoon-ink-hover": "#164e68",
+      "mist": "#e8eef3",
+      "coral": "#e2b45f",
+      "coral-hover": "#d6a64c",
+      "sand": "#f6f7f8",
+      "ink": "#1c2733",
+      "muted": "#586571",
+      "border": "#7b8590",
+      "border-subtle": "#d6dce2"
+    },
+    "contrast": [
+      {
+        "pair": "Body text on page",
+        "ratio": 14.11,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Body text on mist",
+        "ratio": 12.94,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Headings on page",
+        "ratio": 15.56,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on page",
+        "ratio": 6.58,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on mist",
+        "ratio": 6.03,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary button",
+        "ratio": 7.05,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary hover",
+        "ratio": 9.04,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent button",
+        "ratio": 7.88,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent hover",
+        "ratio": 6.79,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on page",
+        "ratio": 5.57,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on mist",
+        "ratio": 5.11,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Footer text on ocean",
+        "ratio": 15.56,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Input border on white",
+        "ratio": 3.75,
+        "required": 3,
+        "pass": true
+      },
+      {
+        "pair": "Input border on page",
+        "ratio": 3.5,
+        "required": 3,
+        "pass": true
+      }
+    ]
+  },
+  {
+    "name": "Tropical Palm",
+    "direction": "Natural, fresh",
+    "tokens": {
+      "ocean": "#12372a",
+      "lagoon": "#34b37e",
+      "lagoon-ink": "#1b6e4f",
+      "lagoon-ink-hover": "#155a41",
+      "mist": "#e1f3e8",
+      "coral": "#ffc233",
+      "coral-hover": "#f5b61f",
+      "sand": "#f9f7ee",
+      "ink": "#1f3128",
+      "muted": "#586b60",
+      "border": "#7c8a82",
+      "border-subtle": "#d6e0d8"
+    },
+    "contrast": [
+      {
+        "pair": "Body text on page",
+        "ratio": 12.8,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Body text on mist",
+        "ratio": 11.9,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Headings on page",
+        "ratio": 12.19,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on page",
+        "ratio": 5.77,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Link on mist",
+        "ratio": 5.37,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary button",
+        "ratio": 6.19,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "White on primary hover",
+        "ratio": 8.17,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent button",
+        "ratio": 8.52,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Ink on accent hover",
+        "ratio": 7.59,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on page",
+        "ratio": 5.31,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Muted text on mist",
+        "ratio": 4.93,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Footer text on ocean",
+        "ratio": 12.19,
+        "required": 4.5,
+        "pass": true
+      },
+      {
+        "pair": "Input border on white",
+        "ratio": 3.61,
+        "required": 3,
+        "pass": true
+      },
+      {
+        "pair": "Input border on page",
+        "ratio": 3.37,
+        "required": 3,
+        "pass": true
+      }
+    ]
+  }
+]

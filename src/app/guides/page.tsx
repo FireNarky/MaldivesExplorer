@@ -1,33 +1,71 @@
 import type { Metadata } from "next";
-import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
-import { RelatedList } from "@/components/discovery/related-list";
+import { PageHeader } from "@/components/patterns/page-header";
+import { GuideCard } from "@/components/patterns/guide-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
-import { listPublishedGuides } from "@/modules/discovery";
+import { db } from "@/lib/db";
 
 export const metadata: Metadata = publicMetadata({
-  title: "Guides",
-  description: "Published guides.",
+  title: "Maldives Travel Guides & Insights",
+  description: "Curated editorial guides on seaplane transfers, monsoon seasons, atoll geography, and villa selection.",
   path: "/guides",
 });
 
 export default async function GuidesPage() {
   try {
-    const guides = await listPublishedGuides();
+    const guides = await db.article.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: { publishedAt: "desc" },
+      include: {
+        category: true,
+        author: true,
+      },
+    });
+
+    const mediaLinks = await db.mediaLink.findMany({
+      where: {
+        ownerType: "ARTICLE",
+        ownerId: { in: guides.map((g) => g.id) },
+      },
+      include: { media: { select: { id: true, altText: true } } },
+    });
+    const imageMap = new Map(mediaLinks.map((l) => [l.ownerId, l.media]));
+
     return (
-      <section className="grid gap-6">
-        <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Guides" }]} />
-        <h1>Guides</h1>
+      <div className="grid gap-10">
+        <PageHeader
+          crumbs={[{ name: "Home", href: "/" }, { name: "Guides" }]}
+          title="Editorial Guides & Insights"
+          lede="In-depth knowledge curated by local marine biologists, expedition leaders, and luxury travel curators to help you make informed decisions."
+        />
+
         {guides.length === 0 ? (
           <EmptyState title="Guides">
-            <p>No guide is published.</p>
+            <p>No guides are published yet.</p>
           </EmptyState>
         ) : (
-          <RelatedList title="Published guides" items={guides} />
+          <div className="grid gap-6 sm:grid-cols-2">
+            {guides.map((guide) => (
+              <GuideCard
+                key={guide.id}
+                item={{
+                  id: guide.id,
+                  title: guide.title,
+                  slug: guide.slug,
+                  excerpt: guide.excerpt,
+                  categoryName: guide.category?.name,
+                  authorName: guide.author?.name,
+                  image: imageMap.get(guide.id)
+                    ? { id: imageMap.get(guide.id)!.id, altText: imageMap.get(guide.id)!.altText ?? guide.title }
+                    : null,
+                }}
+              />
+            ))}
+          </div>
         )}
-      </section>
+      </div>
     );
   } catch (error) {
     logError(error instanceof Error ? error.message : "Guides could not be loaded.");

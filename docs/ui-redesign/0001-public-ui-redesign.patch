@@ -1,0 +1,1376 @@
+From b87456834e578d4f0a47e29f93a0a8ddddda036a Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 19 Oct 2026 08:04:47 +0000
+Subject: [PATCH] Redesign public UI shell, homepage, resort list and detail
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01W7XWP3dtdDwJPdkXhqMSVb
+---
+ Documentation/UI_Review_and_Gaps.md          |  53 ++++
+ src/app/globals.css                          |   6 +
+ src/app/layout.tsx                           |   7 +-
+ src/app/page.tsx                             | 140 +++++++--
+ src/app/resorts/[slug]/page.tsx              | 302 ++++++++++++-------
+ src/app/resorts/page.tsx                     |  72 +++--
+ src/components/layout/action-bar.tsx         |  28 ++
+ src/components/layout/mobile-menu.tsx        |  69 +++++
+ src/components/layout/nav-link.tsx           |  31 ++
+ src/components/layout/nav-links.ts           |  13 +
+ src/components/layout/site-footer.tsx        | 125 ++++----
+ src/components/layout/site-header.tsx        | 124 ++++----
+ src/components/patterns/page-header.tsx      |  24 ++
+ src/components/patterns/price-disclosure.tsx |   9 +
+ src/components/patterns/resort-card.tsx      |  56 ++++
+ src/components/shortlist/compare-tray.tsx    |   2 +-
+ src/modules/catalog/index.ts                 |   1 +
+ src/modules/catalog/repository.ts            |  20 ++
+ 18 files changed, 814 insertions(+), 268 deletions(-)
+ create mode 100644 Documentation/UI_Review_and_Gaps.md
+ create mode 100644 src/components/layout/action-bar.tsx
+ create mode 100644 src/components/layout/mobile-menu.tsx
+ create mode 100644 src/components/layout/nav-link.tsx
+ create mode 100644 src/components/layout/nav-links.ts
+ create mode 100644 src/components/patterns/page-header.tsx
+ create mode 100644 src/components/patterns/price-disclosure.tsx
+ create mode 100644 src/components/patterns/resort-card.tsx
+
+diff --git a/Documentation/UI_Review_and_Gaps.md b/Documentation/UI_Review_and_Gaps.md
+new file mode 100644
+index 0000000..eab18c7
+--- /dev/null
++++ b/Documentation/UI_Review_and_Gaps.md
+@@ -0,0 +1,53 @@
++# UI review and gaps
++
++Date: 19 October 2026. Basis: repo at `c069c34`, the architecture diagram, and the Stage 10 readiness checklist.
++
++## What changed in this UI pass
++
++| Area | Change |
++| --- | --- |
++| Header | Active-page underline, Search icon, coral "Plan my trip" from `lg`, mobile menu (Escape closes, focus returns) |
++| Mobile | Fixed Search / Plan my trip action bar (Design_System §4.1); compare tray sits above it |
++| Footer | Three link columns, newsletter in a white card (contrast-safe on ocean) |
++| Homepage | Full-bleed ocean hero, explore cards, three-step planning band. CMS modules still render below |
++| Resorts list | Card grid (1/2/3 columns), lead photo, location, price disclosure. New `listLeadResortImages` (one query) |
++| Resort detail | Gallery, overview facts, card grids for rooms/dining/transfers, badges, sticky "Plan a stay here" panel |
++| Patterns | `PageHeader`, `ResortCard`, `PriceDisclosure` in `components/patterns` |
++
++No invented prices, reviews, claims or the unapproved descriptor (D-002, D-011, D-014). Typecheck and lint pass. No horizontal overflow at 390px and 1440px on home, resorts and resort detail (checked with placeholder seed data).
++
++## Gaps found (not fixed here)
++
++### Blocked on owner decisions
++- D-010 hosting, email, storage, shared rate limiter: no email is sent; quotes and acknowledgements stay QUEUED.
++- D-013 catalog data: the site is empty until staff publish real records.
++- D-014 domain, brand, indexing: site is `noindex`.
++- D-012 retention: privacy export and deletion do nothing yet.
++- D-002 / D-006 prices and currency: no public prices.
++
++### Security and quality (from the checklist)
++- Claim link token stored in `jobs.payload` (FAIL).
++- `npm audit`: 11 findings (10 high).
++- No WCAG 2.2 AA audit, no Core Web Vitals measurement, backup/restore untested.
++- In-process rate limits only; no bot check rendered.
++
++### UI and product gaps
++1. Analytics consent renders in page flow above the footer. It should be a dismissible banner with a footer "Cookie settings" link.
++2. No legal pages: privacy, cookies, terms, accessibility (Design_System requires footer links).
++3. Global search is a page, not the specified dialog. No filters, sort or chips on resorts, offers or search.
++4. No map (`MapWithList`), no lightbox gallery, no skeleton/loading states.
++5. Other listing pages (destinations, offers, experiences, guides, collections, islands, atolls) still use the old plain list. Apply `PageHeader` and card patterns.
++6. Empty-state pages use `h2` instead of `h1` (checklist FAIL). Fixed for resorts only.
++7. Homepage has no featured resort/destination modules until CMS content exists, and no hero photography (needs licensed media with alt text).
++8. Contact options missing: phone/WhatsApp, business address, company registration. Response-time wording stays internal (D-003).
++9. No payment or booking step. Confirm quote-led is intended.
++10. No multi-language or currency switcher; no seasonal, ferry or transfer-availability info.
++11. Custom icon set (atoll, speedboat, seaplane, water-villa, reef) not drawn; Lucide stand-ins used.
++12. Compare is device-local and resort-only.
++13. Video transcript editor missing in admin.
++
++## Suggested order
++1. Owner decisions D-010, D-013, D-014 (unblock real content and email).
++2. Cookie banner, legal pages, accessibility audit.
++3. Roll cards and `PageHeader` to remaining listing pages; add filters.
++4. Photography and map.
+diff --git a/src/app/globals.css b/src/app/globals.css
+index 04ec83a..62b9fed 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -109,6 +109,7 @@
+   }
+ 
+   body {
++    overflow-x: clip;
+     min-height: 100vh;
+     background: var(--color-sand);
+     color: var(--color-ink);
+@@ -226,3 +227,8 @@
+     transform: rotate(360deg);
+   }
+ }
++
++@utility full-bleed {
++  margin-inline: calc(50% - 50vw);
++  width: 100vw;
++}
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index d001c67..7e06cc0 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -4,6 +4,7 @@ import { AnalyticsConsent } from "@/components/discovery/analytics-consent";
+ import { LandingCapture } from "@/components/planner/landing-capture";
+ import { CompareTray } from "@/components/shortlist/compare-tray";
+ import { WishlistMerge } from "@/components/shortlist/device-sync";
++import { ActionBar } from "@/components/layout/action-bar";
+ import { SiteFooter } from "@/components/layout/site-footer";
+ import { SiteHeader } from "@/components/layout/site-header";
+ import { display, sans } from "@/lib/fonts";
+@@ -37,7 +38,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
+           Skip to content
+         </a>
+         <SiteHeader />
+-        <main id="main" className="mx-auto w-full max-w-[90rem] flex-1 px-4 py-8 pb-28 lg:px-8">
++        <main
++          id="main"
++          className="mx-auto w-full max-w-[90rem] flex-1 px-4 py-8 pb-24 lg:px-8 lg:pb-12"
++        >
+           {children}
+         </main>
+         <CompareTray />
+@@ -45,6 +49,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
+         <WishlistMerge signedIn={Boolean(session?.user?.id)} />
+         <AnalyticsConsent />
+         <SiteFooter />
++        <ActionBar />
+       </body>
+     </html>
+   );
+diff --git a/src/app/page.tsx b/src/app/page.tsx
+index d3f7170..553612f 100644
+--- a/src/app/page.tsx
++++ b/src/app/page.tsx
+@@ -1,6 +1,8 @@
+ import type { Metadata } from "next";
+ import Link from "next/link";
++import { ClipboardList, Compass, FileText, Search } from "lucide-react";
+ import { JsonLd } from "@/components/discovery/json-ld";
++import { Button } from "@/components/ui/button";
+ import { EmptyState } from "@/components/ui/empty-state";
+ import { ErrorState } from "@/components/ui/error-state";
+ import { logError } from "@/lib/observability/log";
+@@ -24,6 +26,31 @@ function moduleText(config: unknown): string {
+   return typeof config.text === "string" ? config.text.trim() : "";
+ }
+ 
++const entryPoints = [
++  { href: "/destinations", title: "Destinations", text: "Atolls and islands, one page each." },
++  { href: "/resorts", title: "Resorts", text: "Published resorts you can save and compare." },
++  { href: "/experiences", title: "Experiences", text: "Diving, reef, food and more." },
++  { href: "/offers", title: "Offers", text: "Current offers inside their validity dates." },
++] as const;
++
++const steps = [
++  {
++    icon: ClipboardList,
++    title: "Tell us your plan",
++    text: "Dates, travellers and the kind of stay you want. Your draft stays on this device.",
++  },
++  {
++    icon: Compass,
++    title: "We build your options",
++    text: "A member of our team reviews your enquiry and follows up with you.",
++  },
++  {
++    icon: FileText,
++    title: "Review your quote",
++    text: "Accommodation, transfers and pricing in one written quote you can accept online.",
++  },
++] as const;
++
+ export default async function HomePage() {
+   let failed = false;
+   let modules: Awaited<ReturnType<typeof listPublishedHomepageModules>> = [];
+@@ -34,40 +61,101 @@ export default async function HomePage() {
+     logError(error instanceof Error ? error.message : "Homepage modules could not be loaded.");
+   }
+   return (
+-    <div className="grid gap-8">
++    <div className="-mt-8 grid gap-16 lg:gap-24">
+       <JsonLd data={websiteSearchData(siteOrigin())} />
+-      <section className="grid max-w-[65ch] gap-4">
+-        <h1>Maldives Explorer</h1>
+-        <p>Published places are listed on their own pages.</p>
+-        <Link href="/plan" className="font-semibold text-lagoon-ink">
+-          Plan a trip
+-        </Link>
++
++      <section className="surface-inverse full-bleed bg-ocean text-sand">
++        <div className="mx-auto grid w-full max-w-[90rem] gap-8 px-4 py-16 lg:grid-cols-12 lg:px-8 lg:py-28">
++          <div className="grid content-center gap-6 lg:col-span-8">
++            <h1 className="text-[clamp(2.5rem,1rem+4vw,4.25rem)] leading-[1.12] tracking-[-0.02em] text-sand">
++              Plan your Maldives stay
++            </h1>
++            <p className="max-w-[52ch] text-lg text-sand">
++              Browse published resorts, islands and experiences. When you are ready, send us your
++              plan and we reply with a written quote.
++            </p>
++            <div className="flex flex-wrap gap-3">
++              <Button asChild variant="conversion">
++                <Link href="/plan">
++                  <Compass aria-hidden="true" size={20} strokeWidth={1.75} />
++                  Plan my trip
++                </Link>
++              </Button>
++              <Button asChild variant="secondary">
++                <Link href="/search">
++                  <Search aria-hidden="true" size={20} strokeWidth={1.75} />
++                  Search
++                </Link>
++              </Button>
++            </div>
++          </div>
++        </div>
++      </section>
++
++      <section aria-labelledby="explore-heading" className="grid gap-8">
++        <h2 id="explore-heading">Start exploring</h2>
++        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
++          {entryPoints.map((item) => (
++            <li key={item.href} className="relative">
++              <div className="grid h-full gap-2 rounded-lg border border-border-subtle bg-white p-6 shadow-1 hover:border-border">
++                <h3>
++                  <Link
++                    href={item.href}
++                    className="text-ocean after:absolute after:inset-0 hover:underline"
++                  >
++                    {item.title}
++                  </Link>
++                </h3>
++                <p>{item.text}</p>
++              </div>
++            </li>
++          ))}
++        </ul>
++      </section>
++
++      <section className="surface-tint full-bleed bg-mist">
++        <div className="mx-auto grid w-full max-w-[90rem] gap-8 px-4 py-12 lg:px-8 lg:py-20">
++          <h2>How planning works</h2>
++          <ol className="grid gap-6 md:grid-cols-3">
++            {steps.map((step, index) => (
++              <li key={step.title} className="grid content-start gap-3 rounded-lg bg-white p-6">
++                <span className="flex items-center gap-3 text-lagoon-ink">
++                  <step.icon aria-hidden="true" size={24} strokeWidth={1.75} />
++                  <span className="text-sm font-semibold uppercase tracking-[0.04em]">
++                    Step {index + 1}
++                  </span>
++                </span>
++                <h3>{step.title}</h3>
++                <p>{step.text}</p>
++              </li>
++            ))}
++          </ol>
++        </div>
+       </section>
++
+       {failed ? (
+         <ErrorState title="Homepage modules">
+           <p>The homepage modules could not be loaded.</p>
+         </ErrorState>
+-      ) : modules.length === 0 ? (
+-        <EmptyState title="Homepage">
+-          <p>No homepage module is published.</p>
+-        </EmptyState>
+-      ) : (
+-        modules.map((module) => {
+-          const text = moduleText(module.config);
+-          if (!text) {
++      ) : modules.length === 0 ? null : (
++        <div className="grid gap-8">
++          {modules.map((module) => {
++            const text = moduleText(module.config);
++            if (!text) {
++              return (
++                <EmptyState key={module.id} title={module.title ?? "Homepage module"}>
++                  <p>Nothing is selected for this module.</p>
++                </EmptyState>
++              );
++            }
+             return (
+-              <EmptyState key={module.id} title={module.title ?? "Homepage module"}>
+-                <p>Nothing is selected for this module.</p>
+-              </EmptyState>
++              <section key={module.id} className="grid max-w-[65ch] gap-4">
++                <h2>{module.title ?? module.moduleType}</h2>
++                <p>{text}</p>
++              </section>
+             );
+-          }
+-          return (
+-            <section key={module.id} className="grid max-w-[65ch] gap-4">
+-              <h2>{module.title ?? module.moduleType}</h2>
+-              <p>{text}</p>
+-            </section>
+-          );
+-        })
++          })}
++        </div>
+       )}
+     </div>
+   );
+diff --git a/src/app/resorts/[slug]/page.tsx b/src/app/resorts/[slug]/page.tsx
+index cc499d6..5af22d8 100644
+--- a/src/app/resorts/[slug]/page.tsx
++++ b/src/app/resorts/[slug]/page.tsx
+@@ -2,12 +2,16 @@ import type { Metadata } from "next";
+ import Image from "next/image";
+ import Link from "next/link";
+ import { notFound } from "next/navigation";
++import { Compass, MapPin } from "lucide-react";
+ import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
+ import { FaqList } from "@/components/discovery/faq-list";
+ import { JsonLd } from "@/components/discovery/json-ld";
+ import { RelatedList } from "@/components/discovery/related-list";
++import { PriceDisclosure } from "@/components/patterns/price-disclosure";
+ import { ReviewList } from "@/components/reviews/review-list";
+ import { ListingActions } from "@/components/shortlist/listing-actions";
++import { Badge } from "@/components/ui/badge";
++import { Button } from "@/components/ui/button";
+ import { ErrorState } from "@/components/ui/error-state";
+ import { isNotFoundError } from "@/lib/http/navigation";
+ import { logError } from "@/lib/observability/log";
+@@ -63,8 +67,17 @@ export default async function ResortPage({ params }: PageProps) {
+       crumbs.push({ name: resort.island.name, href: `/islands/${resort.island.slug}` });
+     }
+     crumbs.push({ name: resort.name });
++    const location = [
++      resort.island.status === "PUBLISHED" ? resort.island.name : null,
++      resort.island.status === "PUBLISHED" && resort.island.atoll.status === "PUBLISHED"
++        ? resort.island.atoll.name
++        : null,
++    ]
++      .filter(Boolean)
++      .join(", ");
++    const gallery = images.filter((image) => image.media.altText);
+     const page = (
+-      <article className="grid max-w-[65ch] gap-6">
++      <article className="grid gap-8">
+         <Breadcrumbs items={crumbs} />
+         <JsonLd
+           data={lodgingData({
+@@ -73,115 +86,188 @@ export default async function ResortPage({ params }: PageProps) {
+             path: `/resorts/${resort.slug}`,
+           })}
+         />
+-        <h1>{resort.name}</h1>
+-        <ListingActions entityType="RESORT" entityId={resort.id} save compare />
+-        <p>{resort.summary}</p>
+-        <p>{resort.description}</p>
+-        <p>Property type: {resort.propertyType}</p>
+-        {resort.island.status === "PUBLISHED" ? (
+-          <p>
+-            Island:{" "}
+-            <Link href={`/islands/${resort.island.slug}`} className="text-lagoon-ink">
+-              {resort.island.name}
+-            </Link>
+-            {resort.island.atoll.status === "PUBLISHED" ? (
+-              <>
+-                {". Atoll: "}
+-                <Link href={`/atolls/${resort.island.atoll.slug}`} className="text-lagoon-ink">
+-                  {resort.island.atoll.name}
+-                </Link>
+-              </>
+-            ) : null}
+-          </p>
+-        ) : null}
+-        <p>An indicative price is not published.</p>
+-        {images.map((image) =>
+-          image.media.altText ? (
+-            <div key={image.media.id} className="relative aspect-[3/2] w-full">
+-              <Image
+-                src={`/media/${image.media.id}`}
+-                alt={image.media.altText}
+-                fill
+-                unoptimized
+-                sizes="(min-width: 65ch) 65ch, 100vw"
+-                className="object-cover"
+-              />
+-            </div>
+-          ) : null,
+-        )}
+-        {resort.roomTypes.length > 0 ? (
+-          <section className="grid gap-3">
+-            <h2>Rooms</h2>
+-            <ul className="grid gap-3">
+-              {resort.roomTypes.map((room) => (
+-                <li key={room.id}>
+-                  <h3>{room.name}</h3>
+-                  <p>{room.description}</p>
+-                  <p>Maximum adults: {room.maxAdults}</p>
+-                </li>
+-              ))}
+-            </ul>
+-          </section>
+-        ) : null}
+-        {resort.diningVenues.length > 0 ? (
+-          <section className="grid gap-3">
+-            <h2>Dining</h2>
+-            <ul className="grid gap-3">
+-              {resort.diningVenues.map((venue) => (
+-                <li key={venue.id}>
+-                  <h3>{venue.name}</h3>
+-                  <p>{venue.description}</p>
+-                  {venue.cuisine ? <p>{venue.cuisine}</p> : null}
+-                </li>
+-              ))}
+-            </ul>
+-          </section>
+-        ) : null}
+-        {resort.transfers.length > 0 ? (
+-          <section className="grid gap-3">
+-            <h2>Transfers</h2>
+-            <ul className="grid gap-3">
+-              {resort.transfers.map((transfer) => (
+-                <li key={transfer.id}>
+-                  <h3>{transfer.label}</h3>
+-                  <p>{transfer.transferType.label}</p>
+-                  {transfer.durationMinutes ? (
+-                    <p>Duration: {transfer.durationMinutes} minutes</p>
+-                  ) : null}
+-                </li>
+-              ))}
+-            </ul>
+-          </section>
+-        ) : null}
+-        {resort.amenities.length > 0 ? (
+-          <section className="grid gap-3">
+-            <h2>Amenities</h2>
+-            <ul>
+-              {resort.amenities.map((item) => (
+-                <li key={item.amenityId}>{item.amenity.name}</li>
+-              ))}
+-            </ul>
+-          </section>
+-        ) : null}
+-        {resort.audiences.length > 0 ? (
+-          <section className="grid gap-3">
+-            <h2>Audiences</h2>
+-            <ul>
+-              {resort.audiences.map((item) => (
+-                <li key={item.audienceTagId}>{item.audienceTag.name}</li>
+-              ))}
+-            </ul>
+-          </section>
+-        ) : null}
+-        {reviews.length > 0 ? (
+-          <section className="grid gap-3">
+-            <h2>Reviews</h2>
+-            <ReviewList reviews={reviews} />
++        <header className="grid gap-3">
++          {location ? (
++            <p className="flex items-center gap-2 text-base text-muted">
++              <MapPin aria-hidden="true" size={16} strokeWidth={1.75} />
++              {location}
++            </p>
++          ) : null}
++          <h1>{resort.name}</h1>
++          <p className="max-w-[65ch] text-lg">{resort.summary}</p>
++        </header>
++
++        {gallery.length > 0 ? (
++          <section
++            aria-label="Photos"
++            className="grid gap-2 sm:grid-cols-3 sm:grid-rows-2 [&>*:first-child]:sm:col-span-2 [&>*:first-child]:sm:row-span-2"
++          >
++            {gallery.slice(0, 5).map((image) => (
++              <div
++                key={image.media.id}
++                className="relative aspect-[3/2] overflow-hidden rounded-lg bg-mist"
++              >
++                <Image
++                  src={`/media/${image.media.id}`}
++                  alt={image.media.altText ?? ""}
++                  fill
++                  unoptimized
++                  sizes="(min-width: 64rem) 60vw, 100vw"
++                  className="object-cover"
++                />
++              </div>
++            ))}
+           </section>
+         ) : null}
+-        <RelatedList title="Experiences" items={experiences} />
+-        <RelatedList title="Guides" items={guides} />
+-        <FaqList items={faqs} />
++
++        <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
++          <div className="grid content-start gap-10 lg:col-span-8">
++            <section className="grid max-w-[65ch] gap-4">
++              <h2>Overview</h2>
++              <p>{resort.description}</p>
++              <dl className="grid gap-2 sm:grid-cols-2">
++                <div>
++                  <dt className="text-sm text-muted">Property type</dt>
++                  <dd className="font-semibold">{resort.propertyType}</dd>
++                </div>
++                {resort.island.status === "PUBLISHED" ? (
++                  <div>
++                    <dt className="text-sm text-muted">Island</dt>
++                    <dd>
++                      <Link
++                        href={`/islands/${resort.island.slug}`}
++                        className="font-semibold text-lagoon-ink underline"
++                      >
++                        {resort.island.name}
++                      </Link>
++                    </dd>
++                  </div>
++                ) : null}
++                {resort.island.status === "PUBLISHED" &&
++                resort.island.atoll.status === "PUBLISHED" ? (
++                  <div>
++                    <dt className="text-sm text-muted">Atoll</dt>
++                    <dd>
++                      <Link
++                        href={`/atolls/${resort.island.atoll.slug}`}
++                        className="font-semibold text-lagoon-ink underline"
++                      >
++                        {resort.island.atoll.name}
++                      </Link>
++                    </dd>
++                  </div>
++                ) : null}
++              </dl>
++            </section>
++            {resort.roomTypes.length > 0 ? (
++              <section className="grid gap-4">
++                <h2>Rooms</h2>
++                <ul className="grid gap-4 md:grid-cols-2">
++                  {resort.roomTypes.map((room) => (
++                    <li
++                      key={room.id}
++                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
++                    >
++                      <h3>{room.name}</h3>
++                      <p>{room.description}</p>
++                      <p className="text-sm text-muted">Maximum adults: {room.maxAdults}</p>
++                    </li>
++                  ))}
++                </ul>
++              </section>
++            ) : null}
++            {resort.diningVenues.length > 0 ? (
++              <section className="grid gap-4">
++                <h2>Dining</h2>
++                <ul className="grid gap-4 md:grid-cols-2">
++                  {resort.diningVenues.map((venue) => (
++                    <li
++                      key={venue.id}
++                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
++                    >
++                      <h3>{venue.name}</h3>
++                      <p>{venue.description}</p>
++                      {venue.cuisine ? <p className="text-sm text-muted">{venue.cuisine}</p> : null}
++                    </li>
++                  ))}
++                </ul>
++              </section>
++            ) : null}
++            {resort.transfers.length > 0 ? (
++              <section className="grid gap-4">
++                <h2>Transfers</h2>
++                <ul className="grid gap-4 md:grid-cols-2">
++                  {resort.transfers.map((transfer) => (
++                    <li
++                      key={transfer.id}
++                      className="grid content-start gap-2 rounded-lg border border-border-subtle bg-white p-4 shadow-1 lg:p-6"
++                    >
++                      <h3>{transfer.label}</h3>
++                      <p>{transfer.transferType.label}</p>
++                      {transfer.durationMinutes ? (
++                        <p className="text-sm text-muted">
++                          Duration: {transfer.durationMinutes} minutes
++                        </p>
++                      ) : null}
++                    </li>
++                  ))}
++                </ul>
++              </section>
++            ) : null}
++            {resort.amenities.length > 0 ? (
++              <section className="grid gap-4">
++                <h2>Amenities</h2>
++                <ul className="flex flex-wrap gap-2">
++                  {resort.amenities.map((item) => (
++                    <li key={item.amenityId}>
++                      <Badge tone="quoted">{item.amenity.name}</Badge>
++                    </li>
++                  ))}
++                </ul>
++              </section>
++            ) : null}
++            {resort.audiences.length > 0 ? (
++              <section className="grid gap-4">
++                <h2>Good for</h2>
++                <ul className="flex flex-wrap gap-2">
++                  {resort.audiences.map((item) => (
++                    <li key={item.audienceTagId}>
++                      <Badge tone="info">{item.audienceTag.name}</Badge>
++                    </li>
++                  ))}
++                </ul>
++              </section>
++            ) : null}
++            {reviews.length > 0 ? (
++              <section className="grid gap-4">
++                <h2>Reviews</h2>
++                <ReviewList reviews={reviews} />
++              </section>
++            ) : null}
++            <RelatedList title="Experiences" items={experiences} />
++            <RelatedList title="Guides" items={guides} />
++            <FaqList items={faqs} />
++          </div>
++
++          <aside
++            aria-label="Plan this stay"
++            className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start"
++          >
++            <div className="grid gap-4 rounded-lg border border-border-subtle bg-white p-6 shadow-1">
++              <h2 className="text-2xl">Plan a stay here</h2>
++              <PriceDisclosure />
++              <Button asChild variant="conversion">
++                <Link href="/plan">
++                  <Compass aria-hidden="true" size={20} strokeWidth={1.75} />
++                  Plan my trip
++                </Link>
++              </Button>
++              <div className="flex flex-wrap items-center gap-3">
++                <ListingActions entityType="RESORT" entityId={resort.id} save compare />
++              </div>
++            </div>
++          </aside>
++        </div>
+       </article>
+     );
+     return page;
+diff --git a/src/app/resorts/page.tsx b/src/app/resorts/page.tsx
+index db31d5c..fa4afc4 100644
+--- a/src/app/resorts/page.tsx
++++ b/src/app/resorts/page.tsx
+@@ -1,11 +1,12 @@
+ import type { Metadata } from "next";
+ import Link from "next/link";
+-import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
++import { PageHeader } from "@/components/patterns/page-header";
++import { ResortCard } from "@/components/patterns/resort-card";
+ import { ErrorState } from "@/components/ui/error-state";
+ import { EmptyState } from "@/components/ui/empty-state";
+ import { logError } from "@/lib/observability/log";
+ import { publicMetadata } from "@/lib/seo/metadata";
+-import { listPublishedResorts } from "@/modules/catalog";
++import { listLeadResortImages, listPublishedResorts } from "@/modules/catalog";
+ 
+ export const metadata: Metadata = publicMetadata({
+   title: "Resorts",
+@@ -13,41 +14,62 @@ export const metadata: Metadata = publicMetadata({
+   path: "/resorts",
+ });
+ 
++const crumbs = [{ name: "Home", href: "/" }, { name: "Resorts" }];
++
+ export default async function ResortsPage() {
+   try {
+     const resorts = await listPublishedResorts();
+     if (resorts.length === 0) {
+       return (
+-        <EmptyState title="Resorts">
+-          <p>No resort is published.</p>
+-        </EmptyState>
++        <div className="grid gap-8">
++          <PageHeader crumbs={crumbs} title="Resorts" />
++          <EmptyState
++            title="No resort is published yet"
++            action={
++              <Link href="/plan" className="font-semibold text-lagoon-ink underline">
++                Tell us what you are looking for
++              </Link>
++            }
++          >
++            <p>Resorts appear here once our team has published them. You can still plan a trip.</p>
++          </EmptyState>
++        </div>
+       );
+     }
++    const images = await listLeadResortImages(resorts.map((resort) => resort.id));
+     return (
+-      <section className="grid gap-6">
+-        <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Resorts" }]} />
+-        <h1>Resorts</h1>
+-        <ul className="grid gap-4">
++      <div className="grid gap-8">
++        <PageHeader
++          crumbs={crumbs}
++          title="Resorts"
++          lede={`${resorts.length} published ${resorts.length === 1 ? "resort" : "resorts"}. Save the ones you like and compare up to three.`}
++        />
++        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+           {resorts.map((resort) => (
+-            <li key={resort.id} className="grid max-w-[65ch] gap-2">
+-              <h2>
+-                <Link href={`/resorts/${resort.slug}`} className="text-lagoon-ink">
+-                  {resort.name}
+-                </Link>
+-              </h2>
+-              <p>{resort.summary}</p>
+-              {resort.island.status === "PUBLISHED" ? (
+-                <p>
+-                  {resort.island.name}
+-                  {resort.island.atoll.status === "PUBLISHED"
+-                    ? `, ${resort.island.atoll.name}`
+-                    : ""}
+-                </p>
+-              ) : null}
++            <li key={resort.id}>
++              <ResortCard
++                resort={{
++                  slug: resort.slug,
++                  name: resort.name,
++                  summary: resort.summary,
++                  image: images.get(resort.id) ?? null,
++                  location:
++                    resort.island.status === "PUBLISHED"
++                      ? [
++                          resort.island.name,
++                          resort.island.atoll.status === "PUBLISHED"
++                            ? resort.island.atoll.name
++                            : null,
++                        ]
++                          .filter(Boolean)
++                          .join(", ")
++                      : null,
++                }}
++              />
+             </li>
+           ))}
+         </ul>
+-      </section>
++      </div>
+     );
+   } catch (error) {
+     logError(error instanceof Error ? error.message : "Published resorts could not be loaded.");
+diff --git a/src/components/layout/action-bar.tsx b/src/components/layout/action-bar.tsx
+new file mode 100644
+index 0000000..5d881d9
+--- /dev/null
++++ b/src/components/layout/action-bar.tsx
+@@ -0,0 +1,28 @@
++import Link from "next/link";
++import { Compass, Search } from "lucide-react";
++import { Button } from "@/components/ui/button";
++
++export function ActionBar() {
++  return (
++    <div
++      aria-label="Quick actions"
++      role="region"
++      className="fixed inset-x-0 bottom-0 z-10 border-t border-border-subtle bg-white pb-[env(safe-area-inset-bottom)] lg:hidden"
++    >
++      <div className="grid h-16 grid-cols-2 items-center gap-3 px-4">
++        <Button asChild variant="secondary">
++          <Link href="/search">
++            <Search aria-hidden="true" size={20} strokeWidth={1.75} />
++            Search
++          </Link>
++        </Button>
++        <Button asChild variant="conversion">
++          <Link href="/plan">
++            <Compass aria-hidden="true" size={20} strokeWidth={1.75} />
++            Plan my trip
++          </Link>
++        </Button>
++      </div>
++    </div>
++  );
++}
+diff --git a/src/components/layout/mobile-menu.tsx b/src/components/layout/mobile-menu.tsx
+new file mode 100644
+index 0000000..212f7c1
+--- /dev/null
++++ b/src/components/layout/mobile-menu.tsx
+@@ -0,0 +1,69 @@
++"use client";
++
++import { useEffect, useRef, useState } from "react";
++import Link from "next/link";
++import { usePathname } from "next/navigation";
++import { Menu, X } from "lucide-react";
++
++type MenuLink = { href: string; label: string };
++
++export function MobileMenu({ links, account }: { links: MenuLink[]; account: MenuLink[] }) {
++  const [open, setOpen] = useState(false);
++  const pathname = usePathname();
++  const buttonRef = useRef<HTMLButtonElement>(null);
++
++  useEffect(() => {
++    setOpen(false);
++  }, [pathname]);
++
++  useEffect(() => {
++    if (!open) return;
++    const onKey = (event: KeyboardEvent) => {
++      if (event.key === "Escape") {
++        setOpen(false);
++        buttonRef.current?.focus();
++      }
++    };
++    document.addEventListener("keydown", onKey);
++    return () => document.removeEventListener("keydown", onKey);
++  }, [open]);
++
++  return (
++    <div className="lg:hidden">
++      <button
++        ref={buttonRef}
++        type="button"
++        aria-expanded={open}
++        aria-controls="mobile-menu"
++        aria-label={open ? "Close menu" : "Open menu"}
++        onClick={() => setOpen((value) => !value)}
++        className="inline-flex size-11 items-center justify-center rounded-md border border-border bg-white text-ink"
++      >
++        {open ? (
++          <X aria-hidden="true" size={20} strokeWidth={1.75} />
++        ) : (
++          <Menu aria-hidden="true" size={20} strokeWidth={1.75} />
++        )}
++      </button>
++      {open ? (
++        <div
++          id="mobile-menu"
++          className="absolute inset-x-0 top-full z-20 border-b border-border-subtle bg-white shadow-2"
++        >
++          <nav aria-label="Mobile" className="mx-auto grid w-full max-w-[90rem] gap-1 px-4 py-4">
++            {[...links, ...account].map((link) => (
++              <Link
++                key={link.href}
++                href={link.href}
++                aria-current={pathname.startsWith(link.href) ? "page" : undefined}
++                className="flex min-h-11 items-center rounded-md px-3 text-lg font-semibold text-ocean aria-[current=page]:bg-mist"
++              >
++                {link.label}
++              </Link>
++            ))}
++          </nav>
++        </div>
++      ) : null}
++    </div>
++  );
++}
+diff --git a/src/components/layout/nav-link.tsx b/src/components/layout/nav-link.tsx
+new file mode 100644
+index 0000000..9cb01c4
+--- /dev/null
++++ b/src/components/layout/nav-link.tsx
+@@ -0,0 +1,31 @@
++"use client";
++
++import Link from "next/link";
++import { usePathname } from "next/navigation";
++import { cn } from "@/lib/utils";
++
++export function NavLink({
++  href,
++  className,
++  children,
++}: {
++  href: string;
++  className?: string;
++  children: React.ReactNode;
++}) {
++  const pathname = usePathname();
++  const current = pathname === href || pathname.startsWith(`${href}/`);
++  return (
++    <Link
++      href={href}
++      aria-current={current ? "page" : undefined}
++      className={cn(
++        "inline-flex min-h-11 items-center border-b-2 border-transparent text-base font-semibold text-ocean hover:border-border-subtle",
++        current && "border-lagoon-ink",
++        className,
++      )}
++    >
++      {children}
++    </Link>
++  );
++}
+diff --git a/src/components/layout/nav-links.ts b/src/components/layout/nav-links.ts
+new file mode 100644
+index 0000000..5c4503f
+--- /dev/null
++++ b/src/components/layout/nav-links.ts
+@@ -0,0 +1,13 @@
++export const primaryLinks = [
++  { href: "/destinations", label: "Destinations" },
++  { href: "/resorts", label: "Resorts" },
++  { href: "/experiences", label: "Experiences" },
++  { href: "/offers", label: "Offers" },
++  { href: "/guides", label: "Guides" },
++] as const;
++
++export const utilityLinks = [
++  { href: "/wishlist", label: "Saved" },
++  { href: "/compare", label: "Compare" },
++  { href: "/faq", label: "Questions" },
++] as const;
+diff --git a/src/components/layout/site-footer.tsx b/src/components/layout/site-footer.tsx
+index b48c8c1..cb0b749 100644
+--- a/src/components/layout/site-footer.tsx
++++ b/src/components/layout/site-footer.tsx
+@@ -2,62 +2,83 @@ import Link from "next/link";
+ import { SubscribeForm } from "@/components/newsletter/subscribe-form";
+ import { currentNoticeVersion } from "@/modules/newsletter/service";
+ 
++const columns = [
++  {
++    title: "Explore",
++    links: [
++      { href: "/destinations", label: "Destinations" },
++      { href: "/resorts", label: "Resorts" },
++      { href: "/experiences", label: "Experiences" },
++      { href: "/collections", label: "Collections" },
++      { href: "/guides", label: "Guides" },
++      { href: "/offers", label: "Offers" },
++    ],
++  },
++  {
++    title: "Plan",
++    links: [
++      { href: "/plan", label: "Plan a trip" },
++      { href: "/search", label: "Search" },
++      { href: "/wishlist", label: "Saved" },
++      { href: "/compare", label: "Compare" },
++      { href: "/recently-viewed", label: "Recently viewed" },
++    ],
++  },
++  {
++    title: "About",
++    links: [
++      { href: "/faq", label: "Questions" },
++      { href: "/reviews", label: "Testimonials" },
++      { href: "/newsletter", label: "Newsletter" },
++      { href: "/account", label: "Your account" },
++    ],
++  },
++] as const;
++
+ export async function SiteFooter() {
+   const noticeVersion = await currentNoticeVersion().catch(() => "2026-10-10");
+   return (
+-    <footer className="surface-inverse bg-ocean text-sand">
+-      <div className="mx-auto flex w-full max-w-[90rem] flex-col gap-4 px-4 py-8 lg:px-8">
+-        <p className="font-display text-xl text-sand">Maldives Explorer</p>
+-        <nav aria-label="Footer" className="flex flex-wrap gap-x-4 gap-y-2">
+-          <Link href="/destinations" className="text-base text-sand">
+-            Destinations
+-          </Link>
+-          <Link href="/experiences" className="text-base text-sand">
+-            Experiences
+-          </Link>
+-          <Link href="/guides" className="text-base text-sand">
+-            Guides
+-          </Link>
+-          <Link href="/offers" className="text-base text-sand">
+-            Offers
+-          </Link>
+-          <Link href="/collections" className="text-base text-sand">
+-            Collections
+-          </Link>
+-          <Link href="/faq" className="text-base text-sand">
+-            Questions
+-          </Link>
+-          <Link href="/search" className="text-base text-sand">
+-            Search
+-          </Link>
+-          <Link href="/wishlist" className="text-base text-sand">
+-            Saved
+-          </Link>
+-          <Link href="/compare" className="text-base text-sand">
+-            Compare
+-          </Link>
+-          <Link href="/recently-viewed" className="text-base text-sand">
+-            Recently viewed
+-          </Link>
+-          <Link href="/plan" className="text-base text-sand">
+-            Plan a trip
+-          </Link>
+-          <Link href="/account" className="text-base text-sand">
+-            Account
+-          </Link>
+-          <Link href="/reviews" className="text-base text-sand">
+-            Testimonials
+-          </Link>
+-          <Link href="/newsletter" className="text-base text-sand">
+-            Newsletter
+-          </Link>
++    <footer className="surface-inverse mt-8 bg-ocean pb-20 text-sand lg:pb-0">
++      <div className="mx-auto grid w-full max-w-[90rem] gap-10 px-4 py-12 lg:grid-cols-12 lg:px-8 lg:py-16">
++        <div className="grid content-start gap-4 lg:col-span-5">
++          <p className="font-display text-2xl text-sand">Maldives Explorer</p>
++          <p className="max-w-[40ch] text-sand">
++            Plan your Maldives stay with a travel team that replies with a clear, written quote.
++          </p>
++          <div className="max-w-md rounded-lg bg-white p-4 text-ink">
++            <h2 className="mb-3 font-sans text-base font-semibold text-ocean">Newsletter</h2>
++            <SubscribeForm
++              idPrefix="footer"
++              noticeVersion={noticeVersion}
++              returnPath="/newsletter"
++              showTopics={false}
++            />
++          </div>
++        </div>
++        <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
++          {columns.map((column) => (
++            <div key={column.title} className="grid content-start gap-3">
++              <h2 className="font-sans text-base font-semibold text-sand">{column.title}</h2>
++              <ul className="grid gap-1">
++                {column.links.map((link) => (
++                  <li key={link.href}>
++                    <Link
++                      href={link.href}
++                      className="inline-flex min-h-8 items-center text-base text-sand underline-offset-4 hover:underline"
++                    >
++                      {link.label}
++                    </Link>
++                  </li>
++                ))}
++              </ul>
++            </div>
++          ))}
+         </nav>
+-        <SubscribeForm
+-          idPrefix="footer"
+-          noticeVersion={noticeVersion}
+-          returnPath="/newsletter"
+-          showTopics={false}
+-        />
++      </div>
++      <div className="border-t border-sand/20">
++        <p className="mx-auto w-full max-w-[90rem] px-4 py-4 text-sm text-sand lg:px-8">
++          © {new Date().getFullYear()} Maldives Explorer
++        </p>
+       </div>
+     </footer>
+   );
+diff --git a/src/components/layout/site-header.tsx b/src/components/layout/site-header.tsx
+index 2291f77..2176633 100644
+--- a/src/components/layout/site-header.tsx
++++ b/src/components/layout/site-header.tsx
+@@ -1,69 +1,83 @@
+ import Link from "next/link";
++import { Compass, Search } from "lucide-react";
+ import { auth, signOut } from "@/auth";
+ import { Button } from "@/components/ui/button";
++import { MobileMenu } from "@/components/layout/mobile-menu";
++import { NavLink } from "@/components/layout/nav-link";
++import { primaryLinks, utilityLinks } from "@/components/layout/nav-links";
+ 
+ export async function SiteHeader() {
+   const session = await auth().catch(() => null);
+   const signedIn = Boolean(session?.user?.id);
++  const account = [
++    ...utilityLinks,
++    ...(signedIn
++      ? [{ href: "/account", label: "Account" }]
++      : [{ href: "/login", label: "Sign in" }]),
++    ...(session?.user?.staff ? [{ href: "/admin", label: "Staff" }] : []),
++  ];
+   return (
+-    <header className="sticky top-0 z-10 border-b border-border-subtle bg-sand">
+-      <div className="mx-auto flex min-h-16 w-full max-w-[90rem] flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 lg:px-8">
+-        <Link href="/" className="font-display text-xl text-ocean">
++    <header className="sticky top-0 z-10 border-b border-border-subtle bg-sand/95 backdrop-blur">
++      <div className="relative mx-auto flex min-h-16 w-full max-w-[90rem] items-center gap-4 px-4 lg:gap-8 lg:px-8">
++        <Link href="/" className="flex items-baseline gap-2 py-2 font-display text-xl text-ocean">
++          <span aria-hidden="true" className="size-3 rounded-full bg-lagoon" />
+           Maldives Explorer
+         </Link>
+-        <nav aria-label="Primary" className="flex flex-wrap gap-x-4 gap-y-2">
+-          <Link href="/destinations" className="text-base font-semibold text-lagoon-ink">
+-            Destinations
+-          </Link>
+-          <Link href="/experiences" className="text-base font-semibold text-lagoon-ink">
+-            Experiences
+-          </Link>
+-          <Link href="/guides" className="text-base font-semibold text-lagoon-ink">
+-            Guides
+-          </Link>
+-          <Link href="/resorts" className="text-base font-semibold text-lagoon-ink">
+-            Resorts
+-          </Link>
+-          <Link href="/offers" className="text-base font-semibold text-lagoon-ink">
+-            Offers
+-          </Link>
+-          <Link href="/wishlist" className="text-base font-semibold text-lagoon-ink">
+-            Saved
+-          </Link>
+-          <Link href="/plan" className="text-base font-semibold text-lagoon-ink">
+-            Plan a trip
+-          </Link>
+-          <Link href="/search" className="text-base font-semibold text-lagoon-ink">
+-            Search
+-          </Link>
++        <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex">
++          {primaryLinks.map((link) => (
++            <NavLink key={link.href} href={link.href}>
++              {link.label}
++            </NavLink>
++          ))}
+         </nav>
+-        <nav aria-label="Account" className="ml-auto flex items-center gap-3">
+-          {session?.user?.staff ? (
+-            <Link href="/admin" className="text-base font-semibold text-lagoon-ink">
+-              Staff
+-            </Link>
+-          ) : null}
+-          {signedIn ? (
+-            <Link href="/account" className="text-base font-semibold text-lagoon-ink">
+-              Account
+-            </Link>
+-          ) : null}
+-          {signedIn ? (
+-            <form
+-              action={async () => {
+-                "use server";
+-                await signOut({ redirectTo: "/" });
+-              }}
+-            >
+-              <Button type="submit" variant="tertiary">
+-                Sign out
+-              </Button>
+-            </form>
+-          ) : (
+-            <Link href="/login" className="text-base font-semibold text-lagoon-ink">
+-              Sign in
+-            </Link>
+-          )}
++        <nav aria-label="Account" className="ml-auto flex items-center gap-2">
++          <Link
++            href="/search"
++            aria-label="Search"
++            className="inline-flex size-11 items-center justify-center rounded-md text-ink hover:bg-mist"
++          >
++            <Search aria-hidden="true" size={20} strokeWidth={1.75} />
++          </Link>
++          <div className="hidden items-center gap-2 lg:flex">
++            {utilityLinks.slice(0, 1).map((link) => (
++              <NavLink key={link.href} href={link.href} className="px-2">
++                {link.label}
++              </NavLink>
++            ))}
++            {session?.user?.staff ? (
++              <NavLink href="/admin" className="px-2">
++                Staff
++              </NavLink>
++            ) : null}
++            {signedIn ? (
++              <>
++                <NavLink href="/account" className="px-2">
++                  Account
++                </NavLink>
++                <form
++                  action={async () => {
++                    "use server";
++                    await signOut({ redirectTo: "/" });
++                  }}
++                >
++                  <Button type="submit" variant="tertiary">
++                    Sign out
++                  </Button>
++                </form>
++              </>
++            ) : (
++              <NavLink href="/login" className="px-2">
++                Sign in
++              </NavLink>
++            )}
++            <Button asChild variant="conversion">
++              <Link href="/plan">
++                <Compass aria-hidden="true" size={20} strokeWidth={1.75} />
++                Plan my trip
++              </Link>
++            </Button>
++          </div>
++          <MobileMenu links={[...primaryLinks]} account={account} />
+         </nav>
+       </div>
+     </header>
+diff --git a/src/components/patterns/page-header.tsx b/src/components/patterns/page-header.tsx
+new file mode 100644
+index 0000000..4a9ad93
+--- /dev/null
++++ b/src/components/patterns/page-header.tsx
+@@ -0,0 +1,24 @@
++import type { ReactNode } from "react";
++import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
++import type { Crumb } from "@/lib/seo/structured";
++
++export function PageHeader({
++  crumbs,
++  title,
++  lede,
++  actions,
++}: {
++  crumbs: Crumb[];
++  title: string;
++  lede?: string;
++  actions?: ReactNode;
++}) {
++  return (
++    <header className="grid gap-4 border-b border-border-subtle pb-8">
++      <Breadcrumbs items={crumbs} />
++      <h1 className="max-w-[24ch]">{title}</h1>
++      {lede ? <p className="max-w-[65ch] text-lg text-ink">{lede}</p> : null}
++      {actions ? <div className="flex flex-wrap items-center gap-3">{actions}</div> : null}
++    </header>
++  );
++}
+diff --git a/src/components/patterns/price-disclosure.tsx b/src/components/patterns/price-disclosure.tsx
+new file mode 100644
+index 0000000..5166ddf
+--- /dev/null
++++ b/src/components/patterns/price-disclosure.tsx
+@@ -0,0 +1,9 @@
++export function PriceDisclosure() {
++  return (
++    <p className="text-sm text-muted">
++      <span className="font-semibold uppercase tracking-[0.04em]">Indicative</span>
++      <span aria-hidden="true"> · </span>
++      An indicative price is not published. We confirm rates in your quote.
++    </p>
++  );
++}
+diff --git a/src/components/patterns/resort-card.tsx b/src/components/patterns/resort-card.tsx
+new file mode 100644
+index 0000000..4e1721c
+--- /dev/null
++++ b/src/components/patterns/resort-card.tsx
+@@ -0,0 +1,56 @@
++import Image from "next/image";
++import Link from "next/link";
++import { MapPin, Waves } from "lucide-react";
++import { PriceDisclosure } from "@/components/patterns/price-disclosure";
++
++export type ResortCardData = {
++  slug: string;
++  name: string;
++  summary: string;
++  location: string | null;
++  image: { id: string; altText: string } | null;
++};
++
++export function ResortCard({ resort }: { resort: ResortCardData }) {
++  return (
++    <article className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-border-subtle bg-white shadow-1 hover:border-border">
++      <div className="relative aspect-[3/2] bg-mist">
++        {resort.image ? (
++          <Image
++            src={`/media/${resort.image.id}`}
++            alt={resort.image.altText}
++            fill
++            unoptimized
++            sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 45vw, 100vw"
++            className="object-cover"
++          />
++        ) : (
++          <div className="flex h-full items-center justify-center text-lagoon-ink">
++            <Waves aria-hidden="true" size={32} strokeWidth={1.75} />
++            <span className="sr-only">No photo published yet</span>
++          </div>
++        )}
++      </div>
++      <div className="flex flex-1 flex-col gap-3 p-4 lg:p-6">
++        {resort.location ? (
++          <p className="flex items-center gap-2 text-sm text-muted">
++            <MapPin aria-hidden="true" size={16} strokeWidth={1.75} />
++            {resort.location}
++          </p>
++        ) : null}
++        <h2 className="text-2xl">
++          <Link
++            href={`/resorts/${resort.slug}`}
++            className="text-ocean after:absolute after:inset-0 hover:underline"
++          >
++            {resort.name}
++          </Link>
++        </h2>
++        <p className="text-base text-ink">{resort.summary}</p>
++        <div className="mt-auto pt-2">
++          <PriceDisclosure />
++        </div>
++      </div>
++    </article>
++  );
++}
+diff --git a/src/components/shortlist/compare-tray.tsx b/src/components/shortlist/compare-tray.tsx
+index fa976b3..85479fc 100644
+--- a/src/components/shortlist/compare-tray.tsx
++++ b/src/components/shortlist/compare-tray.tsx
+@@ -23,7 +23,7 @@ export function CompareTray() {
+   return (
+     <aside
+       aria-label="Compare"
+-      className="sticky bottom-0 z-10 border-t border-border-subtle bg-white"
++      className="sticky bottom-[calc(4rem+env(safe-area-inset-bottom))] z-10 border-t lg:bottom-0 border-border-subtle bg-white"
+     >
+       <div className="mx-auto flex w-full max-w-[90rem] flex-wrap items-center gap-3 px-4 py-3 lg:px-8">
+         <p>
+diff --git a/src/modules/catalog/index.ts b/src/modules/catalog/index.ts
+index 5e3758d..2924fa0 100644
+--- a/src/modules/catalog/index.ts
++++ b/src/modules/catalog/index.ts
+@@ -12,6 +12,7 @@ export {
+   listAudiences,
+   listDining,
+   listIslandOptions,
++  listLeadResortImages,
+   listPublishedResortImages,
+   listPublishedResorts,
+   listResortOptions,
+diff --git a/src/modules/catalog/repository.ts b/src/modules/catalog/repository.ts
+index 2b605da..5b434ab 100644
+--- a/src/modules/catalog/repository.ts
++++ b/src/modules/catalog/repository.ts
+@@ -139,6 +139,26 @@ export function listPublishedResortImages(resortId: string) {
+   });
+ }
+ 
++export async function listLeadResortImages(resortIds: string[]) {
++  if (resortIds.length === 0) return new Map<string, { id: string; altText: string }>();
++  const links = await db.mediaLink.findMany({
++    where: {
++      ownerType: "RESORT",
++      ownerId: { in: resortIds },
++      media: { status: "PUBLISHED", kind: { in: ["IMAGE", "DRONE"] }, altText: { not: null } },
++    },
++    orderBy: { sortOrder: "asc" },
++    select: { ownerId: true, media: { select: { id: true, altText: true } } },
++  });
++  const lead = new Map<string, { id: string; altText: string }>();
++  for (const link of links) {
++    if (!lead.has(link.ownerId) && link.media.altText) {
++      lead.set(link.ownerId, { id: link.media.id, altText: link.media.altText });
++    }
++  }
++  return lead;
++}
++
+ export function listIslandOptions() {
+   return db.island.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } });
+ }
+-- 
+2.43.0
+

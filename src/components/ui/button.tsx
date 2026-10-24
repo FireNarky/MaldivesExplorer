@@ -9,14 +9,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-lagoon-ink text-white hover:bg-lagoon-ink-hover active:bg-lagoon-ink-hover disabled:hover:bg-mist",
+          "bg-lagoon-ink text-white hover:bg-lagoon-ink-hover active:bg-lagoon-ink-hover disabled:hover:bg-mist dark:bg-lagoon-ink dark:text-white dark:hover:bg-lagoon-ink-hover",
         secondary:
-          "border border-border bg-white text-ink hover:bg-sand active:bg-sand disabled:hover:bg-mist",
-        tertiary: "bg-transparent text-ink underline-offset-4 hover:underline active:underline",
+          "border border-border bg-white text-ink hover:bg-sand active:bg-sand disabled:hover:bg-mist dark:border-white/20 dark:bg-white/10 dark:text-white dark:hover:bg-white/15 dark:active:bg-white/15",
+        tertiary:
+          "bg-transparent text-ink underline-offset-4 hover:underline active:underline dark:text-white dark:hover:text-cyan-300",
         conversion:
-          "bg-coral text-ink hover:bg-coral-hover active:bg-coral-hover disabled:hover:bg-mist",
+          "bg-coral text-[#111827] hover:bg-coral-hover active:bg-coral-hover disabled:hover:bg-mist font-semibold shadow-sm",
         destructive:
-          "bg-danger text-white active:bg-danger disabled:bg-danger-surface disabled:hover:bg-danger-surface",
+          "bg-danger text-white active:bg-danger disabled:bg-danger-surface disabled:hover:bg-danger-surface dark:bg-rose-600 dark:text-white",
       },
     },
     defaultVariants: {

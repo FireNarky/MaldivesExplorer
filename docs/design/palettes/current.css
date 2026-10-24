@@ -1,0 +1,19 @@
+/* Maldives Explorer palette: Ocean & Coral (Current brand)
+   Replace the colour block in :root. --color-coral holds the accent (conversion button), whatever its hue. */
+:root {
+  --color-ocean: #083b4c;
+  --color-lagoon: #009fb7;
+  --color-lagoon-ink: #006c7c;
+  --color-lagoon-ink-hover: #005f6e;
+  --color-mist: #dff6f4;
+  --color-coral: #ff6f59;
+  --color-coral-hover: #f56b55;
+  --color-sand: #faf8f3;
+  --color-ink: #20323a;
+  --color-muted: #5e6b71;
+  --color-border: #7e888d;
+  --color-border-subtle: #d5dee0;
+  --color-white: #ffffff;
+  --color-focus: #006c7c;
+  --color-info: #083b4c;
+}

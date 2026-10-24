@@ -1,0 +1,19 @@
+/* Maldives Explorer palette: Midnight Resort (Premium, quiet)
+   Replace the colour block in :root. --color-coral holds the accent (conversion button), whatever its hue. */
+:root {
+  --color-ocean: #0b1f33;
+  --color-lagoon: #3a9bb5;
+  --color-lagoon-ink: #1c5f7c;
+  --color-lagoon-ink-hover: #164e68;
+  --color-mist: #e8eef3;
+  --color-coral: #e2b45f;
+  --color-coral-hover: #d6a64c;
+  --color-sand: #f6f7f8;
+  --color-ink: #1c2733;
+  --color-muted: #586571;
+  --color-border: #7b8590;
+  --color-border-subtle: #d6dce2;
+  --color-white: #ffffff;
+  --color-focus: #1c5f7c;
+  --color-info: #0b1f33;
+}

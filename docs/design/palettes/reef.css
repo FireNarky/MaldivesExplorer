@@ -1,0 +1,19 @@
+/* Maldives Explorer palette: Coral Reef (Playful, energetic)
+   Replace the colour block in :root. --color-coral holds the accent (conversion button), whatever its hue. */
+:root {
+  --color-ocean: #0a3d3f;
+  --color-lagoon: #17b5a6;
+  --color-lagoon-ink: #0b6b66;
+  --color-lagoon-ink-hover: #085a56;
+  --color-mist: #def5f1;
+  --color-coral: #ff7f9c;
+  --color-coral-hover: #f56f8e;
+  --color-sand: #faf8f4;
+  --color-ink: #1f3234;
+  --color-muted: #586b6c;
+  --color-border: #7a8a8a;
+  --color-border-subtle: #d3dfdc;
+  --color-white: #ffffff;
+  --color-focus: #0b6b66;
+  --color-info: #0a3d3f;
+}

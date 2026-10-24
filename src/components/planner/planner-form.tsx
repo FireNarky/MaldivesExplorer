@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
 import { readWishlist } from "@/lib/shortlist/local";
 import {
   clearPlannerDraft,
@@ -152,43 +153,78 @@ export function PlannerForm(props: PlannerFormProps) {
 
   return (
     <form
-      className="grid max-w-[65ch] gap-6"
+      className="grid w-full gap-8"
       onSubmit={(event) => {
         event.preventDefault();
         if (current === "review") void submit();
         else goNext();
       }}
     >
-      <p>
-        Step {step + 1} of {plannerSteps.length}
-      </p>
-      <ol aria-label="Progress" className="flex flex-wrap gap-2">
-        {plannerSteps.map((name, index) => (
-          <li key={name} aria-current={index === step ? "step" : undefined}>
-            <Button
-              type="button"
-              variant={index === step ? "primary" : "secondary"}
-              disabled={index > step}
-              onClick={() => {
-                if (index < step) setStep(index);
-              }}
-            >
-              {index + 1}. {plannerStepLabels[index]}
-            </Button>
-          </li>
-        ))}
-      </ol>
-      {expired ? <p role="status">This draft has expired.</p> : null}
-      <p id={statusId} role="status" aria-live="polite">
+      {/* Animated Visual Progress Bar */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-muted">
+          <span>
+            Step {step + 1} of {plannerSteps.length}:{" "}
+            <span className="text-ocean font-bold">{plannerStepLabels[step]}</span>
+          </span>
+          <span className="text-lagoon-ink dark:text-cyan-400 font-mono">
+            {Math.round(((step + 1) / plannerSteps.length) * 100)}% Complete
+          </span>
+        </div>
+        <div className="relative h-2 w-full overflow-hidden rounded-full bg-sand dark:bg-white/10">
+          <div
+            className="h-full bg-gradient-to-r from-lagoon via-lagoon-ink to-ocean transition-all duration-500 ease-out"
+            style={{ width: `${((step + 1) / plannerSteps.length) * 100}%` }}
+          />
+        </div>
+        <ol aria-label="Progress" className="flex flex-wrap gap-1.5 pt-1">
+          {plannerSteps.map((name, index) => {
+            const isCompleted = index < step;
+            const isCurrent = index === step;
+            return (
+              <li key={name} aria-current={isCurrent ? "step" : undefined}>
+                <button
+                  type="button"
+                  disabled={index > step}
+                  onClick={() => {
+                    if (index < step) setStep(index);
+                  }}
+                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all ${
+                    isCurrent
+                      ? "bg-lagoon-ink text-white shadow-sm ring-2 ring-lagoon-ink/30"
+                      : isCompleted
+                      ? "border border-border-subtle bg-mist/60 dark:bg-white/10 text-lagoon-ink dark:text-cyan-400 hover:bg-mist cursor-pointer"
+                      : "border border-border-subtle/50 text-muted opacity-50 cursor-not-allowed"
+                  }`}
+                >
+                  {isCompleted ? <Check size={12} strokeWidth={2.5} /> : null}
+                  <span>
+                    {index + 1}. {plannerStepLabels[index]}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      {expired ? (
+        <div className="rounded-xl border border-warning/20 bg-warning-surface p-3 text-xs text-warning animate-in fade-in" role="status">
+          This draft has expired and was reset to fresh values.
+        </div>
+      ) : null}
+
+      <p id={statusId} role="status" aria-live="polite" className="text-xs text-muted font-medium">
         {status}
       </p>
+
       {Object.keys(issues).length > 0 ? (
-        <div ref={summaryRef} tabIndex={-1} role="alert" className="grid gap-2">
-          <h2>Check this step</h2>
-          <ul className="list-disc pl-5">
+        <div ref={summaryRef} tabIndex={-1} role="alert" className="rounded-2xl border border-danger/20 bg-danger-surface p-4 text-xs text-danger space-y-2 animate-in fade-in">
+          <h2 className="font-semibold text-sm">Please verify the following:</h2>
+          <ul className="list-disc pl-5 space-y-1">
             {Object.entries(issues).map(([field, message]) => (
               <li key={field}>
-                <a href={`#${field.replace(".", "-")}`} className="text-lagoon-ink">
+                <a href={`#${field.replace(".", "-")}`} className="underline font-medium">
                   {message}
                 </a>
               </li>
@@ -196,33 +232,38 @@ export function PlannerForm(props: PlannerFormProps) {
           </ul>
         </div>
       ) : null}
-      {current === "dates" ? <DatesStep draft={draft} issues={issues} onChange={update} /> : null}
-      {current === "budget" ? <BudgetStep draft={draft} issues={issues} onChange={update} /> : null}
-      {current === "party" ? (
-        <PartyStep draft={draft} issues={issues} tripTypes={props.tripTypes} onChange={update} />
-      ) : null}
-      {current === "preferences" ? (
-        <PreferencesStep
-          draft={draft}
-          issues={issues}
-          resorts={props.resorts}
-          experiences={props.experiences}
-          onChange={update}
-        />
-      ) : null}
-      {current === "review" ? (
-        <ReviewStep
-          draft={draft}
-          issues={issues}
-          missing={gaps.missing}
-          noticeVersion={props.noticeVersion}
-          accountEmail={props.accountEmail}
-          tripTypes={props.tripTypes}
-          resorts={props.resorts}
-          experiences={props.experiences}
-          onChange={update}
-        />
-      ) : null}
+
+      {/* Step Content Container */}
+      <div key={current} className="animate-in fade-in slide-in-from-right-3 duration-300">
+        {current === "dates" ? <DatesStep draft={draft} issues={issues} onChange={update} /> : null}
+        {current === "budget" ? <BudgetStep draft={draft} issues={issues} onChange={update} /> : null}
+        {current === "party" ? (
+          <PartyStep draft={draft} issues={issues} tripTypes={props.tripTypes} onChange={update} />
+        ) : null}
+        {current === "preferences" ? (
+          <PreferencesStep
+            draft={draft}
+            issues={issues}
+            resorts={props.resorts}
+            experiences={props.experiences}
+            onChange={update}
+          />
+        ) : null}
+        {current === "review" ? (
+          <ReviewStep
+            draft={draft}
+            issues={issues}
+            missing={gaps.missing}
+            noticeVersion={props.noticeVersion}
+            accountEmail={props.accountEmail}
+            tripTypes={props.tripTypes}
+            resorts={props.resorts}
+            experiences={props.experiences}
+            onChange={update}
+          />
+        ) : null}
+      </div>
+
       <div aria-hidden="true" className="absolute -left-[9999px] h-px overflow-hidden">
         <label>
           Company
@@ -234,22 +275,52 @@ export function PlannerForm(props: PlannerFormProps) {
           />
         </label>
       </div>
-      <div className="flex flex-wrap gap-3">
+
+      {/* Bottom Navigation Buttons */}
+      <div className="flex flex-wrap items-center gap-3 border-t border-border-subtle/80 pt-6">
         {step > 0 ? (
-          <Button type="button" variant="secondary" onClick={() => setStep((value) => value - 1)}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => setStep((value) => value - 1)}
+            className="rounded-xl flex items-center gap-1.5"
+          >
+            <ArrowLeft size={16} />
             Back
           </Button>
         ) : null}
-        <Button type="button" variant="secondary" onClick={() => save()}>
+
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => save()}
+          className="rounded-xl text-xs font-semibold"
+        >
           Save draft
         </Button>
-        {current === "review" ? (
-          <Button type="submit" disabled={pending}>
-            {pending ? "Sending" : "Send plan"}
-          </Button>
-        ) : (
-          <Button type="submit">Next</Button>
-        )}
+
+        <div className="ml-auto">
+          {current === "review" ? (
+            <Button
+              type="submit"
+              variant="conversion"
+              disabled={pending}
+              className="rounded-xl px-7 py-3 text-base font-semibold shadow-2 group flex items-center gap-2"
+            >
+              {pending ? "Sending your itinerary..." : "Submit Itinerary for Review"}
+              <Sparkles size={17} className="transition-transform group-hover:rotate-12" />
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              variant="conversion"
+              className="rounded-xl px-6 py-3 font-semibold shadow-1 group flex items-center gap-2"
+            >
+              Continue to {plannerStepLabels[step + 1]}
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </Button>
+          )}
+        </div>
       </div>
     </form>
   );

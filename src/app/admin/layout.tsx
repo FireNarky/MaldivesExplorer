@@ -102,6 +102,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             Redirects
           </Link>
         ) : null}
+        <Link href="/admin/settings/contact" className="font-semibold text-lagoon-ink">
+          Chat &amp; Contact
+        </Link>
       </nav>
       {children}
     </div>

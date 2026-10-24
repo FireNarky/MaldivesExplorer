@@ -22,7 +22,7 @@ export default async function EnquiriesPage() {
         <EmptyState title="Enquiries">
           <p>No trip plan is linked to this account.</p>
           <Link href="/plan" className="font-semibold text-lagoon-ink">
-            Plan a trip
+            Plan my trip
           </Link>
         </EmptyState>
       ) : (

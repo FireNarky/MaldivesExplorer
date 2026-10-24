@@ -1,0 +1,104 @@
+{
+  "name": "Lagoon Daylight",
+  "direction": "Brighter, airier",
+  "tokens": {
+    "ocean": "#0a4a5c",
+    "lagoon": "#2bbcd0",
+    "lagoon-ink": "#00697a",
+    "lagoon-ink-hover": "#005a69",
+    "mist": "#e3f7f8",
+    "coral": "#ff7a5c",
+    "coral-hover": "#f56f50",
+    "sand": "#fbfcfb",
+    "ink": "#1d3138",
+    "muted": "#576a70",
+    "border": "#78888d",
+    "border-subtle": "#d3e2e4"
+  },
+  "contrast": [
+    {
+      "pair": "Body text on page",
+      "ratio": 13.18,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Body text on mist",
+      "ratio": 12.22,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Headings on page",
+      "ratio": 9.51,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on page",
+      "ratio": 6.18,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Link on mist",
+      "ratio": 5.73,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary button",
+      "ratio": 6.36,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "White on primary hover",
+      "ratio": 7.88,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent button",
+      "ratio": 5.29,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Ink on accent hover",
+      "ratio": 4.7,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on page",
+      "ratio": 5.52,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Muted text on mist",
+      "ratio": 5.11,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Footer text on ocean",
+      "ratio": 9.51,
+      "required": 4.5,
+      "pass": true
+    },
+    {
+      "pair": "Input border on white",
+      "ratio": 3.68,
+      "required": 3,
+      "pass": true
+    },
+    {
+      "pair": "Input border on page",
+      "ratio": 3.58,
+      "required": 3,
+      "pass": true
+    }
+  ]
+}

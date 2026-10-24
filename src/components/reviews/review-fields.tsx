@@ -116,13 +116,14 @@ export function ReviewFields({
           className="min-h-32 w-full rounded-sm border border-border bg-white px-4 py-3 text-base text-ink"
         />
       </div>
-      <label className="flex min-h-11 items-start gap-3">
+      <label className="flex min-h-11 items-center gap-3 cursor-pointer select-none text-sm text-ink dark:text-slate-200">
         <input
           type="checkbox"
           name="consent"
           value="yes"
           defaultChecked={values?.consentGranted ?? false}
           required
+          className="size-6 min-w-6 rounded-md cursor-pointer accent-lagoon text-ocean focus:ring-2 focus:ring-lagoon/40"
         />
         <span>Permission to publish this text is recorded.</span>
       </label>

@@ -1,0 +1,19 @@
+/* Maldives Explorer palette: Tropical Palm (Natural, fresh)
+   Replace the colour block in :root. --color-coral holds the accent (conversion button), whatever its hue. */
+:root {
+  --color-ocean: #12372a;
+  --color-lagoon: #34b37e;
+  --color-lagoon-ink: #1b6e4f;
+  --color-lagoon-ink-hover: #155a41;
+  --color-mist: #e1f3e8;
+  --color-coral: #ffc233;
+  --color-coral-hover: #f5b61f;
+  --color-sand: #f9f7ee;
+  --color-ink: #1f3128;
+  --color-muted: #586b60;
+  --color-border: #7c8a82;
+  --color-border-subtle: #d6e0d8;
+  --color-white: #ffffff;
+  --color-focus: #1b6e4f;
+  --color-info: #12372a;
+}
