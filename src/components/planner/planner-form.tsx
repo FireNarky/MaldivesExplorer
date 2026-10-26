@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Send } from "lucide-react";
 import { readWishlist } from "@/lib/shortlist/local";
 import {
   clearPlannerDraft,
@@ -318,7 +318,7 @@ export function PlannerForm(props: PlannerFormProps) {
               className="rounded-xl px-7 py-3 text-base font-semibold shadow-2 group flex items-center gap-2"
             >
               {pending ? "Sending your itinerary..." : "Submit Itinerary for Review"}
-              <Sparkles size={17} className="transition-transform group-hover:rotate-12" />
+              <Send size={16} className="transition-transform group-hover:translate-x-0.5" />
             </Button>
           ) : (
             <Button

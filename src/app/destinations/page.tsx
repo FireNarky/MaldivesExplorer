@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Compass } from "lucide-react";
 import { PageHeader } from "@/components/patterns/page-header";
 import { DestinationCard } from "@/components/patterns/destination-card";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -95,7 +95,7 @@ export default async function DestinationsPage({
 
           <div className="relative max-w-3xl space-y-4">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/20">
-              <Sparkles size={13} className="text-coral" />
+              <Compass size={13} className="text-coral" />
               Geography &amp; Marine Corridors
             </span>
             <h2 className="text-2xl sm:text-3xl font-display font-medium text-white leading-snug">

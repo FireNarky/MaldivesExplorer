@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Compass, FileText, MapPin, Search, Sparkles, Waves, X } from "lucide-react";
+import { Compass, FileText, MapPin, Search, Waves, X } from "lucide-react";
 import { trapFocusKeydown } from "@/lib/a11y/focus-trap";
 
 interface Suggestion {
@@ -140,7 +140,7 @@ export function QuickSearchDialog() {
       case "article":
         return <FileText size={16} className="text-lagoon-ink" aria-hidden="true" />;
       default:
-        return <Sparkles size={16} className="text-lagoon-ink" aria-hidden="true" />;
+        return <Compass size={16} className="text-lagoon-ink" aria-hidden="true" />;
     }
   };
 

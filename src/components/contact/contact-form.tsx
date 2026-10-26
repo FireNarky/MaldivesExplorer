@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Send, Sparkles, AlertCircle, ArrowRight } from "lucide-react";
+import { CheckCircle2, Send, MessageSquare, AlertCircle, ArrowRight } from "lucide-react";
 import { submitContactEnquiryAction, ContactEnquiryState } from "@/modules/contact/actions";
 import { Button } from "@/components/ui/button";
 
@@ -92,7 +92,7 @@ export function ContactForm({ noticeVersion = "2026-10-10" }: { noticeVersion?: 
     <div className="rounded-3xl border border-border-subtle bg-white dark:bg-[#071318] dark:border-white/10 p-6 sm:p-10 shadow-2">
       <div className="mb-8">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-mist dark:bg-white/10 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-cyan-300">
-          <Sparkles size={13} />
+          <MessageSquare size={13} />
           Bespoke Travel Inquiry
         </span>
         <h2 className="mt-2 font-display text-2xl sm:text-3xl text-ocean dark:text-cyan-200 font-medium">

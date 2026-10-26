@@ -10,7 +10,6 @@ import {
   Lock,
   Mail,
   ShieldCheck,
-  Sparkles,
   Waves,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -68,7 +67,7 @@ export function LoginForm({
           <Compass size={28} className="animate-spin-slow" />
         </div>
         <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-mist/60 dark:bg-white/5 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">
-          <Sparkles size={13} className="text-coral" />
+          <ShieldCheck size={13} className="text-coral" />
           Maldives Explorer Access
         </span>
         <h1 className="mt-2 text-3xl sm:text-4xl font-display font-medium text-ocean">

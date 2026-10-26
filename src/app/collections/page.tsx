@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FolderHeart, Sparkles } from "lucide-react";
+import { FolderHeart } from "lucide-react";
 import { PageHeader } from "@/components/patterns/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ErrorState } from "@/components/ui/error-state";
@@ -48,7 +48,7 @@ export default async function CollectionsPage() {
                 <div>
                   <div className="mb-4 flex items-center justify-between">
                     <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300">
-                      <Sparkles size={20} aria-hidden="true" />
+                      <FolderHeart size={20} aria-hidden="true" />
                     </span>
                     <span className="text-xs font-semibold text-muted dark:text-slate-300 bg-sand dark:bg-white/10 px-3 py-1 rounded-full border border-border-subtle/50 dark:border-white/10">
                       {col.items.length} curated {col.items.length === 1 ? "resort" : "resorts"}

@@ -5,10 +5,11 @@ import {
   ClipboardList,
   Compass,
   FileText,
+  Gift,
   MapPin,
   ShieldCheck,
-  Sparkles,
   Star,
+  Tag,
   Waves,
 } from "lucide-react";
 import { JsonLd } from "@/components/discovery/json-ld";
@@ -63,7 +64,7 @@ const entryPoints = [
     href: "/offers",
     title: "Curated Offers",
     badge: "Exclusive",
-    icon: Sparkles,
+    icon: Tag,
     text: "Complimentary seaplane flights, half-board upgrades, and extended stay privileges.",
   },
 ] as const;
@@ -304,7 +305,7 @@ export default async function HomePage() {
                 </div>
                 <div className="rounded-xl border border-white/15 bg-white/10 p-3 text-xs text-white/90">
                   <p className="flex items-center gap-1.5 font-medium">
-                    <Sparkles size={13} className="text-amber-300" />
+                    <Gift size={14} className="text-amber-300" />
                     Complimentary Privileges:
                   </p>
                   <p className="mt-1 text-xs text-slate-300">

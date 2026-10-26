@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Calendar, CheckCircle2, Plane, Sparkles } from "lucide-react";
+import { Calendar, CheckCircle2, Plane, Tag } from "lucide-react";
 import { PriceDisclosure } from "@/components/patterns/price-disclosure";
 
 export type OfferCardData = {
@@ -25,7 +25,7 @@ export function OfferCard({ item }: { item: OfferCardData }) {
     <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-6 shadow-1 transition-all duration-200 hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/50 hover:shadow-2">
       <div className="mb-3 flex items-center justify-between">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-coral/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-coral-hover dark:text-coral">
-          <Sparkles size={14} className="text-coral" aria-hidden="true" />
+          <Tag size={13} className="text-coral" aria-hidden="true" />
           Special Offer
         </span>
         <span className="flex items-center gap-1 text-xs text-muted">

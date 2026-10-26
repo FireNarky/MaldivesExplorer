@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, CheckCircle2, Plane, ShieldCheck, Sparkles, Waves } from "lucide-react";
+import { BookOpen, CheckCircle2, Gift, Plane, ShieldCheck, Waves } from "lucide-react";
 import { SubscribeForm } from "@/components/newsletter/subscribe-form";
 import { FieldError } from "@/components/ui/field-error";
 import { logError } from "@/lib/observability/log";
@@ -17,7 +17,7 @@ export const metadata: Metadata = publicMetadata({
 
 const perks = [
   {
-    icon: Sparkles,
+    icon: Gift,
     title: "Unpublished Villa Privileges",
     desc: "Direct partner rates, complimentary half-board upgrades, and resort opening perks.",
   },
@@ -56,7 +56,7 @@ export default async function NewsletterPage({
       {/* Editorial Header */}
       <div className="text-center space-y-4">
         <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-mist/60 dark:bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400 backdrop-blur">
-          <Sparkles size={14} className="text-coral" />
+          <BookOpen size={14} className="text-coral" />
           Maldives Explorer Editorial
         </span>
         <h1 className="text-3xl sm:text-5xl font-display font-medium text-ocean">

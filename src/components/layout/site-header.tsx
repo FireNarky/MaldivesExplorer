@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Compass } from "lucide-react";
+import { Bookmark, Compass, LogOut, ShieldCheck, User } from "lucide-react";
 import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { MobileMenu } from "@/components/layout/mobile-menu";
@@ -36,18 +36,21 @@ export async function SiteHeader() {
           <QuickSearchDialog />
           <div className="hidden items-center gap-2 lg:flex">
             {utilityLinks.slice(0, 1).map((link) => (
-              <NavLink key={link.href} href={link.href} className="px-2">
+              <NavLink key={link.href} href={link.href} className="px-2.5 inline-flex items-center gap-1.5">
+                <Bookmark size={15} aria-hidden="true" />
                 {link.label}
               </NavLink>
             ))}
             {session?.user?.staff ? (
-              <NavLink href="/admin" className="px-2">
+              <NavLink href="/admin" className="px-2.5 inline-flex items-center gap-1.5">
+                <ShieldCheck size={15} aria-hidden="true" />
                 Staff
               </NavLink>
             ) : null}
             {signedIn ? (
               <>
-                <NavLink href="/account" className="px-2">
+                <NavLink href="/account" className="px-2.5 inline-flex items-center gap-1.5">
+                  <User size={15} aria-hidden="true" />
                   Account
                 </NavLink>
                 <form
@@ -56,13 +59,15 @@ export async function SiteHeader() {
                     await signOut({ redirectTo: "/" });
                   }}
                 >
-                  <Button type="submit" variant="tertiary">
+                  <Button type="submit" variant="tertiary" className="inline-flex items-center gap-1.5">
+                    <LogOut size={15} aria-hidden="true" />
                     Sign out
                   </Button>
                 </form>
               </>
             ) : (
-              <NavLink href="/login" className="px-2">
+              <NavLink href="/login" className="px-2.5 inline-flex items-center gap-1.5">
+                <User size={15} aria-hidden="true" />
                 Sign in
               </NavLink>
             )}

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Clock, Plane, ShieldCheck, Sparkles } from "lucide-react";
+import { Clock, Compass, Plane, ShieldCheck, SlidersHorizontal } from "lucide-react";
 import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
 import { PlannerForm } from "@/components/planner/planner-form";
 import { ErrorState } from "@/components/ui/error-state";
@@ -35,7 +35,7 @@ const plannerPerks = [
     desc: "Seaplane and speedboat options matched to your itinerary.",
   },
   {
-    icon: Sparkles,
+    icon: SlidersHorizontal,
     title: "Tailored Options",
     desc: "Recommendations matched to your travel dates, party size, and interests.",
   },
@@ -58,7 +58,7 @@ export default async function PlanPage() {
 
           <div className="relative max-w-2xl space-y-3">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/20">
-              <Sparkles size={13} className="text-coral" />
+              <Compass size={13} className="text-coral" />
               Resident Concierge Service
             </span>
             <h1 className="text-3xl sm:text-4xl font-display font-medium text-white leading-snug">

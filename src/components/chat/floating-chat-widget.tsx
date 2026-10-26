@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { MessageSquare, X, ChevronRight, Sparkles } from "lucide-react";
+import { MessageSquare, X, ChevronRight, Mail } from "lucide-react";
 import { WhatsAppIcon, MessengerIcon, TelegramIcon } from "./social-icons";
 import { trapFocusKeydown } from "@/lib/a11y/focus-trap";
 import {
@@ -186,7 +186,7 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
                 className="flex items-center justify-between rounded-xl bg-mist/70 dark:bg-white/5 px-3 py-2.5 text-xs font-semibold text-ocean dark:text-cyan-300 hover:bg-mist dark:hover:bg-white/10 transition-colors"
               >
                 <span className="flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-coral" />
+                  <Mail size={14} className="text-coral" />
                   Send a Travel Enquiry
                 </span>
                 <ChevronRight size={14} />

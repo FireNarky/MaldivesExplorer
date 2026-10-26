@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, Compass, Sparkles } from "lucide-react";
+import { Calendar, Clock, Compass } from "lucide-react";
 
 export type ExperienceCardData = {
   id: string;
@@ -58,7 +58,7 @@ export function ExperienceCard({ item }: { item: ExperienceCardData }) {
           ) : null}
           {item.seasonality ? (
             <p className="flex items-center gap-1.5">
-              <Sparkles size={14} className="text-lagoon-ink" aria-hidden="true" />
+              <Calendar size={14} className="text-lagoon-ink" aria-hidden="true" />
               <span>Season: {item.seasonality}</span>
             </p>
           ) : null}
