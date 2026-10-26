@@ -25,6 +25,7 @@ const PRIMARY_NAV_ICONS: Record<
   React.ComponentType<{ size?: number; className?: string; "aria-hidden"?: boolean | "true" | "false" }>
 > = {
   "/destinations": MapPin,
+  "/map": Compass,
   "/resorts": Palmtree,
   "/experiences": Sailboat,
   "/offers": Tag,

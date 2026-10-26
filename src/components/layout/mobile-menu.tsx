@@ -38,6 +38,11 @@ const ROUTE_META: Record<string, RouteMeta> = {
     subtitle: "26 natural geographic atolls",
     section: "explore",
   },
+  "/map": {
+    icon: Compass,
+    subtitle: "Interactive 3D archipelago & resort explorer",
+    section: "explore",
+  },
   "/resorts": {
     icon: Palmtree,
     subtitle: "Private islands & overwater pool villas",

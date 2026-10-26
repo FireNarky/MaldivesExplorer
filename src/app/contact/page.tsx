@@ -287,7 +287,11 @@ export default async function ContactPage() {
 
         {/* Right Column: General Enquiry Form */}
         <div className="lg:col-span-7">
-          <ContactForm noticeVersion={noticeVersion} />
+          <ContactForm
+            noticeVersion={noticeVersion}
+            whatsappNumber={settings.whatsappNumber}
+            whatsappMessage={settings.whatsappMessage}
+          />
         </div>
       </div>
     </div>

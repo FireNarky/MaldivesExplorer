@@ -141,6 +141,16 @@ export default async function DestinationsPage({
                 </span>
               </div>
             </div>
+
+            <div className="pt-3">
+              <Link
+                href="/map"
+                className="inline-flex items-center gap-2 rounded-full bg-cyan-400 px-5 py-2.5 text-xs font-bold text-[#071318] shadow-md hover:bg-cyan-300 transition-all hover:scale-105 active:scale-95"
+              >
+                <Compass size={15} />
+                <span>Launch Interactive 3D Archipelago Map &rarr;</span>
+              </Link>
+            </div>
           </div>
         </section>
 
