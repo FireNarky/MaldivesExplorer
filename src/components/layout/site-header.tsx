@@ -1,5 +1,17 @@
 import Link from "next/link";
-import { Bookmark, Compass, LogOut, ShieldCheck, User } from "lucide-react";
+import {
+  Bookmark,
+  BookOpen,
+  Compass,
+  LogOut,
+  MapPin,
+  MessageSquare,
+  Palmtree,
+  Sailboat,
+  ShieldCheck,
+  Tag,
+  User,
+} from "lucide-react";
 import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { MobileMenu } from "@/components/layout/mobile-menu";
@@ -7,6 +19,18 @@ import { NavLink } from "@/components/layout/nav-link";
 import { primaryLinks, utilityLinks } from "@/components/layout/nav-links";
 
 import { QuickSearchDialog } from "@/components/layout/quick-search-dialog";
+
+const PRIMARY_NAV_ICONS: Record<
+  string,
+  React.ComponentType<{ size?: number; className?: string; "aria-hidden"?: boolean | "true" | "false" }>
+> = {
+  "/destinations": MapPin,
+  "/resorts": Palmtree,
+  "/experiences": Sailboat,
+  "/offers": Tag,
+  "/guides": BookOpen,
+  "/contact": MessageSquare,
+};
 
 export async function SiteHeader() {
   const session = await auth().catch(() => null);
@@ -25,12 +49,22 @@ export async function SiteHeader() {
           <span aria-hidden="true" className="size-2.5 sm:size-3 rounded-full bg-lagoon" />
           Maldives Explorer
         </Link>
-        <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex">
-          {primaryLinks.map((link) => (
-            <NavLink key={link.href} href={link.href}>
-              {link.label}
-            </NavLink>
-          ))}
+        <nav aria-label="Primary" className="hidden items-center gap-5 xl:gap-7 lg:flex">
+          {primaryLinks.map((link) => {
+            const Icon = PRIMARY_NAV_ICONS[link.href];
+            return (
+              <NavLink key={link.href} href={link.href} className="inline-flex items-center gap-1.5 group transition-colors">
+                {Icon ? (
+                  <Icon
+                    size={16}
+                    className="text-lagoon-ink/70 group-hover:text-lagoon-ink dark:text-cyan-400/70 dark:group-hover:text-cyan-300 transition-colors"
+                    aria-hidden="true"
+                  />
+                ) : null}
+                <span>{link.label}</span>
+              </NavLink>
+            );
+          })}
         </nav>
         <nav aria-label="Account" className="ml-auto flex items-center gap-2">
           <QuickSearchDialog />
@@ -78,6 +112,13 @@ export async function SiteHeader() {
               </Link>
             </Button>
           </div>
+          <Link
+            href="/wishlist"
+            aria-label="Saved list"
+            className="lg:hidden inline-flex size-11 items-center justify-center rounded-xl border border-border-subtle bg-white dark:bg-white/10 dark:border-white/15 text-ink dark:text-white active:scale-95 transition-transform shadow-sm"
+          >
+            <Bookmark aria-hidden="true" size={19} strokeWidth={1.75} />
+          </Link>
           <MobileMenu links={[...primaryLinks]} account={account} />
         </nav>
       </div>

@@ -5,7 +5,6 @@ import { LandingCapture } from "@/components/planner/landing-capture";
 import { CompareTray } from "@/components/shortlist/compare-tray";
 import { WishlistMerge } from "@/components/shortlist/device-sync";
 import { PaletteSwitcher } from "@/components/layout/palette-switcher";
-import { ActionBar } from "@/components/layout/action-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { FloatingChatWidget } from "@/components/chat/floating-chat-widget";
@@ -83,7 +82,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <SiteHeader />
         <main
           id="main"
-          className="mx-auto w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] flex-1 px-4 py-8 pb-24 lg:px-8 lg:pb-12 2xl:px-12"
+          className="mx-auto w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] flex-1 px-4 py-8 pb-12 lg:px-8 2xl:px-12"
         >
           {children}
         </main>
@@ -93,7 +92,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <AnalyticsConsent />
         <SiteFooter />
         <FloatingChatWidget settings={contactSettings} />
-        <ActionBar />
         <PaletteSwitcher />
       </body>
     </html>
