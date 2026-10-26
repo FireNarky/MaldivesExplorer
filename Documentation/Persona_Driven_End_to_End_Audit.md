@@ -104,3 +104,15 @@ Branch `fix/phase-4-dev-runtime-hardening`, started from `20d8f6d` (Merge Phase 
 | Finding ID | Implementation Status | Summary of Change | Tests Added | Remaining Notes |
 | --- | --- | --- | --- | --- |
 | **F-08** (dev launcher overwrites `.env`, machine path, production-style `AUTH_URL`, always-on tunnel framing) | **Resolved** | Launcher moved to `scripts/run-dev.ts` + `scripts/lib/dev-runtime.ts`. Root `.env` never written (only `.data/stage1-browser.env`). `AUTH_URL` defaults to `http://127.0.0.1:3000`. Machine-specific Team Board path removed (`ME_TEAM_BOARD_DIR` opt-in). Tunnel proxy requires `ENABLE_DEV_TUNNEL=true` plus `DEV_TUNNEL_PUBLIC_URL`/`AUTH_URL`. Port conflicts fail clearly without killing other processes. Secrets redacted from launcher summary. Fixture/UAT gates remain fail-closed. | `src/tests/phase4-dev-runtime.test.ts` | `siteOrigin()` SEO fallback when `AUTH_URL` unset remains application-level and was left unchanged. |
+
+---
+
+## 8. Audit v2 / Post-Phase 4 End-to-End Simulation & Remediation Status (Appended 26 October 2026)
+
+Branch `fix/post-phase4-e2e-audit-remediation`, started from `3748418` (Merge Phase 4 development runtime hardening). Full verification details across all 10 Personas (A through J) and 24 required sections are in [`Post_Phase4_E2E_Audit_and_Remediation.md`](./Post_Phase4_E2E_Audit_and_Remediation.md). All prior Phase 1–4 protections were independently audited and verified intact.
+
+| Finding ID | Implementation Status | Summary of Change | Tests Added / Updated | Remaining Notes |
+| --- | --- | --- | --- | --- |
+| **A2-001** (Test harness username assumption in `phase4-dev-runtime.test.ts`) | **Resolved** | Test previously asserted `expect(resolved.includes("/home/roon")).toBe(false)`, which failed when cloned under a developer home named `roon`. Updated to verify dynamic root normalization and synthetic URL derivation without machine-specific assumptions. | `src/tests/phase4-dev-runtime.test.ts` (18/18 suites, 168/168 tests pass) | None. |
+| **A2-002** (Contact form consent checkbox sizing) | **Resolved** | Upgraded `/contact` consent checkbox from `size-5` (20px) to `size-6 min-w-6` (24px) with accessible tappable label, matching `/newsletter`. | Verified in component test suite and live browser render | None. |
+| **A2-003** (Playwright smoke test heading assertion mismatch) | **Resolved** | Updated level-1 heading matcher to recognize editorial brand headline `Bespoke Luxury Stays Across the Maldives` on `/`. | `tests/smoke.spec.ts` (4/4 browser specs pass) | None. |

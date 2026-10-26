@@ -61,8 +61,11 @@ describe("Phase 4 — repository path derivation", () => {
   it("resolves the repo root from import.meta.url without machine-specific homes", () => {
     const resolved = resolveRepoRoot();
     expect(path.normalize(resolved)).toBe(path.normalize(root));
-    expect(resolved.includes("/home/roon")).toBe(false);
-    expect(resolved.includes("Desktop/Grinding")).toBe(false);
+    const synthetic = resolveRepoRoot(new URL("file:///opt/ci/repo/scripts/lib/dev-runtime.ts").href);
+    expect(synthetic).toBe(path.resolve("/opt/ci/repo"));
+    expect(synthetic.includes("/home/roon")).toBe(false);
+    expect(synthetic.includes("Desktop/Grinding")).toBe(false);
+    expect(resolved.includes("Desktop/Grinding/maldivexplorer")).toBe(false);
   });
 
   it("keeps machine-specific absolute paths out of launcher source", () => {

@@ -274,7 +274,7 @@ export function ContactForm({ noticeVersion = "2026-10-10" }: { noticeVersion?: 
               setConsent(event.target.checked);
               if (event.target.checked) setClientError(null);
             }}
-            className="size-5 min-w-5 rounded cursor-pointer accent-lagoon text-ocean focus:ring-2 focus:ring-lagoon/40 mt-0.5"
+            className="size-6 min-w-6 rounded-md cursor-pointer accent-lagoon text-ocean focus:ring-2 focus:ring-lagoon/40 mt-0.5"
           />
           <span>
             I agree that Maldives Explorer may contact me to respond to this enquiry. Notice version{" "}
