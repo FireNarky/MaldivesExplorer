@@ -165,10 +165,10 @@ const MLE_AIRPORT = {
   lng: 73.5291,
 };
 
-const DEFAULT_CENTER: [number, number] = [73.35, 4.4];
-const DEFAULT_ZOOM = 7.1;
-const DEFAULT_PITCH = 50;
-const DEFAULT_BEARING = -6;
+const DEFAULT_CENTER: [number, number] = [73.2, 4.0];
+const DEFAULT_ZOOM = 6.8;
+const DEFAULT_PITCH = 42;
+const DEFAULT_BEARING = -4;
 
 export function Archipelago3DMap({
   initialResortSlug,
@@ -191,15 +191,15 @@ export function Archipelago3DMap({
   const [basemapType, setBasemapType] = useState<"satellite" | "ocean">("satellite");
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
-  // Smoothly fly camera to a specific resort
+  // Smoothly fly camera to a specific resort with comfortable framing (entire island & lagoon visible)
   const flyToResort = useCallback((resort: MapResort) => {
     setSelectedResort(resort);
     if (!mapInstanceRef.current) return;
     mapInstanceRef.current.flyTo({
       center: [resort.lng, resort.lat],
-      zoom: 12.6,
-      pitch: is3DMode ? 58 : 0,
-      bearing: is3DMode ? 18 : 0,
+      zoom: 11.0,
+      pitch: is3DMode ? 45 : 0,
+      bearing: is3DMode ? 14 : 0,
       speed: 1.1,
       curve: 1.4,
       essential: true,
@@ -486,7 +486,7 @@ export function Archipelago3DMap({
 
   return (
     <div
-      className={`relative h-[620px] sm:h-[720px] w-full overflow-hidden rounded-3xl border border-border-subtle bg-[#020b10] shadow-2 select-none ${className}`}
+      className={`relative h-[65vh] min-h-[440px] max-h-[720px] w-full overflow-hidden rounded-3xl border border-border-subtle bg-[#020b10] shadow-2 select-none ${className}`}
     >
       {/* Real MapLibre GL Map Canvas */}
       <div ref={mapContainerRef} className="size-full" />
@@ -593,9 +593,9 @@ export function Archipelago3DMap({
         </div>
       </div>
 
-      {/* Floating Selected Resort Inspector Card */}
+      {/* Floating Selected Resort Inspector Card (docked at bottom-left so island view remains unobstructed) */}
       {selectedResort ? (
-        <div className="absolute top-16 left-4 right-4 sm:right-auto sm:max-w-sm z-30 rounded-2xl border border-white/20 bg-slate-950/90 p-5 text-white shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto">
+        <div className="absolute bottom-20 left-4 right-4 sm:right-auto sm:max-w-sm z-30 rounded-2xl border border-white/20 bg-slate-950/92 p-4 sm:p-5 text-white shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-2 duration-200 pointer-events-auto">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-1.5">

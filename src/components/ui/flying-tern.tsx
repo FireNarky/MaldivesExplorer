@@ -2,18 +2,17 @@ import React from "react";
 
 /**
  * FlyingTern: Realistic vector Maldivian White Tern (Dhondheeni) flight.
- * Uses 10-frame high-resolution avian kinematics with authentic
- * wing strokes, bank angles, and soaring trajectory arcs.
+ * Stays gracefully in the background behind page content and dialogs.
  */
 export function FlyingTern() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 overflow-hidden z-20"
+      className="pointer-events-none absolute inset-0 overflow-hidden z-0 select-none"
     >
-      {/* Single graceful White Tern soaring across the hero */}
-      <div className="tern-container-1">
-        <div className="real-tern tern-flap-1" />
+      {/* Single graceful White Tern soaring across the hero in the background */}
+      <div className="tern-container-1 pointer-events-none">
+        <div className="real-tern tern-flap-1 pointer-events-none" />
       </div>
     </div>
   );

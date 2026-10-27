@@ -5,7 +5,6 @@ import {
   Compass,
   LogOut,
   MapPin,
-  MessageSquare,
   Palmtree,
   Sailboat,
   ShieldCheck,
@@ -30,7 +29,6 @@ const PRIMARY_NAV_ICONS: Record<
   "/experiences": Sailboat,
   "/offers": Tag,
   "/guides": BookOpen,
-  "/contact": MessageSquare,
 };
 
 export async function SiteHeader() {
@@ -120,7 +118,10 @@ export async function SiteHeader() {
           >
             <Bookmark aria-hidden="true" size={19} strokeWidth={1.75} />
           </Link>
-          <MobileMenu links={[...primaryLinks]} account={account} />
+          <MobileMenu
+            links={[...primaryLinks, { href: "/contact", label: "Contact & Concierge" }]}
+            account={account}
+          />
         </nav>
       </div>
     </header>

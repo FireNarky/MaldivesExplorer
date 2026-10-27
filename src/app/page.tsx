@@ -187,7 +187,7 @@ export default async function HomePage() {
         {/* Flying tern */}
         <FlyingTern />
 
-        <div className="relative mx-auto grid w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] items-center gap-10 px-4 py-16 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32 2xl:px-12">
+        <div className="relative z-10 mx-auto grid w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] items-center gap-10 px-4 py-16 sm:py-24 lg:grid-cols-12 lg:px-8 lg:py-32 2xl:px-12">
           <div className="grid content-center gap-6 lg:col-span-8">
             <h1 className="text-[clamp(2.5rem,1.2rem+4vw,4.5rem)] font-display font-medium leading-[1.08] tracking-[-0.025em] text-white animate-in fade-in slide-in-from-bottom-2 duration-500">
               Bespoke Luxury Stays Across the Maldives

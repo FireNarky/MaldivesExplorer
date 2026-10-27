@@ -5,7 +5,6 @@ export const primaryLinks = [
   { href: "/experiences", label: "Experiences" },
   { href: "/offers", label: "Offers" },
   { href: "/guides", label: "Guides" },
-  { href: "/contact", label: "Contact" },
 ] as const;
 
 export const utilityLinks = [

@@ -65,7 +65,7 @@ const ROUTE_META: Record<string, RouteMeta> = {
   },
   "/contact": {
     icon: MessageSquare,
-    subtitle: "Resident concierge & WhatsApp advisory",
+    subtitle: "Resident concierge & travel enquiries",
     section: "explore",
   },
   "/wishlist": {
@@ -175,23 +175,23 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
         href={link.href}
         aria-current={isActive ? "page" : undefined}
         onClick={() => setOpen(false)}
-        className="group flex min-h-[52px] items-center gap-3.5 rounded-2xl p-2.5 transition-all hover:bg-mist/80 dark:hover:bg-white/10 active:scale-[0.99] aria-[current=page]:bg-mist dark:aria-[current=page]:bg-white/10"
+        className="group flex min-h-[44px] items-center gap-3 rounded-xl p-2 transition-all hover:bg-mist/80 dark:hover:bg-white/10 active:scale-[0.99] aria-[current=page]:bg-mist dark:aria-[current=page]:bg-white/10"
       >
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-ocean dark:text-cyan-300 group-hover:bg-ocean group-hover:text-white dark:group-hover:bg-cyan-400 dark:group-hover:text-ocean transition-colors shadow-sm">
-          <Icon size={18} aria-hidden="true" />
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-ocean dark:text-cyan-300 group-hover:bg-ocean group-hover:text-white dark:group-hover:bg-cyan-400 dark:group-hover:text-ocean transition-colors shadow-sm">
+          <Icon size={16} aria-hidden="true" />
         </div>
         <div className="flex flex-col min-w-0">
           <span className="text-sm font-semibold text-ocean dark:text-cyan-200 group-hover:text-ocean dark:group-hover:text-cyan-100">
             {link.label}
           </span>
           {meta.subtitle ? (
-            <span className="text-xs text-muted dark:text-slate-400 truncate">
+            <span className="text-[11px] text-muted dark:text-slate-400 truncate">
               {meta.subtitle}
             </span>
           ) : null}
         </div>
         <ChevronRight
-          size={16}
+          size={15}
           className="ml-auto shrink-0 text-muted/50 group-hover:text-ocean dark:group-hover:text-cyan-300 group-hover:translate-x-0.5 transition-all"
           aria-hidden="true"
         />
@@ -219,7 +219,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
       {open ? (
         <div
           id="mobile-menu"
-          className="absolute inset-x-0 top-full z-20 border-b border-border-subtle bg-white/95 dark:bg-[#071318]/95 backdrop-blur-xl shadow-3 animate-in fade-in slide-in-from-top-1 max-h-[calc(100vh-4.5rem)] overflow-y-auto overscroll-contain"
+          className="fixed inset-x-0 top-16 bottom-0 z-50 border-b border-border-subtle bg-white/98 dark:bg-[#071318]/98 backdrop-blur-xl shadow-3 animate-in fade-in slide-in-from-top-1 overflow-y-auto overscroll-contain pb-20"
         >
           <nav aria-label="Mobile" className="mx-auto grid w-full max-w-[90rem] gap-4 px-4 py-4 sm:px-6">
             {/* Primary Action Button */}

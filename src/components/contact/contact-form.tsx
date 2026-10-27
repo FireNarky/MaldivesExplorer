@@ -100,13 +100,13 @@ export function ContactForm({
   }
 
   return (
-    <div className="rounded-3xl border border-border-subtle bg-white dark:bg-[#071318] p-6 sm:p-10 shadow-1">
-      <div className="space-y-1.5 mb-8">
+    <div className="rounded-3xl border border-border-subtle bg-white dark:bg-[#071318] p-6 sm:p-10 shadow-1 max-w-2xl mx-auto">
+      <div className="space-y-1.5 mb-7">
         <h2 className="font-display text-2xl sm:text-3xl text-ocean dark:text-cyan-200 font-medium">
           Send a Travel Enquiry
         </h2>
         <p className="text-sm text-muted dark:text-slate-400 font-light">
-          Tell us about your envisioned Maldives getaway. We will craft a bespoke itinerary and itemized quote.
+          Share your desired dates and resort preferences for a tailored written quotation and transfer plan.
         </p>
       </div>
 
@@ -119,7 +119,7 @@ export function ContactForm({
           setClientError(null);
           formAction(formData);
         }}
-        className="space-y-6"
+        className="space-y-5"
       >
         <input type="hidden" name="noticeVersion" value={noticeVersion} />
         <input type="hidden" name="idempotencyKey" value={idempotencyKey} />
@@ -141,7 +141,7 @@ export function ContactForm({
           </div>
         ) : null}
 
-        {/* Clean Topic Pills */}
+        {/* Topic Pills */}
         <div className="space-y-2">
           <label className="text-xs font-semibold uppercase tracking-wider text-muted dark:text-slate-300 block">
             Enquiry Topic
@@ -154,7 +154,7 @@ export function ContactForm({
                   key={item}
                   type="button"
                   onClick={() => setTopic(item)}
-                  className={`rounded-full px-4 py-2 text-xs font-medium transition-all ${
+                  className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
                     isSelected
                       ? "bg-ocean text-white dark:bg-cyan-400 dark:text-[#071318] shadow-sm font-semibold"
                       : "border border-border-subtle bg-sand/30 dark:bg-white/5 text-ink dark:text-slate-300 hover:border-ocean/40"
@@ -167,93 +167,87 @@ export function ContactForm({
           </div>
         </div>
 
-        {/* Name and Email */}
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="grid gap-1.5">
-            <label htmlFor="contact-name" className="text-xs font-semibold text-ink dark:text-slate-200">
-              Full Name <span className="text-coral">*</span>
-            </label>
-            <div className="relative">
-              <input
-                id="contact-name"
-                name="name"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Victoria Sterling"
-                className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
-              />
-              <User size={15} className="absolute left-3 top-3 text-muted pointer-events-none" />
-            </div>
-          </div>
-
-          <div className="grid gap-1.5">
-            <label htmlFor="contact-email" className="text-xs font-semibold text-ink dark:text-slate-200">
-              Email Address <span className="text-coral">*</span>
-            </label>
-            <div className="relative">
-              <input
-                id="contact-email"
-                name="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="victoria@example.com"
-                className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
-              />
-              <Mail size={15} className="absolute left-3 top-3 text-muted pointer-events-none" />
-            </div>
+        {/* Single-Column Clean Input Flow */}
+        <div className="grid gap-1.5">
+          <label htmlFor="contact-name" className="text-xs font-semibold text-ink dark:text-slate-200">
+            Full Name <span className="text-coral">*</span>
+          </label>
+          <div className="relative">
+            <input
+              id="contact-name"
+              name="name"
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Victoria Sterling"
+              className="min-h-12 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+            />
+            <User size={15} className="absolute left-3 top-3.5 text-muted pointer-events-none" />
           </div>
         </div>
 
-        {/* Phone and Dates */}
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div className="grid gap-1.5">
-            <label htmlFor="contact-phone" className="text-xs font-semibold text-ink dark:text-slate-200">
-              Phone / WhatsApp
-            </label>
-            <div className="relative">
-              <input
-                id="contact-phone"
-                name="phone"
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+1 (555) 012-3456"
-                className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
-              />
-              <Phone size={15} className="absolute left-3 top-3 text-muted pointer-events-none" />
-            </div>
-          </div>
-
-          <div className="grid gap-1.5">
-            <label htmlFor="contact-dates" className="text-xs font-semibold text-ink dark:text-slate-200">
-              Target Month / Dates
-            </label>
-            <div className="relative">
-              <input
-                id="contact-dates"
-                name="dates"
-                type="text"
-                value={dates}
-                onChange={(e) => setDates(e.target.value)}
-                placeholder="e.g. November 2026 (7 nights)"
-                className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
-              />
-              <Calendar size={15} className="absolute left-3 top-3 text-muted pointer-events-none" />
-            </div>
+        <div className="grid gap-1.5">
+          <label htmlFor="contact-email" className="text-xs font-semibold text-ink dark:text-slate-200">
+            Email Address <span className="text-coral">*</span>
+          </label>
+          <div className="relative">
+            <input
+              id="contact-email"
+              name="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="victoria@example.com"
+              className="min-h-12 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+            />
+            <Mail size={15} className="absolute left-3 top-3.5 text-muted pointer-events-none" />
           </div>
         </div>
 
-        {/* Message / Requirements */}
+        <div className="grid gap-1.5">
+          <label htmlFor="contact-phone" className="text-xs font-semibold text-ink dark:text-slate-200">
+            Phone / WhatsApp (Optional)
+          </label>
+          <div className="relative">
+            <input
+              id="contact-phone"
+              name="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+1 (555) 012-3456"
+              className="min-h-12 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+            />
+            <Phone size={15} className="absolute left-3 top-3.5 text-muted pointer-events-none" />
+          </div>
+        </div>
+
+        <div className="grid gap-1.5">
+          <label htmlFor="contact-dates" className="text-xs font-semibold text-ink dark:text-slate-200">
+            Target Month / Dates
+          </label>
+          <div className="relative">
+            <input
+              id="contact-dates"
+              name="dates"
+              type="text"
+              value={dates}
+              onChange={(e) => setDates(e.target.value)}
+              placeholder="e.g. November 2026 (7 nights)"
+              className="min-h-12 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
+            />
+            <Calendar size={15} className="absolute left-3 top-3.5 text-muted pointer-events-none" />
+          </div>
+        </div>
+
         <div className="grid gap-1.5">
           <div className="flex items-center justify-between">
             <label htmlFor="contact-user-notes" className="text-xs font-semibold text-ink dark:text-slate-200">
               Travel Requirements &amp; Notes <span className="text-coral">*</span>
             </label>
-            <span className="text-[11px] text-muted">Party size, resort preferences, special wishes</span>
+            <span className="text-[11px] text-muted">Resort wishes, party size, dining</span>
           </div>
           <textarea
             id="contact-user-notes"
@@ -297,7 +291,7 @@ export function ContactForm({
             type="submit"
             variant="conversion"
             disabled={pending}
-            className="min-h-12 w-full rounded-full py-3 text-sm font-semibold shadow-sm transition-all"
+            className="min-h-12 w-full rounded-full py-3.5 text-sm font-semibold shadow-sm transition-all"
           >
             {pending ? (
               <span className="flex items-center gap-2">
