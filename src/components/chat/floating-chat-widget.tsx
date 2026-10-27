@@ -60,7 +60,7 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
   return (
     <div
       ref={widgetRef}
-      className="fixed z-40 select-none bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-4 lg:bottom-[calc(1.5rem+var(--me-compare-tray-h,0px))] lg:right-[calc(1.5rem+13.5rem)]"
+      className="fixed z-40 select-none bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-4 sm:right-6 lg:bottom-[calc(1.5rem+var(--me-compare-tray-h,0px))]"
     >
       {/* Expanded Chat Drawer / Card — non-modal popover (page remains usable). */}
       {isOpen ? (
