@@ -1,19 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import {
   Layers,
-  Moon,
   Plane,
   RotateCcw,
-  Sun,
-  X,
   ZoomIn,
   ZoomOut,
-  Gift,
+  X,
+  Compass,
+  MapPin,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import "maplibre-gl/dist/maplibre-gl.css";
 
 export interface MapResort {
   id: string;
@@ -158,37 +159,16 @@ export const RESORTS_DATA: MapResort[] = [
   },
 ];
 
-// Major Maldivian Atolls Coordinates & Geometry
-const ATOLL_CENTERS = [
-  { name: "Haa Alif", lat: 6.95, lng: 73.0, radius: 22 },
-  { name: "Haa Dhaalu", lat: 6.6, lng: 72.95, radius: 18 },
-  { name: "Shaviyani", lat: 6.25, lng: 73.1, radius: 20 },
-  { name: "Noonu", lat: 5.85, lng: 73.25, radius: 24, active: true },
-  { name: "Raa", lat: 5.65, lng: 72.95, radius: 20 },
-  { name: "Lhaviyani", lat: 5.42, lng: 73.48, radius: 17, active: true },
-  { name: "Baa (UNESCO)", lat: 5.13, lng: 72.97, radius: 25, active: true },
-  { name: "North Malé", lat: 4.45, lng: 73.52, radius: 26, active: true },
-  { name: "Velana Hub", lat: 4.1918, lng: 73.5291, radius: 9, isHub: true },
-  { name: "South Malé", lat: 3.92, lng: 73.45, radius: 22, active: true },
-  { name: "North Ari", lat: 4.15, lng: 72.85, radius: 19 },
-  { name: "South Ari", lat: 3.65, lng: 72.82, radius: 23 },
-  { name: "Vaavu", lat: 3.5, lng: 73.55, radius: 17 },
-  { name: "Meemu", lat: 2.95, lng: 73.5, radius: 18 },
-  { name: "Faafu", lat: 3.1, lng: 72.95, radius: 15 },
-  { name: "Dhaalu", lat: 2.68, lng: 72.98, radius: 20 },
-  { name: "Thaa", lat: 2.3, lng: 73.15, radius: 22 },
-  { name: "Laamu", lat: 1.95, lng: 73.45, radius: 21 },
-  { name: "Gaafu Alifu", lat: 0.65, lng: 73.35, radius: 26 },
-  { name: "Gaafu Dhaalu", lat: 0.35, lng: 73.2, radius: 24 },
-  { name: "Fuvahmulah", lat: -0.29, lng: 73.42, radius: 9 },
-  { name: "Addu", lat: -0.63, lng: 73.15, radius: 17 },
-];
-
 const MLE_AIRPORT = {
   name: "Velana International Airport (MLE)",
   lat: 4.1918,
   lng: 73.5291,
 };
+
+const DEFAULT_CENTER: [number, number] = [73.35, 4.4];
+const DEFAULT_ZOOM = 7.1;
+const DEFAULT_PITCH = 50;
+const DEFAULT_BEARING = -6;
 
 export function Archipelago3DMap({
   initialResortSlug,
@@ -197,535 +177,425 @@ export function Archipelago3DMap({
   initialResortSlug?: string;
   className?: string;
 }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapInstanceRef = useRef<any>(null);
 
-  // Map Controls State
   const [selectedResort, setSelectedResort] = useState<MapResort | null>(() => {
     if (initialResortSlug) {
-      return RESORTS_DATA.find((r) => r.slug === initialResortSlug) ?? RESORTS_DATA[0] ?? null;
+      return RESORTS_DATA.find((r) => r.slug === initialResortSlug) ?? null;
     }
     return null;
   });
-  const [hoveredResort, setHoveredResort] = useState<MapResort | null>(null);
   const [is3DMode, setIs3DMode] = useState<boolean>(true);
-  const [isNightMode, setIsNightMode] = useState<boolean>(false);
+  const [basemapType, setBasemapType] = useState<"satellite" | "ocean">("satellite");
+  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
-  // 3D Camera State
-  const [pitch, setPitch] = useState<number>(44);
-  const [yaw, setYaw] = useState<number>(-6);
-  const [zoom, setZoom] = useState<number>(1.15);
-  const [panX, setPanX] = useState<number>(0);
-  const [panY, setPanY] = useState<number>(0);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
+  // Smoothly fly camera to a specific resort
+  const flyToResort = useCallback((resort: MapResort) => {
+    setSelectedResort(resort);
+    if (!mapInstanceRef.current) return;
+    mapInstanceRef.current.flyTo({
+      center: [resort.lng, resort.lat],
+      zoom: 12.6,
+      pitch: is3DMode ? 58 : 0,
+      bearing: is3DMode ? 18 : 0,
+      speed: 1.1,
+      curve: 1.4,
+      essential: true,
+    });
+  }, [is3DMode]);
 
-  const dragStartRef = useRef<{ x: number; y: number; panX: number; panY: number; pitch: number; yaw: number }>({
-    x: 0,
-    y: 0,
-    panX: 0,
-    panY: 0,
-    pitch: 44,
-    yaw: -6,
-  });
+  // Reset to whole archipelago overview
+  const resetToOverview = useCallback(() => {
+    setSelectedResort(null);
+    if (!mapInstanceRef.current) return;
+    mapInstanceRef.current.flyTo({
+      center: DEFAULT_CENTER,
+      zoom: DEFAULT_ZOOM,
+      pitch: is3DMode ? DEFAULT_PITCH : 0,
+      bearing: is3DMode ? DEFAULT_BEARING : 0,
+      speed: 1.2,
+      essential: true,
+    });
+  }, [is3DMode]);
 
-  const timeRef = useRef<number>(0);
-  const animFrameRef = useRef<number>(0);
+  // Toggle 3D Tilt perspective
+  const toggle3D = useCallback(() => {
+    const next3D = !is3DMode;
+    setIs3DMode(next3D);
+    if (!mapInstanceRef.current) return;
+    mapInstanceRef.current.easeTo({
+      pitch: next3D ? 52 : 0,
+      bearing: next3D ? -8 : 0,
+      duration: 1000,
+    });
+  }, [is3DMode]);
 
-  // Geodetic projection
-  const bounds = useMemo(
-    () => ({
-      minLat: -1.2,
-      maxLat: 7.4,
-      minLng: 71.8,
-      maxLng: 74.5,
-    }),
-    []
-  );
-
-  const projectCoords = useCallback(
-    (lat: number, lng: number, width: number, height: number) => {
-      const latRange = bounds.maxLat - bounds.minLat;
-      const lngRange = bounds.maxLng - bounds.minLng;
-
-      const normY = (bounds.maxLat - lat) / latRange;
-      const normX = (lng - bounds.minLng) / lngRange;
-
-      const padding = 60;
-      const x = padding + normX * (width - padding * 2);
-      const y = padding + normY * (height - padding * 2);
-
-      return { x, y };
-    },
-    [bounds]
-  );
-
-  // 3D Perspective Transform
-  const apply3DTransform = useCallback(
-    (x: number, y: number, z: number, width: number, height: number) => {
-      const cx = width / 2;
-      const cy = height / 2;
-
-      if (!is3DMode) {
-        return {
-          x: cx + (x - cx + panX) * zoom,
-          y: cy + (y - cy + panY) * zoom,
-          scale: zoom,
-          depth: 1,
-        };
-      }
-
-      const rx = (x - cx + panX) * zoom;
-      const ry = (y - cy + panY) * zoom;
-
-      const radYaw = (yaw * Math.PI) / 180;
-      const cosYaw = Math.cos(radYaw);
-      const sinYaw = Math.sin(radYaw);
-      const x1 = rx * cosYaw - ry * sinYaw * 0.15;
-      const y1 = rx * sinYaw * 0.15 + ry;
-
-      const radPitch = (pitch * Math.PI) / 180;
-      const cosPitch = Math.cos(radPitch);
-      const sinPitch = Math.sin(radPitch);
-
-      const distance = 950;
-      const yProjected = y1 * cosPitch;
-      const zTotal = distance + y1 * sinPitch - z * 1.4;
-      const perspectiveScale = distance / Math.max(zTotal, 100);
-
-      return {
-        x: cx + x1 * perspectiveScale,
-        y: cy + (yProjected - z) * perspectiveScale,
-        scale: perspectiveScale * zoom,
-        depth: zTotal,
-      };
-    },
-    [is3DMode, pitch, yaw, zoom, panX, panY]
-  );
-
-  const handleResetCamera = () => {
-    setPitch(44);
-    setYaw(-6);
-    setZoom(1.15);
-    setPanX(0);
-    setPanY(0);
+  // Zoom controls
+  const handleZoomIn = () => {
+    if (!mapInstanceRef.current) return;
+    mapInstanceRef.current.zoomIn({ duration: 300 });
   };
 
-  // Main Render Loop
+  const handleZoomOut = () => {
+    if (!mapInstanceRef.current) return;
+    mapInstanceRef.current.zoomOut({ duration: 300 });
+  };
+
+  // Initialize MapLibre GL
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if (!mapContainerRef.current) return;
 
-    let running = true;
+    let isSubscribed = true;
 
-    const render = () => {
-      if (!running) return;
-      timeRef.current += 0.016;
-      const t = timeRef.current;
+    async function initMap() {
+      const maplibregl = await import("maplibre-gl");
 
-      const dpr = window.devicePixelRatio || 1;
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
+      if (!isSubscribed || !mapContainerRef.current) return;
 
-      if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-      }
+      const satelliteStyle = {
+        version: 8 as const,
+        sources: {
+          "esri-satellite": {
+            type: "raster" as const,
+            tiles: [
+              "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+            ],
+            tileSize: 256,
+            attribution: "Esri, Maxar, Earthstar Geographics",
+          },
+          "esri-labels": {
+            type: "raster" as const,
+            tiles: [
+              "https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+            ],
+            tileSize: 256,
+          },
+        },
+        layers: [
+          {
+            id: "esri-satellite-layer",
+            type: "raster" as const,
+            source: "esri-satellite",
+            minzoom: 0,
+            maxzoom: 19,
+          },
+          {
+            id: "esri-labels-layer",
+            type: "raster" as const,
+            source: "esri-labels",
+            minzoom: 4,
+            maxzoom: 19,
+            paint: {
+              "raster-opacity": 0.45,
+            },
+          },
+        ],
+      };
 
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, width, height);
-
-      // 1. Serene Ocean Gradient
-      const oceanGrad = ctx.createRadialGradient(
-        width / 2,
-        height / 2,
-        40,
-        width / 2,
-        height / 2,
-        Math.max(width, height)
-      );
-
-      if (isNightMode) {
-        oceanGrad.addColorStop(0, "#081d28");
-        oceanGrad.addColorStop(0.5, "#04121a");
-        oceanGrad.addColorStop(1, "#02090e");
-      } else {
-        oceanGrad.addColorStop(0, "#0a2e3d");
-        oceanGrad.addColorStop(0.5, "#06222e");
-        oceanGrad.addColorStop(1, "#03141c");
-      }
-
-      ctx.fillStyle = oceanGrad;
-      ctx.fillRect(0, 0, width, height);
-
-      // 2. Subtle Equator Line (0°00'00")
-      const eqPt1 = projectCoords(0, 72.0, width, height);
-      const eqPt2 = projectCoords(0, 74.4, width, height);
-      const eq3D1 = apply3DTransform(eqPt1.x, eqPt1.y, 0, width, height);
-      const eq3D2 = apply3DTransform(eqPt2.x, eqPt2.y, 0, width, height);
-
-      ctx.save();
-      ctx.strokeStyle = isNightMode ? "rgba(245, 158, 11, 0.25)" : "rgba(245, 158, 11, 0.35)";
-      ctx.setLineDash([4, 6]);
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(eq3D1.x, eq3D1.y);
-      ctx.lineTo(eq3D2.x, eq3D2.y);
-      ctx.stroke();
-
-      ctx.font = "9px monospace";
-      ctx.fillStyle = isNightMode ? "rgba(251, 191, 36, 0.6)" : "rgba(245, 158, 11, 0.7)";
-      ctx.fillText("EQUATOR · 0°00'00\"", eq3D1.x + 12, eq3D1.y - 4);
-      ctx.restore();
-
-      // 3. Delicate Natural Atolls (Soft lagoon glow, NO noisy text labels)
-      ATOLL_CENTERS.forEach((atoll) => {
-        const atollPt = projectCoords(atoll.lat, atoll.lng, width, height);
-        const atoll3D = apply3DTransform(atollPt.x, atollPt.y, 0, width, height);
-        const radiusScaled = atoll.radius * atoll3D.scale * 0.9;
-
-        // Lagoon soft glow
-        const lagoonGlow = ctx.createRadialGradient(
-          atoll3D.x,
-          atoll3D.y,
-          0,
-          atoll3D.x,
-          atoll3D.y,
-          Math.max(radiusScaled, 8)
-        );
-
-        if (atoll.active) {
-          lagoonGlow.addColorStop(0, isNightMode ? "rgba(34, 211, 238, 0.22)" : "rgba(43, 188, 208, 0.25)");
-          lagoonGlow.addColorStop(0.7, isNightMode ? "rgba(34, 211, 238, 0.06)" : "rgba(43, 188, 208, 0.08)");
-          lagoonGlow.addColorStop(1, "transparent");
-        } else {
-          lagoonGlow.addColorStop(0, "rgba(255, 255, 255, 0.04)");
-          lagoonGlow.addColorStop(1, "transparent");
-        }
-
-        ctx.fillStyle = lagoonGlow;
-        ctx.beginPath();
-        ctx.arc(atoll3D.x, atoll3D.y, Math.max(radiusScaled, 4), 0, Math.PI * 2);
-        ctx.fill();
-
-        // Delicate coral reef rim
-        ctx.strokeStyle = atoll.active
-          ? isNightMode
-            ? "rgba(34, 211, 238, 0.35)"
-            : "rgba(43, 188, 208, 0.4)"
-          : "rgba(255, 255, 255, 0.08)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(atoll3D.x, atoll3D.y, Math.max(radiusScaled * 0.65, 3), 0, Math.PI * 2);
-        ctx.stroke();
+      const map = new maplibregl.Map({
+        container: mapContainerRef.current,
+        style: satelliteStyle,
+        center: DEFAULT_CENTER,
+        zoom: DEFAULT_ZOOM,
+        pitch: DEFAULT_PITCH,
+        bearing: DEFAULT_BEARING,
+        maxPitch: 75,
+        minZoom: 4.5,
+        maxZoom: 17,
+        attributionControl: false,
       });
 
-      // 4. MLE Airport Hub
-      const mlePt = projectCoords(MLE_AIRPORT.lat, MLE_AIRPORT.lng, width, height);
-      const mle3D = apply3DTransform(mlePt.x, mlePt.y, 0, width, height);
+      mapInstanceRef.current = map;
 
-      ctx.fillStyle = "#f43f5e";
-      ctx.beginPath();
-      ctx.arc(mle3D.x, mle3D.y, 3.5, 0, Math.PI * 2);
-      ctx.fill();
+      map.on("load", () => {
+        if (!isSubscribed) return;
+        setMapLoaded(true);
 
-      ctx.font = "500 10px sans-serif";
-      ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
-      ctx.fillText("MLE Airport Hub", mle3D.x + 8, mle3D.y + 3);
+        // Add Flight Paths GeoJSON line layer
+        const flightPathsGeoJson = {
+          type: "FeatureCollection" as const,
+          features: RESORTS_DATA.map((resort) => ({
+            type: "Feature" as const,
+            properties: {
+              id: resort.id,
+              name: resort.name,
+              color: resort.color,
+            },
+            geometry: {
+              type: "LineString" as const,
+              coordinates: [
+                [MLE_AIRPORT.lng, MLE_AIRPORT.lat],
+                [resort.lng, resort.lat],
+              ],
+            },
+          })),
+        };
 
-      // 5. Seaplane Flight Corridors (Only highlighted for selected/hovered resort to avoid clutter)
-      RESORTS_DATA.forEach((resort) => {
-        const isSelected = selectedResort?.id === resort.id;
-        const isHovered = hoveredResort?.id === resort.id;
+        map.addSource("flight-paths", {
+          type: "geojson",
+          data: flightPathsGeoJson,
+        });
 
-        // Skip drawing when unselected unless hovered to keep canvas pristine
-        if (!isSelected && !isHovered) {
-          // Subtle, ultra-faint baseline trace
-          ctx.beginPath();
-          const steps = 15;
-          for (let i = 0; i <= steps; i++) {
-            const progress = i / steps;
-            const curLat = MLE_AIRPORT.lat + (resort.lat - MLE_AIRPORT.lat) * progress;
-            const curLng = MLE_AIRPORT.lng + (resort.lng - MLE_AIRPORT.lng) * progress;
-            const pt2D = projectCoords(curLat, curLng, width, height);
-            const pt3D = apply3DTransform(pt2D.x, pt2D.y, Math.sin(progress * Math.PI) * 20, width, height);
-            if (i === 0) ctx.moveTo(pt3D.x, pt3D.y);
-            else ctx.lineTo(pt3D.x, pt3D.y);
+        // Delicate Seaplane Flight Corridor Lines
+        map.addLayer({
+          id: "flight-paths-glow",
+          type: "line",
+          source: "flight-paths",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#22d3ee",
+            "line-width": 1.5,
+            "line-opacity": 0.35,
+            "line-dasharray": [2, 4],
+          },
+        });
+
+        // Add MLE Airport Hub Marker
+        const airportEl = document.createElement("div");
+        airportEl.className = "mle-hub-marker";
+        airportEl.innerHTML = `
+          <div style="
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(3, 20, 28, 0.88);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(244, 63, 94, 0.6);
+            padding: 3px 8px;
+            border-radius: 9999px;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transform: translate(-50%, -50%);
+          ">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#f43f5e;"></span>
+            <span>MLE Airport Hub</span>
+          </div>
+        `;
+        new maplibregl.Marker({ element: airportEl, anchor: "center" })
+          .setLngLat([MLE_AIRPORT.lng, MLE_AIRPORT.lat])
+          .addTo(map);
+
+        // Add 3D Markers for each resort
+        RESORTS_DATA.forEach((resort) => {
+          const markerEl = document.createElement("div");
+          markerEl.className = "resort-3d-marker";
+          markerEl.style.cursor = "pointer";
+          markerEl.innerHTML = `
+            <div style="
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              background: rgba(3, 18, 25, 0.85);
+              backdrop-filter: blur(10px);
+              border: 1px solid rgba(255, 255, 255, 0.25);
+              padding: 4px 10px;
+              border-radius: 9999px;
+              color: white;
+              font-size: 11px;
+              font-weight: 600;
+              letter-spacing: 0.01em;
+              box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+              transition: all 0.2s ease;
+              transform: translate(-50%, -50%);
+              white-space: nowrap;
+            ">
+              <span style="
+                display:inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: ${resort.color};
+                box-shadow: 0 0 10px ${resort.color};
+              "></span>
+              <span>${resort.name}</span>
+            </div>
+          `;
+
+          markerEl.addEventListener("mouseenter", () => {
+            const inner = markerEl.querySelector("div");
+            if (inner) {
+              inner.style.border = `1px solid ${resort.color}`;
+              inner.style.transform = "translate(-50%, -50%) scale(1.08)";
+              inner.style.background = "rgba(4, 28, 38, 0.95)";
+            }
+          });
+
+          markerEl.addEventListener("mouseleave", () => {
+            const inner = markerEl.querySelector("div");
+            if (inner) {
+              inner.style.border = "1px solid rgba(255, 255, 255, 0.25)";
+              inner.style.transform = "translate(-50%, -50%) scale(1)";
+              inner.style.background = "rgba(3, 18, 25, 0.85)";
+            }
+          });
+
+          markerEl.addEventListener("click", () => {
+            flyToResort(resort);
+          });
+
+          new maplibregl.Marker({ element: markerEl, anchor: "center" })
+            .setLngLat([resort.lng, resort.lat])
+            .addTo(map);
+        });
+
+        // If an initial resort slug was passed, fly to it immediately
+        if (initialResortSlug) {
+          const matched = RESORTS_DATA.find((r) => r.slug === initialResortSlug);
+          if (matched) {
+            flyToResort(matched);
           }
-          ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
-          ctx.lineWidth = 0.8;
-          ctx.setLineDash([2, 6]);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          return;
-        }
-
-        // Active highlighted corridor
-        const steps = 30;
-        ctx.beginPath();
-        let beaconPoint: { x: number; y: number } | null = null;
-
-        for (let i = 0; i <= steps; i++) {
-          const progress = i / steps;
-          const curLat = MLE_AIRPORT.lat + (resort.lat - MLE_AIRPORT.lat) * progress;
-          const curLng = MLE_AIRPORT.lng + (resort.lng - MLE_AIRPORT.lng) * progress;
-          const altitudeZ = Math.sin(progress * Math.PI) * 75;
-
-          const pt2D = projectCoords(curLat, curLng, width, height);
-          const pt3D = apply3DTransform(pt2D.x, pt2D.y, altitudeZ, width, height);
-
-          if (i === 0) ctx.moveTo(pt3D.x, pt3D.y);
-          else ctx.lineTo(pt3D.x, pt3D.y);
-
-          // Plane position
-          if (Math.abs(progress - ((t * 0.35) % 1)) < 0.04) {
-            beaconPoint = pt3D;
-          }
-        }
-
-        ctx.strokeStyle = isSelected ? "#22d3ee" : "#facc15";
-        ctx.lineWidth = isSelected ? 2 : 1.5;
-        ctx.setLineDash([4, 4]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Animated Seaplane Beacon
-        if (beaconPoint) {
-          ctx.save();
-          ctx.fillStyle = "#ffffff";
-          ctx.shadowColor = "#22d3ee";
-          ctx.shadowBlur = 10;
-          ctx.beginPath();
-          ctx.arc(beaconPoint.x, beaconPoint.y, 4, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
         }
       });
+    }
 
-      // 6. Refined Resort Beacons
-      RESORTS_DATA.forEach((resort) => {
-        const isSelected = selectedResort?.id === resort.id;
-        const isHovered = hoveredResort?.id === resort.id;
-        const targetPt = projectCoords(resort.lat, resort.lng, width, height);
-
-        const bobZ = 12 + Math.sin(t * 2 + resort.lat * 4) * 4;
-        const groundPt = apply3DTransform(targetPt.x, targetPt.y, 0, width, height);
-        const floatPt = apply3DTransform(targetPt.x, targetPt.y, bobZ, width, height);
-
-        // Subtle tether line
-        ctx.strokeStyle = isSelected ? "#22d3ee" : "rgba(255, 255, 255, 0.25)";
-        ctx.lineWidth = isSelected ? 1.5 : 0.8;
-        ctx.beginPath();
-        ctx.moveTo(groundPt.x, groundPt.y);
-        ctx.lineTo(floatPt.x, floatPt.y);
-        ctx.stroke();
-
-        // Pearl beacon dot
-        const dotRadius = (isSelected ? 6.5 : isHovered ? 5.5 : 4) * floatPt.scale;
-        ctx.save();
-        ctx.fillStyle = resort.color;
-        if (isSelected || isHovered) {
-          ctx.shadowColor = resort.color;
-          ctx.shadowBlur = 14;
-        }
-        ctx.beginPath();
-        ctx.arc(floatPt.x, floatPt.y, dotRadius, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(floatPt.x, floatPt.y, dotRadius * 0.45, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        // Resort label
-        const showLabel = isSelected || isHovered || floatPt.scale > 1.05;
-        if (showLabel) {
-          ctx.save();
-          ctx.font = isSelected ? "bold 11px sans-serif" : "500 10px sans-serif";
-          const labelY = floatPt.y - dotRadius - 6;
-
-          const textWidth = ctx.measureText(resort.name).width;
-          const bgX = floatPt.x - textWidth / 2 - 6;
-          const bgY = labelY - 11;
-
-          ctx.fillStyle = isSelected ? "rgba(6, 182, 212, 0.95)" : "rgba(7, 24, 32, 0.85)";
-          ctx.strokeStyle = isSelected ? "#ffffff" : "rgba(255, 255, 255, 0.15)";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.roundRect(bgX, bgY, textWidth + 12, 16, 8);
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.fillStyle = "#ffffff";
-          ctx.textAlign = "center";
-          ctx.fillText(resort.name, floatPt.x, labelY);
-          ctx.restore();
-        }
-      });
-
-      ctx.restore();
-      animFrameRef.current = requestAnimationFrame(render);
-    };
-
-    render();
+    initMap();
 
     return () => {
-      running = false;
-      cancelAnimationFrame(animFrameRef.current);
-    };
-  }, [is3DMode, isNightMode, apply3DTransform, projectCoords, selectedResort, hoveredResort]);
-
-  // Pointer & Interaction Handlers
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    setIsDragging(true);
-    dragStartRef.current = {
-      x: e.clientX,
-      y: e.clientY,
-      panX,
-      panY,
-      pitch,
-      yaw,
-    };
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    if (isDragging) {
-      const dx = e.clientX - dragStartRef.current.x;
-      const dy = e.clientY - dragStartRef.current.y;
-
-      if (e.shiftKey) {
-        setPanX(dragStartRef.current.panX + dx * 0.8);
-        setPanY(dragStartRef.current.panY + dy * 0.8);
-      } else {
-        setYaw(Math.max(-45, Math.min(45, dragStartRef.current.yaw + dx * 0.25)));
-        setPitch(Math.max(15, Math.min(68, dragStartRef.current.pitch + dy * 0.25)));
+      isSubscribed = false;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
       }
-      return;
+    };
+  }, [flyToResort, initialResortSlug]);
+
+  // Toggle between Photorealistic Satellite and Ocean Bathymetry
+  const toggleBasemap = useCallback(() => {
+    if (!mapInstanceRef.current) return;
+    const nextType = basemapType === "satellite" ? "ocean" : "satellite";
+    setBasemapType(nextType);
+
+    const tileUrl =
+      nextType === "satellite"
+        ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        : "https://server.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}";
+
+    const source = mapInstanceRef.current.getSource("esri-satellite");
+    if (source && typeof source.setTiles === "function") {
+      source.setTiles([tileUrl]);
     }
-
-    // Hover detection
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    let found: MapResort | null = null;
-    RESORTS_DATA.forEach((resort) => {
-      const targetPt = projectCoords(resort.lat, resort.lng, canvas.clientWidth, canvas.clientHeight);
-      const floatPt = apply3DTransform(targetPt.x, targetPt.y, 16, canvas.clientWidth, canvas.clientHeight);
-      const dist = Math.hypot(mouseX - floatPt.x, mouseY - floatPt.y);
-      if (dist < 18) {
-        found = resort;
-      }
-    });
-
-    setHoveredResort(found);
-    canvas.style.cursor = found ? "pointer" : isDragging ? "grabbing" : "grab";
-  };
-
-  const handleMouseUp = () => {
-    if (hoveredResort && !isDragging) {
-      setSelectedResort(hoveredResort);
-    }
-    setIsDragging(false);
-  };
-
-  const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
-    e.preventDefault();
-    const delta = -e.deltaY * 0.001;
-    setZoom((z) => Math.max(0.7, Math.min(2.8, z + delta)));
-  };
+  }, [basemapType]);
 
   return (
     <div
-      ref={containerRef}
-      className={`relative h-[560px] sm:h-[640px] w-full overflow-hidden rounded-3xl border border-border-subtle bg-[#03141c] shadow-2 select-none ${className}`}
+      className={`relative h-[620px] sm:h-[720px] w-full overflow-hidden rounded-3xl border border-border-subtle bg-[#020b10] shadow-2 select-none ${className}`}
     >
-      {/* Top Left: Clean Title Pill */}
+      {/* Real MapLibre GL Map Canvas */}
+      <div ref={mapContainerRef} className="size-full" />
+
+      {/* Top Left: Clean Live Status Pill */}
       <div className="absolute top-4 left-4 z-20 pointer-events-auto">
-        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-slate-950/70 px-3.5 py-1.5 backdrop-blur-md">
-          <span className="size-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-xs font-semibold text-white tracking-wide">
-            Maldives 3D Archipelago
+        <div className="flex items-center gap-2 rounded-full border border-white/15 bg-slate-950/80 px-3.5 py-1.5 backdrop-blur-md shadow-lg text-white">
+          <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs font-semibold tracking-wide">
+            Real Satellite 3D Map
           </span>
-          <span className="text-[11px] text-slate-400 font-mono">
-            · 26 Atolls
+          <span className="text-[11px] text-cyan-300 font-mono">
+            · {basemapType === "satellite" ? "Photorealistic Aerial" : "Bathymetric Ocean"}
           </span>
         </div>
       </div>
 
-      {/* Top Right: Single Sleek Minimal Control Pill */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-1 rounded-full border border-white/10 bg-slate-950/75 p-1 backdrop-blur-md text-white shadow-lg pointer-events-auto">
+      {/* Top Right: Minimal Unified Control Capsule */}
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-1 rounded-full border border-white/15 bg-slate-950/80 p-1.5 backdrop-blur-md text-white shadow-xl pointer-events-auto">
         <button
           type="button"
-          onClick={() => setIs3DMode((v) => !v)}
-          title={is3DMode ? "Switch to 2D Flat Chart" : "Switch to 3D Perspective"}
+          onClick={toggle3D}
+          title={is3DMode ? "Switch to Flat 2D View" : "Switch to 3D Perspective Tilt"}
           className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
             is3DMode ? "bg-cyan-400 text-[#031520]" : "text-slate-300 hover:text-white"
           }`}
         >
           <Layers size={13} />
-          <span>{is3DMode ? "3D" : "2D"}</span>
+          <span>{is3DMode ? "3D Tilt" : "2D"}</span>
         </button>
 
         <button
           type="button"
-          onClick={() => setIsNightMode((v) => !v)}
-          title={isNightMode ? "Switch to Day Lighting" : "Switch to Night Mode"}
-          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white transition-colors"
+          onClick={toggleBasemap}
+          title={basemapType === "satellite" ? "Switch to Bathymetric Ocean Chart" : "Switch to Photorealistic Satellite"}
+          className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
+            basemapType === "satellite" ? "text-cyan-300 hover:bg-white/10" : "bg-cyan-400 text-[#031520]"
+          }`}
         >
-          {isNightMode ? <Sun size={14} className="text-amber-300" /> : <Moon size={14} className="text-cyan-300" />}
+          <Compass size={13} />
+          <span>{basemapType === "satellite" ? "Satellite" : "Bathymetry"}</span>
         </button>
 
-        <div className="h-3 w-px bg-white/20" />
+        <div className="h-3 w-px bg-white/20 mx-0.5" />
 
         <button
           type="button"
-          onClick={() => setZoom((z) => Math.min(2.8, z + 0.2))}
+          onClick={handleZoomIn}
           title="Zoom In"
-          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white transition-colors"
+          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
         >
           <ZoomIn size={14} />
         </button>
         <button
           type="button"
-          onClick={() => setZoom((z) => Math.max(0.7, z - 0.2))}
+          onClick={handleZoomOut}
           title="Zoom Out"
-          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white transition-colors"
+          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
         >
           <ZoomOut size={14} />
         </button>
 
-        <div className="h-3 w-px bg-white/20" />
+        <div className="h-3 w-px bg-white/20 mx-0.5" />
 
         <button
           type="button"
-          onClick={handleResetCamera}
-          title="Reset Camera"
-          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white transition-colors"
+          onClick={resetToOverview}
+          title="Reset Whole Archipelago Overview"
+          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
         >
           <RotateCcw size={13} />
         </button>
       </div>
 
-      {/* Main Interactive Canvas */}
-      <canvas
-        ref={canvasRef}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onWheel={handleWheel}
-        className="size-full cursor-grab active:cursor-grabbing touch-none"
-      />
+      {/* Bottom Horizontal Quick Sanctuary Fly-To Carousel */}
+      <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-between gap-3 pointer-events-none">
+        {/* Quick Sanctuary Pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto rounded-2xl border border-white/15 bg-slate-950/80 p-2 backdrop-blur-md no-scrollbar max-w-2xl pointer-events-auto">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 pl-2 shrink-0">
+            Fly to:
+          </span>
+          {RESORTS_DATA.map((r) => {
+            const isSelected = selectedResort?.id === r.id;
+            return (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => flyToResort(r)}
+                className={`shrink-0 rounded-xl px-2.5 py-1 text-xs font-medium transition-all ${
+                  isSelected
+                    ? "bg-cyan-400 text-[#031520] font-bold shadow-sm"
+                    : "text-slate-200 hover:text-white hover:bg-white/15"
+                }`}
+              >
+                {r.name.split(" ")[0]}
+              </button>
+            );
+          })}
+        </div>
 
-      {/* Selected Resort Inspector Card (Floating bottom left, clean and minimal) */}
+        {/* Orbit hint */}
+        <div className="hidden lg:flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/60 px-3 py-1.5 text-[11px] text-slate-400 backdrop-blur-sm">
+          <span>Right-click &amp; drag to rotate 3D angle</span>
+        </div>
+      </div>
+
+      {/* Floating Selected Resort Inspector Card */}
       {selectedResort ? (
-        <div className="absolute bottom-5 left-5 right-5 sm:right-auto sm:max-w-sm z-20 rounded-2xl border border-white/15 bg-slate-950/85 p-5 text-white shadow-2xl backdrop-blur-lg animate-in slide-in-from-bottom-2 duration-200">
+        <div className="absolute top-16 left-4 right-4 sm:right-auto sm:max-w-sm z-30 rounded-2xl border border-white/20 bg-slate-950/90 p-5 text-white shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200 pointer-events-auto">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-1.5">
@@ -737,7 +607,7 @@ export function Archipelago3DMap({
                   {selectedResort.atoll}
                 </span>
               </div>
-              <h3 className="mt-1 font-display text-lg font-medium text-white leading-tight">
+              <h3 className="mt-1 font-display text-xl font-medium text-white leading-tight">
                 {selectedResort.name}
               </h3>
             </div>
@@ -751,18 +621,18 @@ export function Archipelago3DMap({
             </button>
           </div>
 
-          <p className="mt-2 text-xs text-slate-300 leading-relaxed font-light line-clamp-2">
+          <p className="mt-2 text-xs text-slate-300 leading-relaxed font-light">
             {selectedResort.summary}
           </p>
 
-          <div className="mt-3 flex items-center gap-2 text-[11px] text-slate-300">
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-slate-300">
             <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-0.5">
               <Plane size={11} className="text-cyan-300" />
               {selectedResort.transferDuration}
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-0.5">
-              <Gift size={11} className="text-amber-300" />
-              {selectedResort.tag}
+              <MapPin size={11} className="text-emerald-400" />
+              {selectedResort.lat.toFixed(4)}°N, {selectedResort.lng.toFixed(4)}°E
             </span>
           </div>
 
@@ -770,10 +640,10 @@ export function Archipelago3DMap({
             <Button
               asChild
               variant="conversion"
-              className="flex-1 rounded-full py-2 text-xs font-semibold"
+              className="flex-1 rounded-full py-2 text-xs font-semibold shadow-sm"
             >
               <Link href={`/resorts/${selectedResort.slug}`}>
-                Explore Resort &rarr;
+                Explore Sanctuary &rarr;
               </Link>
             </Button>
             <Button
@@ -781,9 +651,21 @@ export function Archipelago3DMap({
               variant="secondary"
               className="rounded-full py-2 text-xs font-semibold border-white/20 bg-white/10 text-white hover:bg-white/20"
             >
-              <Link href="/plan">Plan Trip</Link>
+              <Link href="/plan">
+                Plan Trip <ExternalLink size={11} className="ml-1" />
+              </Link>
             </Button>
           </div>
+        </div>
+      ) : null}
+
+      {/* Loading overlay while satellite tiles initialize */}
+      {!mapLoaded ? (
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#03141c] text-white">
+          <div className="size-8 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+          <span className="mt-3 text-xs text-slate-300 font-mono">
+            Loading Real Satellite Imagery...
+          </span>
         </div>
       ) : null}
     </div>
