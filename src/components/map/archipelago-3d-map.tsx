@@ -23,8 +23,7 @@ export interface MapResort {
   atoll: string;
   lat: number;
   lng: number;
-  transferType: "Seaplane" | "Speedboat" | "Yacht";
-  transferDuration: string;
+  transferSummary?: string | null;
   highlights: string[];
   vibe: string;
   summary: string;
@@ -42,11 +41,15 @@ export const RESORTS_DATA: MapResort[] = [
     atoll: "Noonu Atoll",
     lat: 5.9221,
     lng: 73.2842,
-    transferType: "Seaplane",
-    transferDuration: "35 min TMA Seaplane",
-    highlights: ["Overwater Slide into Lagoon", "Retractable Stargazing Roof", "5.6km Private Lagoon"],
+    transferSummary: null,
+    highlights: [
+      "Overwater Slide into Lagoon",
+      "Retractable Stargazing Roof",
+      "5.6km Private Lagoon",
+    ],
     vibe: "Iconic Whimsical Ultra-Luxury",
-    summary: "Renowned for its massive multi-bedroom overwater villas featuring curved slides directly into the turquoise lagoon.",
+    summary:
+      "Renowned for its massive multi-bedroom overwater villas featuring curved slides directly into the turquoise lagoon.",
     tag: "Lagoon Slide Pioneer",
     color: "#06b6d4",
     featured: true,
@@ -58,11 +61,15 @@ export const RESORTS_DATA: MapResort[] = [
     atoll: "Baa Atoll (UNESCO Biosphere)",
     lat: 5.1119,
     lng: 73.0801,
-    transferType: "Seaplane",
-    transferDuration: "30 min TMA Seaplane",
-    highlights: ["Hanifaru Bay Manta Snorkeling", "Barefoot Jungle Living", "Cinema Paradiso Under Stars"],
+    transferSummary: null,
+    highlights: [
+      "Hanifaru Bay Manta Snorkeling",
+      "Barefoot Jungle Living",
+      "Cinema Paradiso Under Stars",
+    ],
     vibe: "Original Barefoot Luxury",
-    summary: "Dense jungle foliage meets crystalline waters in the heart of the UNESCO marine biosphere.",
+    summary:
+      "Dense jungle foliage meets crystalline waters in the heart of the UNESCO marine biosphere.",
     tag: "UNESCO Biosphere",
     color: "#10b981",
     featured: true,
@@ -74,11 +81,11 @@ export const RESORTS_DATA: MapResort[] = [
     atoll: "Noonu Atoll",
     lat: 5.7917,
     lng: 73.3421,
-    transferType: "Seaplane",
-    transferDuration: "40 min Maison Seaplane",
+    transferSummary: null,
     highlights: ["Jean-Michel Gathy Architecture", "Guerlain Spa Island", "Le 1947 Fine Dining"],
     vibe: "Haute Couture Parisian Artistry",
-    summary: "An exclusive LVMH Maison sanctuary showcasing soaring 7-meter cathedral doors and private island spa treatments.",
+    summary:
+      "An exclusive LVMH Maison sanctuary showcasing soaring 7-meter cathedral doors and private island spa treatments.",
     tag: "LVMH Hospitality",
     color: "#eab308",
   },
@@ -89,11 +96,15 @@ export const RESORTS_DATA: MapResort[] = [
     atoll: "North Malé Atoll (Fari Islands)",
     lat: 4.5933,
     lng: 73.5822,
-    transferType: "Speedboat",
-    transferDuration: "45 min Luxury Yacht",
-    highlights: ["Kerry Hill Circular Architecture", "Aris Meeha Butler Service", "Fari Marina Village Access"],
+    transferSummary: null,
+    highlights: [
+      "Kerry Hill Circular Architecture",
+      "Aris Meeha Butler Service",
+      "Fari Marina Village Access",
+    ],
     vibe: "Minimalist Modern Masterpiece",
-    summary: "Spherical overwater villas inspired by ocean breezes and circular flows in the archipelago's cultural archipelago.",
+    summary:
+      "Spherical overwater villas inspired by ocean breezes and circular flows in the Fari Islands lagoon.",
     tag: "Architectural Icon",
     color: "#38bdf8",
   },
@@ -104,11 +115,15 @@ export const RESORTS_DATA: MapResort[] = [
     atoll: "South Malé Atoll",
     lat: 3.9514,
     lng: 73.4021,
-    transferType: "Yacht",
-    transferDuration: "40 min Private Yacht",
-    highlights: ["Terra Treetop Bamboo Pods", "11 Celebrated Restaurants", "Stella Maris Ocean Villas"],
+    transferSummary: null,
+    highlights: [
+      "Terra Treetop Bamboo Pods",
+      "11 Celebrated Restaurants",
+      "Stella Maris Ocean Villas",
+    ],
     vibe: "Expansive Multi-Island Grandeur",
-    summary: "Spanning three idyllic private islands with bespoke dining pods elevated in the canopy and standalone ocean villas.",
+    summary:
+      "Spanning three idyllic private islands with bespoke dining pods elevated in the canopy and standalone ocean villas.",
     tag: "Multi-Island Sanctuary",
     color: "#818cf8",
   },
@@ -119,11 +134,11 @@ export const RESORTS_DATA: MapResort[] = [
     atoll: "Lhaviyani Atoll",
     lat: 5.5244,
     lng: 73.4429,
-    transferType: "Seaplane",
-    transferDuration: "40 min TMA Seaplane",
+    transferSummary: null,
     highlights: ["5.8 Undersea Restaurant", "Adults-Only Tranquility", "Abundant Sea Turtle Reef"],
     vibe: "Romantic Ocean Epicurean",
-    summary: "Home to the world's largest all-glass underwater restaurant, 5.8 meters beneath the surface of the lagoon.",
+    summary:
+      "Home to the world's largest all-glass underwater restaurant, 5.8 meters beneath the surface of the lagoon.",
     tag: "Undersea Dining",
     color: "#f43f5e",
   },
@@ -134,11 +149,15 @@ export const RESORTS_DATA: MapResort[] = [
     atoll: "North Malé Atoll",
     lat: 4.2936,
     lng: 73.5552,
-    transferType: "Speedboat",
-    transferDuration: "20 min Luxury Speedboat",
-    highlights: ["100% Overwater Living", "Dedicated Mr. Friday Butler", "The Private Reserve Standalone Villa"],
+    transferSummary: null,
+    highlights: [
+      "100% Overwater Living",
+      "Dedicated Mr. Friday Butler",
+      "The Private Reserve Standalone Villa",
+    ],
     vibe: "No News, No Shoes Sustainability",
-    summary: "An eco-luxury sanctuary of hand-crafted rustic wooden palaces built entirely over shimmering crystalline lagoons.",
+    summary:
+      "An eco-luxury sanctuary of hand-crafted rustic wooden palaces built entirely over shimmering crystalline lagoons.",
     tag: "100% Overwater",
     color: "#14b8a6",
   },
@@ -149,11 +168,15 @@ export const RESORTS_DATA: MapResort[] = [
     atoll: "North Malé Atoll",
     lat: 4.2842,
     lng: 73.4278,
-    transferType: "Speedboat",
-    transferDuration: "25 min Speedboat",
-    highlights: ["Legendary Living House Reef", "Piano Deck in the Lagoon", "Maldivian Hospitality Since 1973"],
+    transferSummary: null,
+    highlights: [
+      "Legendary Living House Reef",
+      "Piano Deck in the Lagoon",
+      "Maldivian Hospitality Since 1973",
+    ],
     vibe: "Intimate Classic Romance",
-    summary: "Celebrated worldwide for over fifty years for possessing one of the most vibrant, teeming house reefs reachable directly from shore.",
+    summary:
+      "Celebrated worldwide for over fifty years for possessing one of the most vibrant, teeming house reefs reachable directly from shore.",
     tag: "World-Class House Reef",
     color: "#fb923c",
   },
@@ -172,9 +195,11 @@ const DEFAULT_BEARING = -4;
 
 export function Archipelago3DMap({
   initialResortSlug,
+  resorts = RESORTS_DATA,
   className = "",
 }: {
   initialResortSlug?: string;
+  resorts?: MapResort[];
   className?: string;
 }) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -183,7 +208,7 @@ export function Archipelago3DMap({
 
   const [selectedResort, setSelectedResort] = useState<MapResort | null>(() => {
     if (initialResortSlug) {
-      return RESORTS_DATA.find((r) => r.slug === initialResortSlug) ?? null;
+      return resorts.find((r) => r.slug === initialResortSlug) ?? null;
     }
     return null;
   });
@@ -192,19 +217,22 @@ export function Archipelago3DMap({
   const [mapLoaded, setMapLoaded] = useState<boolean>(false);
 
   // Smoothly fly camera to a specific resort with comfortable framing (entire island & lagoon visible)
-  const flyToResort = useCallback((resort: MapResort) => {
-    setSelectedResort(resort);
-    if (!mapInstanceRef.current) return;
-    mapInstanceRef.current.flyTo({
-      center: [resort.lng, resort.lat],
-      zoom: 11.0,
-      pitch: is3DMode ? 45 : 0,
-      bearing: is3DMode ? 14 : 0,
-      speed: 1.1,
-      curve: 1.4,
-      essential: true,
-    });
-  }, [is3DMode]);
+  const flyToResort = useCallback(
+    (resort: MapResort) => {
+      setSelectedResort(resort);
+      if (!mapInstanceRef.current) return;
+      mapInstanceRef.current.flyTo({
+        center: [resort.lng, resort.lat],
+        zoom: 11.0,
+        pitch: is3DMode ? 45 : 0,
+        bearing: is3DMode ? 14 : 0,
+        speed: 1.1,
+        curve: 1.4,
+        essential: true,
+      });
+    },
+    [is3DMode],
+  );
 
   // Reset to whole archipelago overview
   const resetToOverview = useCallback(() => {
@@ -316,7 +344,7 @@ export function Archipelago3DMap({
         // Add Flight Paths GeoJSON line layer
         const flightPathsGeoJson = {
           type: "FeatureCollection" as const,
-          features: RESORTS_DATA.map((resort) => ({
+          features: resorts.map((resort) => ({
             type: "Feature" as const,
             properties: {
               id: resort.id,
@@ -338,7 +366,7 @@ export function Archipelago3DMap({
           data: flightPathsGeoJson,
         });
 
-        // Delicate Seaplane Flight Corridor Lines
+        // Delicate Geographic Corridor Lines
         map.addLayer({
           id: "flight-paths-glow",
           type: "line",
@@ -384,7 +412,7 @@ export function Archipelago3DMap({
           .addTo(map);
 
         // Add 3D Markers for each resort
-        RESORTS_DATA.forEach((resort) => {
+        resorts.forEach((resort) => {
           const markerEl = document.createElement("div");
           markerEl.className = "resort-3d-marker";
           markerEl.style.cursor = "pointer";
@@ -448,7 +476,7 @@ export function Archipelago3DMap({
 
         // If an initial resort slug was passed, fly to it immediately
         if (initialResortSlug) {
-          const matched = RESORTS_DATA.find((r) => r.slug === initialResortSlug);
+          const matched = resorts.find((r) => r.slug === initialResortSlug);
           if (matched) {
             flyToResort(matched);
           }
@@ -465,7 +493,7 @@ export function Archipelago3DMap({
         mapInstanceRef.current = null;
       }
     };
-  }, [flyToResort, initialResortSlug]);
+  }, [flyToResort, initialResortSlug, resorts]);
 
   // Toggle between Photorealistic Satellite and Ocean Bathymetry
   const toggleBasemap = useCallback(() => {
@@ -495,9 +523,7 @@ export function Archipelago3DMap({
       <div className="absolute top-4 left-4 z-20 pointer-events-auto">
         <div className="flex items-center gap-2 rounded-full border border-white/15 bg-slate-950/80 px-3.5 py-1.5 backdrop-blur-md shadow-lg text-white">
           <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs font-semibold tracking-wide">
-            Real Satellite 3D Map
-          </span>
+          <span className="text-xs font-semibold tracking-wide">Real Satellite 3D Map</span>
           <span className="text-[11px] text-cyan-300 font-mono">
             · {basemapType === "satellite" ? "Photorealistic Aerial" : "Bathymetric Ocean"}
           </span>
@@ -509,24 +535,37 @@ export function Archipelago3DMap({
         <button
           type="button"
           onClick={toggle3D}
+          aria-pressed={is3DMode}
+          aria-label={is3DMode ? "Switch to flat 2D view" : "Switch to 3D perspective tilt"}
           title={is3DMode ? "Switch to Flat 2D View" : "Switch to 3D Perspective Tilt"}
-          className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
+          className={`flex min-h-9 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
             is3DMode ? "bg-cyan-400 text-[#031520]" : "text-slate-300 hover:text-white"
           }`}
         >
-          <Layers size={13} />
+          <Layers size={13} aria-hidden="true" />
           <span>{is3DMode ? "3D Tilt" : "2D"}</span>
         </button>
 
         <button
           type="button"
           onClick={toggleBasemap}
-          title={basemapType === "satellite" ? "Switch to Bathymetric Ocean Chart" : "Switch to Photorealistic Satellite"}
-          className={`flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
-            basemapType === "satellite" ? "text-cyan-300 hover:bg-white/10" : "bg-cyan-400 text-[#031520]"
+          aria-label={
+            basemapType === "satellite"
+              ? "Switch to bathymetric ocean chart"
+              : "Switch to photorealistic satellite"
+          }
+          title={
+            basemapType === "satellite"
+              ? "Switch to Bathymetric Ocean Chart"
+              : "Switch to Photorealistic Satellite"
+          }
+          className={`flex min-h-9 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold transition-all ${
+            basemapType === "satellite"
+              ? "text-cyan-300 hover:bg-white/10"
+              : "bg-cyan-400 text-[#031520]"
           }`}
         >
-          <Compass size={13} />
+          <Compass size={13} aria-hidden="true" />
           <span>{basemapType === "satellite" ? "Satellite" : "Bathymetry"}</span>
         </button>
 
@@ -535,18 +574,20 @@ export function Archipelago3DMap({
         <button
           type="button"
           onClick={handleZoomIn}
+          aria-label="Zoom in"
           title="Zoom In"
-          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+          className="flex size-9 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
         >
-          <ZoomIn size={14} />
+          <ZoomIn size={14} aria-hidden="true" />
         </button>
         <button
           type="button"
           onClick={handleZoomOut}
+          aria-label="Zoom out"
           title="Zoom Out"
-          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+          className="flex size-9 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
         >
-          <ZoomOut size={14} />
+          <ZoomOut size={14} aria-hidden="true" />
         </button>
 
         <div className="h-3 w-px bg-white/20 mx-0.5" />
@@ -554,44 +595,47 @@ export function Archipelago3DMap({
         <button
           type="button"
           onClick={resetToOverview}
+          aria-label="Reset archipelago overview"
           title="Reset Whole Archipelago Overview"
-          className="flex size-7 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+          className="flex size-9 items-center justify-center rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
         >
-          <RotateCcw size={13} />
+          <RotateCcw size={13} aria-hidden="true" />
         </button>
       </div>
 
       {/* Bottom Horizontal Quick Sanctuary Fly-To Carousel */}
-      <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-between gap-3 pointer-events-none">
-        {/* Quick Sanctuary Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto rounded-2xl border border-white/15 bg-slate-950/80 p-2 backdrop-blur-md no-scrollbar max-w-2xl pointer-events-auto">
-          <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 pl-2 shrink-0">
-            Fly to:
-          </span>
-          {RESORTS_DATA.map((r) => {
-            const isSelected = selectedResort?.id === r.id;
-            return (
-              <button
-                key={r.id}
-                type="button"
-                onClick={() => flyToResort(r)}
-                className={`shrink-0 rounded-xl px-2.5 py-1 text-xs font-medium transition-all ${
-                  isSelected
-                    ? "bg-cyan-400 text-[#031520] font-bold shadow-sm"
-                    : "text-slate-200 hover:text-white hover:bg-white/15"
-                }`}
-              >
-                {r.name.split(" ")[0]}
-              </button>
-            );
-          })}
-        </div>
+      {resorts.length > 0 ? (
+        <div className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-between gap-3 pointer-events-none">
+          {/* Quick Sanctuary Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto rounded-2xl border border-white/15 bg-slate-950/80 p-2 backdrop-blur-md no-scrollbar max-w-2xl pointer-events-auto">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 pl-2 shrink-0">
+              Fly to:
+            </span>
+            {resorts.map((r) => {
+              const isSelected = selectedResort?.id === r.id;
+              return (
+                <button
+                  key={r.id}
+                  type="button"
+                  onClick={() => flyToResort(r)}
+                  className={`shrink-0 rounded-xl px-2.5 py-1 text-xs font-medium transition-all ${
+                    isSelected
+                      ? "bg-cyan-400 text-[#031520] font-bold shadow-sm"
+                      : "text-slate-200 hover:text-white hover:bg-white/15"
+                  }`}
+                >
+                  {r.name.split(" ")[0]}
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Orbit hint */}
-        <div className="hidden lg:flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/60 px-3 py-1.5 text-[11px] text-slate-400 backdrop-blur-sm">
-          <span>Right-click &amp; drag to rotate 3D angle</span>
+          {/* Orbit hint */}
+          <div className="hidden lg:flex items-center gap-1.5 rounded-full border border-white/10 bg-slate-950/60 px-3 py-1.5 text-[11px] text-slate-400 backdrop-blur-sm">
+            <span>Right-click &amp; drag to rotate 3D angle</span>
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {/* Floating Selected Resort Inspector Card (docked at bottom-left so island view remains unobstructed) */}
       {selectedResort ? (
@@ -614,10 +658,10 @@ export function Archipelago3DMap({
             <button
               type="button"
               onClick={() => setSelectedResort(null)}
-              aria-label="Close"
-              className="rounded-full p-1 text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Close resort inspector"
+              className="inline-flex size-9 items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
 
@@ -627,11 +671,11 @@ export function Archipelago3DMap({
 
           <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-slate-300">
             <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-0.5">
-              <Plane size={11} className="text-cyan-300" />
-              {selectedResort.transferDuration}
+              <Plane size={11} className="text-cyan-300" aria-hidden="true" />
+              {selectedResort.transferSummary ?? "Transfer details on request"}
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-0.5">
-              <MapPin size={11} className="text-emerald-400" />
+              <MapPin size={11} className="text-emerald-400" aria-hidden="true" />
               {selectedResort.lat.toFixed(4)}°N, {selectedResort.lng.toFixed(4)}°E
             </span>
           </div>
@@ -642,9 +686,7 @@ export function Archipelago3DMap({
               variant="conversion"
               className="flex-1 rounded-full py-2 text-xs font-semibold shadow-sm"
             >
-              <Link href={`/resorts/${selectedResort.slug}`}>
-                Explore Sanctuary &rarr;
-              </Link>
+              <Link href={`/resorts/${selectedResort.slug}`}>Explore Sanctuary &rarr;</Link>
             </Button>
             <Button
               asChild
@@ -652,7 +694,7 @@ export function Archipelago3DMap({
               className="rounded-full py-2 text-xs font-semibold border-white/20 bg-white/10 text-white hover:bg-white/20"
             >
               <Link href="/plan">
-                Plan Trip <ExternalLink size={11} className="ml-1" />
+                Plan Trip <ExternalLink size={11} className="ml-1" aria-hidden="true" />
               </Link>
             </Button>
           </div>

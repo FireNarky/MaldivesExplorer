@@ -30,19 +30,18 @@ export const metadata: Metadata = {
     default: "Maldives Explorer · Curated Luxury Resorts & Islands",
     template: "%s · Maldives Explorer",
   },
-  description: "Curated private island resorts, iconic overwater pool villas, and bespoke journeys across the Maldives.",
+  description:
+    "Curated private island resorts, iconic overwater pool villas, and bespoke journeys across the Maldives.",
   icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico" },
-    ],
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }, { url: "/favicon.ico" }],
     apple: "/favicon.svg",
   },
   openGraph: {
     siteName: "Maldives Explorer",
     type: "website",
     title: "Maldives Explorer · Curated Luxury Resorts & Bespoke Island Journeys",
-    description: "Discover hand-curated private islands, iconic overwater pool villas, and direct resort quotes across the Maldives.",
+    description:
+      "Discover hand-curated private islands, iconic overwater pool villas, and direct resort quotes across the Maldives.",
     url: "https://xplorer.itnvend.com",
     images: [
       {
@@ -56,7 +55,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Maldives Explorer · Curated Luxury Resorts",
-    description: "Discover hand-curated private islands, iconic overwater pool villas, and bespoke journeys across the Maldives.",
+    description:
+      "Discover hand-curated private islands, iconic overwater pool villas, and bespoke journeys across the Maldives.",
     images: ["/images/og-maldives.jpg"],
   },
   robots: { index: false, follow: false },
@@ -67,7 +67,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const session = await auth().catch(() => null);
   const contactSettings = await getContactSettings().catch(() => DEFAULT_CONTACT_SETTINGS);
   return (
-    <html lang="en" suppressHydrationWarning className={`${display.variable} ${sans.variable} overflow-x-hidden`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${display.variable} ${sans.variable} overflow-x-hidden`}
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{

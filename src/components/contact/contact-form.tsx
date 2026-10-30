@@ -2,16 +2,7 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
-import {
-  AlertCircle,
-  Calendar,
-  CheckCircle2,
-  Clock,
-  Mail,
-  Phone,
-  Send,
-  User,
-} from "lucide-react";
+import { AlertCircle, Calendar, CheckCircle2, Clock, Mail, Phone, Send, User } from "lucide-react";
 import { submitContactEnquiryAction, ContactEnquiryState } from "@/modules/contact/actions";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/chat/social-icons";
@@ -68,13 +59,17 @@ export function ContactForm({
             Enquiry Received
           </h2>
           <p className="text-sm text-muted dark:text-slate-300 max-w-md mx-auto">
-            Thank you, <strong className="font-semibold text-ink dark:text-white">{name || "Traveler"}</strong>. Our Maldivian specialists are preparing your tailored proposal.
+            Thank you,{" "}
+            <strong className="font-semibold text-ink dark:text-white">{name || "Traveler"}</strong>
+            . Our Maldivian specialists are preparing your tailored proposal.
           </p>
         </div>
 
         {state.reference ? (
           <div className="inline-flex flex-col items-center justify-center rounded-2xl border border-border-subtle bg-sand/40 dark:bg-white/5 px-6 py-3">
-            <span className="text-[11px] uppercase tracking-wider text-muted font-medium">Reference Code</span>
+            <span className="text-[11px] uppercase tracking-wider text-muted font-medium">
+              Reference Code
+            </span>
             <span className="font-mono text-lg font-bold text-ocean dark:text-cyan-300 tracking-wider">
               {state.reference}
             </span>
@@ -82,7 +77,8 @@ export function ContactForm({
         ) : null}
 
         <p className="text-xs text-muted dark:text-slate-400 flex items-center justify-center gap-1.5 pt-2">
-          <Clock size={13} /> Written response delivered to {email} within 2 business hours.
+          <Clock size={13} /> Our team will review your request and send a written response to{" "}
+          {email}.
         </p>
 
         <div className="pt-3">
@@ -106,7 +102,8 @@ export function ContactForm({
           Send a Travel Enquiry
         </h2>
         <p className="text-sm text-muted dark:text-slate-400 font-light">
-          Share your desired dates and resort preferences for a tailored written quotation and transfer plan.
+          Share your desired dates and resort preferences for a tailored written quotation and
+          transfer plan.
         </p>
       </div>
 
@@ -169,7 +166,10 @@ export function ContactForm({
 
         {/* Single-Column Clean Input Flow */}
         <div className="grid gap-1.5">
-          <label htmlFor="contact-name" className="text-xs font-semibold text-ink dark:text-slate-200">
+          <label
+            htmlFor="contact-name"
+            className="text-xs font-semibold text-ink dark:text-slate-200"
+          >
             Full Name <span className="text-coral">*</span>
           </label>
           <div className="relative">
@@ -188,7 +188,10 @@ export function ContactForm({
         </div>
 
         <div className="grid gap-1.5">
-          <label htmlFor="contact-email" className="text-xs font-semibold text-ink dark:text-slate-200">
+          <label
+            htmlFor="contact-email"
+            className="text-xs font-semibold text-ink dark:text-slate-200"
+          >
             Email Address <span className="text-coral">*</span>
           </label>
           <div className="relative">
@@ -207,7 +210,10 @@ export function ContactForm({
         </div>
 
         <div className="grid gap-1.5">
-          <label htmlFor="contact-phone" className="text-xs font-semibold text-ink dark:text-slate-200">
+          <label
+            htmlFor="contact-phone"
+            className="text-xs font-semibold text-ink dark:text-slate-200"
+          >
             Phone / WhatsApp (Optional)
           </label>
           <div className="relative">
@@ -225,7 +231,10 @@ export function ContactForm({
         </div>
 
         <div className="grid gap-1.5">
-          <label htmlFor="contact-dates" className="text-xs font-semibold text-ink dark:text-slate-200">
+          <label
+            htmlFor="contact-dates"
+            className="text-xs font-semibold text-ink dark:text-slate-200"
+          >
             Target Month / Dates
           </label>
           <div className="relative">
@@ -238,13 +247,19 @@ export function ContactForm({
               placeholder="e.g. November 2026 (7 nights)"
               className="min-h-12 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-sand/20 dark:bg-white/5 pl-9 pr-3.5 text-sm text-ink dark:text-white placeholder:text-muted focus:border-lagoon focus:bg-white dark:focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-lagoon/20"
             />
-            <Calendar size={15} className="absolute left-3 top-3.5 text-muted pointer-events-none" />
+            <Calendar
+              size={15}
+              className="absolute left-3 top-3.5 text-muted pointer-events-none"
+            />
           </div>
         </div>
 
         <div className="grid gap-1.5">
           <div className="flex items-center justify-between">
-            <label htmlFor="contact-user-notes" className="text-xs font-semibold text-ink dark:text-slate-200">
+            <label
+              htmlFor="contact-user-notes"
+              className="text-xs font-semibold text-ink dark:text-slate-200"
+            >
               Travel Requirements &amp; Notes <span className="text-coral">*</span>
             </label>
             <span className="text-[11px] text-muted">Resort wishes, party size, dining</span>
@@ -276,8 +291,12 @@ export function ContactForm({
               className="mt-0.5 size-6 min-w-6 shrink-0 rounded-md border border-border-subtle text-lagoon focus:ring-2 focus:ring-lagoon/30 cursor-pointer"
             />
             <span className="text-xs leading-relaxed text-muted dark:text-slate-300">
-              I agree to the processing of my contact information to receive tailored quotations in accordance with the{" "}
-              <Link href="/privacy" className="text-ocean dark:text-cyan-400 underline font-medium hover:text-lagoon">
+              I agree to the processing of my contact information to receive tailored quotations in
+              accordance with the{" "}
+              <Link
+                href="/privacy"
+                className="text-ocean dark:text-cyan-400 underline font-medium hover:text-lagoon"
+              >
                 Privacy Policy
               </Link>
               . You may opt out at any time.

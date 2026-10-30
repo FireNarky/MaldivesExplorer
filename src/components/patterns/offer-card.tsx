@@ -39,12 +39,17 @@ export function OfferCard({ item }: { item: OfferCardData }) {
       </p>
 
       <h2 className="mb-2 font-display text-2xl text-ocean dark:text-cyan-300">
-        <Link href={`/offers/${item.slug}`} className="after:absolute after:inset-0 hover:underline">
+        <Link
+          href={`/offers/${item.slug}`}
+          className="after:absolute after:inset-0 hover:underline"
+        >
           {item.title}
         </Link>
       </h2>
 
-      <p className="mb-6 flex-1 text-sm text-ink dark:text-slate-200 leading-relaxed">{item.summary}</p>
+      <p className="mb-6 flex-1 text-sm text-ink dark:text-slate-200 leading-relaxed">
+        {item.summary}
+      </p>
 
       <div className="mb-4 flex flex-wrap gap-2 text-xs">
         {item.transferIncluded ? (

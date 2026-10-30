@@ -15,51 +15,42 @@ export type DestinationCardData = {
   transferType?: string;
 };
 
-// Curated atoll intelligence mapping for rich traveler insights
-const ATOLL_INSIGHTS: Record<string, { highlight: string; transfer: string; gradient: string }> = {
+// Curated atoll intelligence mapping for rich traveler insights (no unverified transfer durations per D-013)
+const ATOLL_INSIGHTS: Record<string, { highlight: string; gradient: string }> = {
   "baa-atoll": {
     highlight: "UNESCO Biosphere & Hanifaru Bay Manta Rays",
-    transfer: "30m Seaplane",
     gradient: "from-teal-600/30 via-lagoon/20 to-ocean/40",
   },
   "north-male-atoll": {
-    highlight: "Luxury Speedboat Corridor & Surf Breaks",
-    transfer: "25–45m Speedboat",
+    highlight: "Lagoon Channels & Surf Breaks",
     gradient: "from-cyan-600/30 via-ocean/20 to-lagoon/40",
   },
   "south-male-atoll": {
-    highlight: "Lagoon Sandbanks & Swift Transfer Access",
-    transfer: "30–45m Speedboat",
+    highlight: "Lagoon Sandbanks & Ocean Channels",
     gradient: "from-blue-600/30 via-lagoon/20 to-ocean/40",
   },
   "south-ari-atoll": {
     highlight: "Year-Round Whale Shark Marine Protected Area",
-    transfer: "25m Seaplane",
     gradient: "from-emerald-600/30 via-teal/20 to-ocean/40",
   },
   "north-ari-atoll": {
     highlight: "Dramatic Underwater Pinnacles (Thilas) & Hammerheads",
-    transfer: "25m Seaplane",
     gradient: "from-lagoon/30 via-cyan-600/20 to-ocean/40",
   },
   "noonu-atoll": {
     highlight: "Ultra-Luxury Island Residences & Private Sandbars",
-    transfer: "45m Seaplane",
     gradient: "from-indigo-600/30 via-lagoon/20 to-ocean/40",
   },
   "raa-atoll": {
     highlight: "Pristine Deep Ocean Channels & Untouched Reefs",
-    transfer: "45m Seaplane",
     gradient: "from-sky-600/30 via-lagoon/20 to-ocean/40",
   },
   "lhaviyani-atoll": {
     highlight: "World-Class Underwater Dining & Shipwreck Diving",
-    transfer: "40m Seaplane",
     gradient: "from-teal-600/30 via-cyan/20 to-ocean/40",
   },
   "dhaalu-atoll": {
     highlight: "Remote Surfing Passes & Coral Gardens",
-    transfer: "40m Domestic / Seaplane",
     gradient: "from-blue-700/30 via-lagoon/20 to-ocean/40",
   },
 };
@@ -67,26 +58,34 @@ const ATOLL_INSIGHTS: Record<string, { highlight: string; transfer: string; grad
 export function DestinationCard({ item }: { item: DestinationCardData }) {
   const insight = ATOLL_INSIGHTS[item.slug] ?? {
     highlight: item.highlight ?? "Tropical Coral Atoll & Lagoons",
-    transfer: item.transferType ?? "Seaplane / Speedboat",
     gradient: "from-lagoon/25 via-ocean/15 to-[#062936]/40",
   };
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 shadow-1 transition-all duration-300 hover:-translate-y-2 hover:border-ocean/50 dark:hover:border-cyan-400/50 hover:shadow-2">
       {/* Decorative Atoll Horizon Banner */}
-      <div className={`relative h-28 overflow-hidden bg-gradient-to-br ${insight.gradient} p-5 text-white`}>
+      <div
+        className={`relative h-28 overflow-hidden bg-gradient-to-br ${insight.gradient} p-5 text-white`}
+      >
         <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" />
-        
+
         <div className="relative flex items-center justify-between">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 dark:bg-black/40 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur-md border border-white/25">
             <Compass size={13} className="text-coral" aria-hidden="true" />
             Atoll Geography
           </span>
 
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 dark:bg-black/30 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md">
-            <Plane size={12} />
-            {insight.transfer}
-          </span>
+          {item.transferType ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 dark:bg-black/30 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md">
+              <Plane size={12} aria-hidden="true" />
+              {item.transferType}
+            </span>
+          ) : typeof item.resortCount === "number" && item.resortCount > 0 ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 dark:bg-black/30 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md">
+              <Hotel size={12} aria-hidden="true" />
+              {item.resortCount} {item.resortCount === 1 ? "Resort" : "Resorts"}
+            </span>
+          ) : null}
         </div>
 
         <div className="absolute bottom-3 left-5 right-5 flex items-center justify-between text-xs text-slate-200">
@@ -95,7 +94,9 @@ export function DestinationCard({ item }: { item: DestinationCardData }) {
               <MapPin size={12} className="text-coral" aria-hidden="true" />
               {Number(item.latitude).toFixed(2)}°N, {Number(item.longitude).toFixed(2)}°E
             </span>
-          ) : <span />}
+          ) : (
+            <span />
+          )}
           {typeof item.islandCount === "number" && (
             <span className="font-medium text-[11px] tracking-wide uppercase text-slate-200">
               {item.islandCount} {item.islandCount === 1 ? "Island" : "Islands"}
@@ -111,15 +112,16 @@ export function DestinationCard({ item }: { item: DestinationCardData }) {
             {insight.highlight}
           </span>
           <h2 className="mt-1 font-display text-2xl text-ocean font-medium tracking-tight">
-            <Link href={`/atolls/${item.slug}`} className="after:absolute after:inset-0 hover:underline">
+            <Link
+              href={`/atolls/${item.slug}`}
+              className="after:absolute after:inset-0 hover:underline"
+            >
               {item.name}
             </Link>
           </h2>
         </div>
 
-        <p className="mb-5 flex-1 text-sm text-ink leading-relaxed line-clamp-3">
-          {item.summary}
-        </p>
+        <p className="mb-5 flex-1 text-sm text-ink leading-relaxed line-clamp-3">{item.summary}</p>
 
         {/* Premier Resorts in this atoll if available */}
         {item.resorts && item.resorts.length > 0 ? (

@@ -35,24 +35,49 @@ export function SubscribeForm({
       <div className="grid gap-1.5">
         <Label
           htmlFor={`${idPrefix}-email`}
-          className={inverted ? "text-xs font-semibold uppercase tracking-wider text-white" : "text-xs font-semibold uppercase tracking-wider text-muted dark:text-slate-300"}
+          className={
+            inverted
+              ? "text-xs font-semibold uppercase tracking-wider text-white"
+              : "text-xs font-semibold uppercase tracking-wider text-muted dark:text-slate-300"
+          }
         >
           Email
         </Label>
-        <input id={`${idPrefix}-email`} name="email" type="email" required className={inputClass} placeholder="traveler@example.com" />
+        <input
+          id={`${idPrefix}-email`}
+          name="email"
+          type="email"
+          required
+          className={inputClass}
+          placeholder="traveler@example.com"
+        />
       </div>
       {showTopics ? (
         <fieldset className="grid gap-2">
-          <legend className={`font-semibold ${inverted ? "text-white" : "text-ink dark:text-white"}`}>Optional topics</legend>
+          <legend
+            className={`font-semibold ${inverted ? "text-white" : "text-ink dark:text-white"}`}
+          >
+            Optional topics
+          </legend>
           {newsletterTopics.map((topic) => (
-            <label key={topic} className={`flex min-h-11 items-center gap-3 text-sm cursor-pointer select-none ${inverted ? "text-slate-200" : "text-ink dark:text-slate-200"}`}>
-              <input type="checkbox" name="topics" value={topic} className="size-6 min-w-6 rounded-md cursor-pointer accent-lagoon text-ocean" />
+            <label
+              key={topic}
+              className={`flex min-h-11 items-center gap-3 text-sm cursor-pointer select-none ${inverted ? "text-slate-200" : "text-ink dark:text-slate-200"}`}
+            >
+              <input
+                type="checkbox"
+                name="topics"
+                value={topic}
+                className="size-6 min-w-6 rounded-md cursor-pointer accent-lagoon text-ocean"
+              />
               {topicLabel(topic)}
             </label>
           ))}
         </fieldset>
       ) : null}
-      <label className={`flex min-h-11 items-center gap-3 text-xs leading-relaxed cursor-pointer select-none ${inverted ? "text-slate-200" : "text-muted dark:text-slate-300"}`}>
+      <label
+        className={`flex min-h-11 items-center gap-3 text-xs leading-relaxed cursor-pointer select-none ${inverted ? "text-slate-200" : "text-muted dark:text-slate-300"}`}
+      >
         <input
           type="checkbox"
           name="consent"
@@ -62,7 +87,11 @@ export function SubscribeForm({
         />
         <span>I agree to receive the Maldives Explorer newsletter. I can unsubscribe later.</span>
       </label>
-      <Button type="submit" variant={inverted ? "conversion" : "primary"} className="w-full sm:w-auto">
+      <Button
+        type="submit"
+        variant={inverted ? "conversion" : "primary"}
+        className="w-full sm:w-auto"
+      >
         Subscribe
       </Button>
     </form>

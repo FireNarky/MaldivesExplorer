@@ -220,8 +220,14 @@ export function PaletteSwitcher() {
       }
       if (!hasMoved) return;
 
-      const newX = Math.max(12, Math.min(window.innerWidth - rect.width - 12, moveEvent.clientX - offsetX));
-      const newY = Math.max(64, Math.min(window.innerHeight - rect.height - 12, moveEvent.clientY - offsetY));
+      const newX = Math.max(
+        12,
+        Math.min(window.innerWidth - rect.width - 12, moveEvent.clientX - offsetX),
+      );
+      const newY = Math.max(
+        64,
+        Math.min(window.innerHeight - rect.height - 12, moveEvent.clientY - offsetY),
+      );
       setCustomPos({ x: newX, y: newY });
     };
 
@@ -229,8 +235,14 @@ export function PaletteSwitcher() {
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
       if (hasMoved) {
-        const finalX = Math.max(12, Math.min(window.innerWidth - rect.width - 12, upEvent.clientX - offsetX));
-        const finalY = Math.max(64, Math.min(window.innerHeight - rect.height - 12, upEvent.clientY - offsetY));
+        const finalX = Math.max(
+          12,
+          Math.min(window.innerWidth - rect.width - 12, upEvent.clientX - offsetX),
+        );
+        const finalY = Math.max(
+          64,
+          Math.min(window.innerHeight - rect.height - 12, upEvent.clientY - offsetY),
+        );
         const pos = { x: finalX, y: finalY };
         setCustomPos(pos);
         try {
@@ -281,9 +293,7 @@ export function PaletteSwitcher() {
   const isDark = getResolvedMode(mode) === "dark";
   const isTopHalf = customPos !== null && customPos.y < 380;
   const isRightSide =
-    customPos !== null &&
-    typeof window !== "undefined" &&
-    customPos.x > window.innerWidth - 380;
+    customPos !== null && typeof window !== "undefined" && customPos.x > window.innerWidth - 380;
 
   return (
     <aside
@@ -342,7 +352,7 @@ export function PaletteSwitcher() {
                   setIsOpen(false);
                   openButtonRef.current?.focus();
                 }}
-                className="inline-flex size-9 items-center justify-center rounded-full text-muted hover:bg-mist dark:hover:bg-white/10 hover:text-ink dark:hover:text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                className="inline-flex size-11 items-center justify-center rounded-full text-muted hover:bg-mist dark:hover:bg-white/10 hover:text-ink dark:hover:text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
                 aria-label="Close palette selector"
               >
                 <X size={16} aria-hidden="true" />

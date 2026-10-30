@@ -134,10 +134,10 @@ export default async function DestinationsPage({
               </div>
               <div className="rounded-2xl bg-white/10 p-3 backdrop-blur-sm border border-white/15">
                 <span className="block font-display text-xl sm:text-2xl font-bold text-white">
-                  35m
+                  {atollsWithData.length}
                 </span>
                 <span className="text-[11px] uppercase tracking-wider text-slate-300">
-                  Avg Seaplane
+                  Published Atolls
                 </span>
               </div>
             </div>

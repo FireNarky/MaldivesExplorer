@@ -104,6 +104,8 @@ The browser check used the disposable database, which has no owner-approved offe
 
 `npm test` on 17 October 2026: 14 files, 56 tests, passed.
 
+`npm test` on 30 October 2026 (Takeover & Post-Phase 4 Regression Suite): 19 files, 180 tests, passed (including Phase 1–4 suites and `src/tests/takeover-remediation.test.tsx`; see `Documentation/Takeover_Baseline_Audit_and_Remediation_Report.md`).
+
 `npm run test:migrations` on 17 October 2026 exited 0. Order: migrate, seed, foundation, catalog, discovery, wishlist, enquiry, portal, CRM, quotes, Stage 9, offers, drop schema, migrate again. Passed lines included foundation, catalog, discovery, wishlist, enquiry, portal, CRM, quote, Stage 9, and offer. PostgreSQL `RAISE` lines for a room on the wrong resort, a changed line on a sent quote, and a featured imported review were the integrity checks, and each exercise still passed.
 
 Playwright was not re-run. Its config starts `next start` against the configured database. That database was not the disposable server, and the disposable server was stopped after the browser check.

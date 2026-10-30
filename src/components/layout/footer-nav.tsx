@@ -25,10 +25,7 @@ export function FooterNav({ columns }: { columns: readonly Column[] }) {
       {columns.map((column) => {
         const isOpen = openSections[column.title] ?? false;
         return (
-          <div
-            key={column.title}
-            className="border-b border-white/15 pb-2 sm:border-none sm:pb-0"
-          >
+          <div key={column.title} className="border-b border-white/15 pb-2 sm:border-none sm:pb-0">
             {/* Mobile collapsible header */}
             <button
               type="button"

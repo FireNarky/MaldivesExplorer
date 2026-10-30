@@ -27,9 +27,10 @@ export default async function ContactSettingsAdminPage() {
       <div className="flex items-center gap-3">
         <Link
           href="/admin"
-          className="inline-flex size-9 items-center justify-center rounded-xl border border-border-subtle bg-white dark:bg-white/5 text-muted hover:text-ink transition-colors"
+          aria-label="Back to staff dashboard"
+          className="inline-flex size-11 items-center justify-center rounded-xl border border-border-subtle bg-white dark:bg-white/5 text-muted hover:text-ink transition-colors"
         >
-          <ArrowLeft size={18} />
+          <ArrowLeft size={18} aria-hidden="true" />
         </Link>
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-lagoon-ink">

@@ -61,7 +61,9 @@ describe("Phase 4 — repository path derivation", () => {
   it("resolves the repo root from import.meta.url without machine-specific homes", () => {
     const resolved = resolveRepoRoot();
     expect(path.normalize(resolved)).toBe(path.normalize(root));
-    const synthetic = resolveRepoRoot(new URL("file:///opt/ci/repo/scripts/lib/dev-runtime.ts").href);
+    const synthetic = resolveRepoRoot(
+      new URL("file:///opt/ci/repo/scripts/lib/dev-runtime.ts").href,
+    );
     expect(synthetic).toBe(path.resolve("/opt/ci/repo"));
     expect(synthetic.includes("/home/roon")).toBe(false);
     expect(synthetic.includes("Desktop/Grinding")).toBe(false);
@@ -159,9 +161,9 @@ describe("Phase 4 — AUTH_URL and tunnel opt-in", () => {
     expect(() =>
       requirePublicTunnelOrigin("http://127.0.0.1:3000", "DEV_TUNNEL_PUBLIC_URL"),
     ).toThrow(/loopback/);
-    expect(() =>
-      requirePublicTunnelOrigin("http://localhost:3000", "AUTH_URL"),
-    ).toThrow(/loopback/);
+    expect(() => requirePublicTunnelOrigin("http://localhost:3000", "AUTH_URL")).toThrow(
+      /loopback/,
+    );
     expect(() =>
       resolveDevAuthUrl(
         { AUTH_URL: "http://127.0.0.1:3000" },

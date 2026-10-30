@@ -21,7 +21,11 @@ import { QuickSearchDialog } from "@/components/layout/quick-search-dialog";
 
 const PRIMARY_NAV_ICONS: Record<
   string,
-  React.ComponentType<{ size?: number; className?: string; "aria-hidden"?: boolean | "true" | "false" }>
+  React.ComponentType<{
+    size?: number;
+    className?: string;
+    "aria-hidden"?: boolean | "true" | "false";
+  }>
 > = {
   "/destinations": MapPin,
   "/map": Compass,
@@ -44,7 +48,10 @@ export async function SiteHeader() {
   return (
     <header className="sticky top-0 z-10 border-b border-border-subtle bg-sand/95 backdrop-blur">
       <div className="relative mx-auto flex min-h-16 w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] items-center gap-2 sm:gap-4 px-4 lg:gap-8 lg:px-8 2xl:px-12">
-        <Link href="/" className="flex shrink-0 items-baseline gap-2 py-2 font-display text-lg sm:text-xl text-ocean">
+        <Link
+          href="/"
+          className="flex shrink-0 items-baseline gap-2 py-2 font-display text-lg sm:text-xl text-ocean"
+        >
           <span aria-hidden="true" className="size-2.5 sm:size-3 rounded-full bg-lagoon" />
           Maldives Explorer
         </Link>
@@ -52,7 +59,11 @@ export async function SiteHeader() {
           {primaryLinks.map((link) => {
             const Icon = PRIMARY_NAV_ICONS[link.href];
             return (
-              <NavLink key={link.href} href={link.href} className="inline-flex items-center gap-1.5 group transition-colors">
+              <NavLink
+                key={link.href}
+                href={link.href}
+                className="inline-flex items-center gap-1.5 group transition-colors"
+              >
                 {Icon ? (
                   <Icon
                     size={16}
@@ -69,7 +80,11 @@ export async function SiteHeader() {
           <QuickSearchDialog />
           <div className="hidden items-center gap-2 lg:flex">
             {utilityLinks.slice(0, 1).map((link) => (
-              <NavLink key={link.href} href={link.href} className="px-2.5 inline-flex items-center gap-1.5">
+              <NavLink
+                key={link.href}
+                href={link.href}
+                className="px-2.5 inline-flex items-center gap-1.5"
+              >
                 <Bookmark size={15} aria-hidden="true" />
                 {link.label}
               </NavLink>
@@ -92,7 +107,11 @@ export async function SiteHeader() {
                     await signOut({ redirectTo: "/" });
                   }}
                 >
-                  <Button type="submit" variant="tertiary" className="inline-flex items-center gap-1.5">
+                  <Button
+                    type="submit"
+                    variant="tertiary"
+                    className="inline-flex items-center gap-1.5"
+                  >
                     <LogOut size={15} aria-hidden="true" />
                     Sign out
                   </Button>

@@ -27,7 +27,11 @@ import { trapFocusKeydown } from "@/lib/a11y/focus-trap";
 type MenuLink = { href: string; label: string };
 
 type RouteMeta = {
-  icon: ComponentType<{ size?: number; className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+  icon: ComponentType<{
+    size?: number;
+    className?: string;
+    "aria-hidden"?: boolean | "true" | "false";
+  }>;
   subtitle: string;
   section: "explore" | "journey" | "account";
 };
@@ -156,9 +160,13 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
     };
   }, [open]);
 
-  const exploreLinks = links.filter((l) => (ROUTE_META[l.href]?.section ?? "explore") === "explore");
+  const exploreLinks = links.filter(
+    (l) => (ROUTE_META[l.href]?.section ?? "explore") === "explore",
+  );
   const journeyLinks = account.filter((l) => ROUTE_META[l.href]?.section === "journey");
-  const accountLinks = account.filter((l) => (ROUTE_META[l.href]?.section ?? "account") === "account");
+  const accountLinks = account.filter(
+    (l) => (ROUTE_META[l.href]?.section ?? "account") === "account",
+  );
 
   const renderMenuItem = (link: MenuLink) => {
     const meta = ROUTE_META[link.href] ?? {
@@ -167,7 +175,8 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
       section: "explore" as const,
     };
     const Icon = meta.icon;
-    const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+    const isActive =
+      pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
 
     return (
       <Link
@@ -221,7 +230,10 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
           id="mobile-menu"
           className="fixed inset-x-0 top-16 bottom-0 z-50 border-b border-border-subtle bg-white/98 dark:bg-[#071318]/98 backdrop-blur-xl shadow-3 animate-in fade-in slide-in-from-top-1 overflow-y-auto overscroll-contain pb-20"
         >
-          <nav aria-label="Mobile" className="mx-auto grid w-full max-w-[90rem] gap-4 px-4 py-4 sm:px-6">
+          <nav
+            aria-label="Mobile"
+            className="mx-auto grid w-full max-w-[90rem] gap-4 px-4 py-4 sm:px-6"
+          >
             {/* Primary Action Button */}
             <Link
               href="/plan"
@@ -237,9 +249,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
               <p className="px-3 pt-1 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-muted dark:text-slate-400">
                 Explore Sanctuaries
               </p>
-              <div className="grid gap-1">
-                {exploreLinks.map(renderMenuItem)}
-              </div>
+              <div className="grid gap-1">{exploreLinks.map(renderMenuItem)}</div>
             </div>
 
             {/* Section 2: Personal Journey */}
@@ -248,9 +258,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
                 <p className="px-3 pt-1 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-muted dark:text-slate-400">
                   Your Journey
                 </p>
-                <div className="grid gap-1">
-                  {journeyLinks.map(renderMenuItem)}
-                </div>
+                <div className="grid gap-1">{journeyLinks.map(renderMenuItem)}</div>
               </div>
             ) : null}
 
@@ -260,9 +268,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
                 <p className="px-3 pt-1 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-muted dark:text-slate-400">
                   Membership &amp; Access
                 </p>
-                <div className="grid gap-1">
-                  {accountLinks.map(renderMenuItem)}
-                </div>
+                <div className="grid gap-1">{accountLinks.map(renderMenuItem)}</div>
               </div>
             ) : null}
 

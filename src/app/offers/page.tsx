@@ -9,7 +9,8 @@ import { listPublicOffers } from "@/modules/offers/service";
 
 export const metadata: Metadata = publicMetadata({
   title: "Exclusive Maldives Travel Offers",
-  description: "Curated island packages with complimentary seaplane transfers, half board upgrades, and resort credits.",
+  description:
+    "Curated island packages with complimentary seaplane transfers, half board upgrades, and resort credits.",
   path: "/offers",
 });
 

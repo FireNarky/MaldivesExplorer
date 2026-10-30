@@ -2,8 +2,8 @@
 
 | Field | Value |
 | --- | --- |
-| Date | 17 October 2026 |
-| Evidence window | Stage 10 checks on 17 October 2026 |
+| Date | 17 October 2026 (updated 30 October 2026 takeover verification) |
+| Evidence window | Stage 10 checks on 17 October 2026 + Takeover verification on 30 October 2026 (`Documentation/Takeover_Baseline_Audit_and_Remediation_Report.md`) |
 | Rule | A passing build is not a pass for a row that was not measured or is waiting on an owner decision. |
 
 | Status | Meaning |
