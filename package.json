@@ -59,7 +59,7 @@
     "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.14.6",
     "prettier": "^3.6.2",
-    "prisma": "^6.16.2",
+    "prisma": "^7.10.1",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
