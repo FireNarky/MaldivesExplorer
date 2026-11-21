@@ -276,7 +276,7 @@ export function QuickSearchDialog() {
               <Link
                 href="/search"
                 onClick={closeDialog}
-                className="font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline"
+                className="font-semibold text-lagoon-ink dark:text-[#7ccdc6] hover:underline"
               >
                 Advanced Search &rarr;
               </Link>

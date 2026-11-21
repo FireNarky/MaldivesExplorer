@@ -27,7 +27,7 @@ import { publicMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = publicMetadata({
   title: "Contact & Travel Enquiries",
   description:
-    "Send a travel enquiry to the Maldives Explorer team for resort guidance, transfer planning, or a tailored written quote.",
+    "Send a travel enquiry to the Thari Ventures team for resort guidance, transfer planning, or a tailored written quote.",
   path: "/contact",
 });
 
@@ -56,12 +56,12 @@ export default async function ContactPage() {
       {active.hasMessaging ? (
         <section aria-labelledby="live-channels-heading" className="grid gap-6">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-lagoon-ink dark:text-[#7ccdc6]">
               Direct Messaging
             </p>
             <h2
               id="live-channels-heading"
-              className="text-2xl sm:text-3xl font-display text-ocean dark:text-cyan-200 mt-1"
+              className="text-2xl sm:text-3xl font-display text-ocean dark:text-[#c5ebe7] mt-1"
             >
               Messaging Channels
             </h2>
@@ -166,14 +166,14 @@ export default async function ContactPage() {
         <div className="space-y-6 lg:col-span-5">
           {active.hasDirectDetails ? (
             <div className="rounded-3xl border border-border-subtle bg-white dark:bg-[#071318] dark:border-white/10 p-6 sm:p-8 shadow-1 space-y-6">
-              <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+              <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
                 Contact Details
               </h2>
 
               <div className="space-y-4">
                 {active.phone ? (
                   <div className="flex items-start gap-3.5">
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5]">
                       <Phone size={18} />
                     </div>
                     <div>
@@ -192,7 +192,7 @@ export default async function ContactPage() {
 
                 {active.email ? (
                   <div className="flex items-start gap-3.5">
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5]">
                       <Mail size={18} />
                     </div>
                     <div>
@@ -211,7 +211,7 @@ export default async function ContactPage() {
 
                 {active.officeHours ? (
                   <div className="flex items-start gap-3.5">
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5]">
                       <Clock size={18} />
                     </div>
                     <div>
@@ -227,7 +227,7 @@ export default async function ContactPage() {
 
                 {active.emergencyDesk ? (
                   <div className="flex items-start gap-3.5">
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5]">
                       <Plane size={18} />
                     </div>
                     <div>
@@ -243,7 +243,7 @@ export default async function ContactPage() {
 
                 {active.address ? (
                   <div className="flex items-start gap-3.5">
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300">
+                    <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5]">
                       <MapPin size={18} />
                     </div>
                     <div>
@@ -261,7 +261,7 @@ export default async function ContactPage() {
           ) : null}
 
           <div className="rounded-2xl border border-lagoon/20 bg-gradient-to-br from-mist/50 to-white dark:from-white/5 dark:to-transparent p-6 shadow-sm space-y-3">
-            <div className="flex items-center gap-2 text-ocean dark:text-cyan-300 font-semibold text-sm">
+            <div className="flex items-center gap-2 text-ocean dark:text-[#9adbd5] font-semibold text-sm">
               <MessageSquare size={18} />
               <span>How Enquiries Work</span>
             </div>
@@ -276,7 +276,7 @@ export default async function ContactPage() {
             <div className="pt-1">
               <Link
                 href="/plan"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-lagoon-ink dark:text-[#7ccdc6] hover:underline"
               >
                 <Compass size={14} />
                 <span>Open the step-by-step Trip Planner &rarr;</span>

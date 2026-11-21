@@ -7,7 +7,7 @@ import { readSubscriptionByToken } from "@/modules/newsletter/service";
 
 export const metadata: Metadata = publicMetadata({
   title: "Unsubscribe",
-  description: "Stop the Maldives Explorer newsletter.",
+  description: "Stop the Thari Ventures newsletter.",
   path: "/newsletter/unsubscribe",
 });
 

@@ -8,7 +8,7 @@ export function FlyingTern() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 overflow-hidden z-0 select-none"
+      className="pointer-events-none absolute inset-0 hidden overflow-hidden z-0 select-none md:block"
     >
       {/* Single graceful White Tern soaring across the hero in the background */}
       <div className="tern-container-1 pointer-events-none">

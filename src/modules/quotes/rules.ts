@@ -313,7 +313,7 @@ export type QuoteDocument = {
 
 export function documentText(document: QuoteDocument): string[] {
   const lines = [
-    "Maldives Explorer",
+    "Thari Ventures",
     `Quote ${document.reference}`,
     `Version ${document.versionNo}`,
     "",

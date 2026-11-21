@@ -47,7 +47,7 @@ test("health returns only public fields", async ({ request }) => {
   const body = (await response.json()) as Record<string, unknown>;
   expect(Object.keys(body).sort()).toEqual(["application", "environment", "status", "version"]);
   expect(body.status).toBe("ok");
-  expect(body.application).toBe("Maldives Explorer");
+  expect(body.application).toBe("Thari Ventures");
   expect(body.environment).toBe("local");
   expect(body.version).toBe("0.1.0");
 });

@@ -7,7 +7,7 @@ import { currentNoticeVersion } from "@/modules/newsletter/service";
 export const metadata: Metadata = publicMetadata({
   title: "Privacy Notice",
   description:
-    "How Maldives Explorer handles enquiry details, optional accounts, device-stored shortlists, opt-in analytics, and privacy requests.",
+    "How Thari Ventures handles enquiry details, optional accounts, device-stored shortlists, opt-in analytics, and privacy requests.",
   path: "/privacy",
 });
 
@@ -21,26 +21,26 @@ export default async function PrivacyPage() {
       <PageHeader
         crumbs={crumbs}
         title="Privacy Notice"
-        lede={`Notice version ${noticeVersion}. This page describes how the Maldives Explorer platform handles information across browsing, trip planning, enquiries, and optional accounts.`}
+        lede={`Notice version ${noticeVersion}. This page describes how the Thari Ventures platform handles information across browsing, trip planning, enquiries, and optional accounts.`}
       />
 
       <div className="grid gap-6 rounded-3xl border border-border-subtle bg-white dark:bg-[#071318] dark:border-white/10 p-6 sm:p-10 shadow-1 text-sm sm:text-base text-ink dark:text-slate-200 leading-relaxed">
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             1. Enquiry and Trip-Planning Information
           </h2>
           <p>
             When you submit a trip plan through the{" "}
             <Link
               href="/plan"
-              className="font-semibold text-lagoon-ink dark:text-cyan-400 underline"
+              className="font-semibold text-lagoon-ink dark:text-[#7ccdc6] underline"
             >
               Trip Planner
             </Link>{" "}
             or an enquiry through the{" "}
             <Link
               href="/contact"
-              className="font-semibold text-lagoon-ink dark:text-cyan-400 underline"
+              className="font-semibold text-lagoon-ink dark:text-[#7ccdc6] underline"
             >
               Contact
             </Link>{" "}
@@ -58,7 +58,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             2. Device Storage for Drafts, Saved Items, and Comparisons
           </h2>
           <p>
@@ -70,7 +70,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             3. Optional Accounts and Authentication
           </h2>
           <p>
@@ -82,7 +82,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             4. Search Analytics and Newsletter
           </h2>
           <p>
@@ -93,7 +93,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             5. Third-Party Messaging Links
           </h2>
           <p>
@@ -104,7 +104,7 @@ export default async function PrivacyPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             6. Account Privacy Requests
           </h2>
           <p>
@@ -112,7 +112,7 @@ export default async function PrivacyPage() {
             request from{" "}
             <Link
               href="/account/privacy"
-              className="font-semibold text-lagoon-ink dark:text-cyan-400 underline"
+              className="font-semibold text-lagoon-ink dark:text-[#7ccdc6] underline"
             >
               Account Privacy
             </Link>
@@ -123,7 +123,7 @@ export default async function PrivacyPage() {
             See also our{" "}
             <Link
               href="/terms"
-              className="font-semibold text-lagoon-ink dark:text-cyan-400 underline"
+              className="font-semibold text-lagoon-ink dark:text-[#7ccdc6] underline"
             >
               Terms of Service
             </Link>

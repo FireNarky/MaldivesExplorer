@@ -6,7 +6,7 @@ import { readProfile } from "@/modules/customers/service";
 
 export const metadata: Metadata = publicMetadata({
   title: "Account",
-  description: "Your Maldives Explorer account.",
+  description: "Your Thari Ventures account.",
   path: "/account",
 });
 

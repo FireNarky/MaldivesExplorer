@@ -73,7 +73,7 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
           {/* Card Header */}
           <div className="bg-gradient-to-r from-[#083b4c] to-[#0a4a5c] p-4 text-white">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-cyan-200">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#c5ebe7]">
                 Direct Messaging
               </span>
               <button
@@ -86,7 +86,7 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
               </button>
             </div>
             <p id={titleId} className="mt-1 font-display text-lg font-medium text-white">
-              Maldives Explorer Team
+              Thari Ventures Team
             </p>
             <p className="mt-0.5 text-xs text-slate-200">
               Questions on resorts, transfers, and custom quotations.
@@ -183,7 +183,7 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
               <Link
                 href="/contact"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center justify-between rounded-xl bg-mist/70 dark:bg-white/5 px-3 py-2.5 text-xs font-semibold text-ocean dark:text-cyan-300 hover:bg-mist dark:hover:bg-white/10 transition-colors"
+                className="flex items-center justify-between rounded-xl bg-mist/70 dark:bg-white/5 px-3 py-2.5 text-xs font-semibold text-ocean dark:text-[#9adbd5] hover:bg-mist dark:hover:bg-white/10 transition-colors"
               >
                 <span className="flex items-center gap-1.5">
                   <Mail size={14} className="text-coral" />
@@ -206,7 +206,7 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
         aria-label="Chat with island concierge"
         className="group relative flex min-h-12 sm:min-h-13 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#083b4c] to-[#0d5970] px-4 sm:px-5 text-white shadow-3 ring-2 ring-white/20 hover:scale-105 active:scale-95 transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
       >
-        <MessageSquare size={19} className="text-cyan-200" />
+        <MessageSquare size={19} className="text-[#c5ebe7]" />
         <span className="hidden sm:inline text-xs font-semibold tracking-wide">Concierge Chat</span>
       </button>
     </div>

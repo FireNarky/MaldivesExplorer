@@ -167,7 +167,7 @@ export function PlannerForm(props: PlannerFormProps) {
             Step {step + 1} of {plannerSteps.length}:{" "}
             <span className="text-ocean font-bold">{plannerStepLabels[step]}</span>
           </span>
-          <span className="text-lagoon-ink dark:text-cyan-400 font-mono">
+          <span className="text-lagoon-ink dark:text-[#7ccdc6] font-mono">
             {Math.round(((step + 1) / plannerSteps.length) * 100)}% Complete
           </span>
         </div>
@@ -193,7 +193,7 @@ export function PlannerForm(props: PlannerFormProps) {
                     isCurrent
                       ? "bg-lagoon-ink text-white shadow-sm ring-2 ring-lagoon-ink/30"
                       : isCompleted
-                        ? "border border-border-subtle bg-mist/60 dark:bg-white/10 text-lagoon-ink dark:text-cyan-400 hover:bg-mist cursor-pointer"
+                        ? "border border-border-subtle bg-mist/60 dark:bg-white/10 text-lagoon-ink dark:text-[#7ccdc6] hover:bg-mist cursor-pointer"
                         : "border border-border-subtle/50 text-muted opacity-50 cursor-not-allowed"
                   }`}
                 >
@@ -501,7 +501,7 @@ function PartyStep({
       <Field id="tripTypeId" label="Trip type" optional error={issues.tripTypeId}>
         <select
           id="tripTypeId"
-          className="min-h-11 w-full rounded-sm border border-border bg-white px-4 text-base text-ink focus-visible:border-focus dark:bg-[#0c1c24] dark:border-[#223d4d] dark:text-white dark:focus-visible:border-cyan-400"
+          className="min-h-11 w-full rounded-sm border border-border bg-white px-4 text-base text-ink focus-visible:border-focus dark:bg-[#0c1c24] dark:border-[#223d4d] dark:text-white dark:focus-visible:border-[#7ccdc6]"
           value={draft.tripTypeId}
           onChange={(event) => onChange({ tripTypeId: event.target.value })}
         >
@@ -723,7 +723,7 @@ function ReviewStep({
           onChange={(event) => onChange({ consent: event.target.checked })}
         />
         <span>
-          I agree that Maldives Explorer may contact me about this trip plan. Notice version{" "}
+          I agree that Thari Ventures may contact me about this trip plan. Notice version{" "}
           {noticeVersion}.
         </span>
       </label>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ComponentType } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -40,7 +41,7 @@ const ROUTE_META: Record<string, RouteMeta> = {
   },
   "/map": {
     icon: Compass,
-    subtitle: "Interactive 3D archipelago & resort explorer",
+    subtitle: "Follow a seaplane to your island",
     section: "explore",
   },
   "/resorts": {
@@ -105,6 +106,14 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
   const [isDark, setIsDark] = useState(false);
   const pathname = usePathname();
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [panelTop, setPanelTop] = useState(72);
+
+  // Measure the sticky header so the panel starts right below it on any screen.
+  useEffect(() => {
+    if (!open) return;
+    const header = buttonRef.current?.closest("header");
+    if (header) setPanelTop(Math.round(header.getBoundingClientRect().bottom));
+  }, [open]);
 
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains("dark"));
@@ -177,11 +186,11 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
         onClick={() => setOpen(false)}
         className="group flex min-h-[44px] items-center gap-3 rounded-xl p-2 transition-all hover:bg-mist/80 dark:hover:bg-white/10 active:scale-[0.99] aria-[current=page]:bg-mist dark:aria-[current=page]:bg-white/10"
       >
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-ocean dark:text-cyan-300 group-hover:bg-ocean group-hover:text-white dark:group-hover:bg-cyan-400 dark:group-hover:text-ocean transition-colors shadow-sm">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-ocean dark:text-[#9adbd5] group-hover:bg-ocean group-hover:text-white dark:group-hover:bg-[#7ccdc6] dark:group-hover:text-ocean transition-colors shadow-sm">
           <Icon size={16} aria-hidden="true" />
         </div>
         <div className="flex flex-col min-w-0">
-          <span className="text-sm font-semibold text-ocean dark:text-cyan-200 group-hover:text-ocean dark:group-hover:text-cyan-100">
+          <span className="text-sm font-semibold text-ocean dark:text-[#c5ebe7] group-hover:text-ocean dark:group-hover:text-[#e0f4f2]">
             {link.label}
           </span>
           {meta.subtitle ? (
@@ -192,7 +201,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
         </div>
         <ChevronRight
           size={15}
-          className="ml-auto shrink-0 text-muted/50 group-hover:text-ocean dark:group-hover:text-cyan-300 group-hover:translate-x-0.5 transition-all"
+          className="ml-auto shrink-0 text-muted/50 group-hover:text-ocean dark:group-hover:text-[#9adbd5] group-hover:translate-x-0.5 transition-all"
           aria-hidden="true"
         />
       </Link>
@@ -208,7 +217,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
         aria-controls="mobile-menu"
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex size-11 items-center justify-center rounded-xl border border-border-subtle bg-white dark:bg-white/10 dark:border-white/15 text-ink dark:text-white active:scale-95 transition-transform shadow-sm"
+        className="inline-flex size-11 items-center justify-center rounded-full bg-ocean text-sand dark:bg-white/10 dark:text-white active:scale-95 transition-transform"
       >
         {open ? (
           <X aria-hidden="true" size={20} strokeWidth={1.75} />
@@ -216,17 +225,19 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
           <Menu aria-hidden="true" size={20} strokeWidth={1.75} />
         )}
       </button>
-      {open ? (
+      {open
+        ? createPortal(
         <div
           id="mobile-menu"
-          className="fixed inset-x-0 top-16 bottom-0 z-50 border-b border-border-subtle bg-white/98 dark:bg-[#071318]/98 backdrop-blur-xl shadow-3 animate-in fade-in slide-in-from-top-1 overflow-y-auto overscroll-contain pb-20"
+          style={{ top: panelTop }}
+          className="fixed inset-x-0 bottom-0 z-50 border-b border-border-subtle bg-sand shadow-3 animate-in fade-in slide-in-from-top-1 overflow-y-auto overscroll-contain pb-24"
         >
           <nav aria-label="Mobile" className="mx-auto grid w-full max-w-[90rem] gap-4 px-4 py-4 sm:px-6">
             {/* Primary Action Button */}
             <Link
               href="/plan"
               onClick={() => setOpen(false)}
-              className="flex min-h-12 items-center justify-center gap-2.5 rounded-2xl bg-coral px-5 text-base font-semibold text-[#111827] shadow-sm active:scale-[0.99] transition-transform"
+              className="flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-coral px-5 text-base font-medium text-[#0a2342] shadow-sm active:scale-[0.99] transition-transform"
             >
               <Compass aria-hidden="true" size={20} strokeWidth={2} />
               Plan my trip
@@ -271,7 +282,7 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
               <button
                 type="button"
                 onClick={toggleDarkMode}
-                className="flex min-h-[48px] w-full items-center justify-between rounded-2xl px-3.5 text-sm font-semibold text-ocean dark:text-cyan-300 hover:bg-mist dark:hover:bg-white/10 transition-colors"
+                className="flex min-h-[48px] w-full items-center justify-between rounded-2xl px-3.5 text-sm font-semibold text-ocean dark:text-[#9adbd5] hover:bg-mist dark:hover:bg-white/10 transition-colors"
               >
                 <span>Theme Appearance</span>
                 <span className="flex items-center gap-1.5 text-xs text-muted dark:text-slate-300 bg-sand dark:bg-white/10 px-3 py-1.5 rounded-full border border-border-subtle/50">
@@ -281,8 +292,10 @@ export function MobileMenu({ links, account }: { links: MenuLink[]; account: Men
               </button>
             </div>
           </nav>
-        </div>
-      ) : null}
+        </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }

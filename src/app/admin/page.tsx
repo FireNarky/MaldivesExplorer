@@ -17,7 +17,7 @@ export default async function AdminFoundationPage() {
           <span className="text-xs font-bold uppercase tracking-wider text-lagoon-ink">
             Management Portal
           </span>
-          <h1 className="text-3xl font-display text-ocean dark:text-cyan-200 mt-1">
+          <h1 className="text-3xl font-display text-ocean dark:text-[#c5ebe7] mt-1">
             Staff Dashboard
           </h1>
           <p className="text-sm text-muted mt-1">
@@ -45,10 +45,10 @@ export default async function AdminFoundationPage() {
             href="/admin/settings/contact"
             className="group rounded-2xl border border-border-subtle bg-white dark:bg-[#071318] dark:border-white/10 p-5 shadow-1 transition-all duration-200 hover:-translate-y-1 hover:border-lagoon hover:shadow-2"
           >
-            <div className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 mb-3 group-hover:bg-lagoon group-hover:text-white transition-colors">
+            <div className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5] mb-3 group-hover:bg-lagoon group-hover:text-white transition-colors">
               <MessageSquare size={20} />
             </div>
-            <h2 className="font-display text-base font-semibold text-ocean dark:text-cyan-200">
+            <h2 className="font-display text-base font-semibold text-ocean dark:text-[#c5ebe7]">
               Chat &amp; Contact Settings
             </h2>
             <p className="text-xs text-muted mt-1">
@@ -62,10 +62,10 @@ export default async function AdminFoundationPage() {
           href="/admin/enquiries"
           className="group rounded-2xl border border-border-subtle bg-white dark:bg-[#071318] dark:border-white/10 p-5 shadow-1 transition-all duration-200 hover:-translate-y-1 hover:border-lagoon hover:shadow-2"
         >
-          <div className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 mb-3 group-hover:bg-lagoon group-hover:text-white transition-colors">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5] mb-3 group-hover:bg-lagoon group-hover:text-white transition-colors">
             <Compass size={20} />
           </div>
-          <h2 className="font-display text-base font-semibold text-ocean dark:text-cyan-200">
+          <h2 className="font-display text-base font-semibold text-ocean dark:text-[#c5ebe7]">
             Guest Enquiries
           </h2>
           <p className="text-xs text-muted mt-1">
@@ -78,10 +78,10 @@ export default async function AdminFoundationPage() {
           href="/admin/catalog/resorts"
           className="group rounded-2xl border border-border-subtle bg-white dark:bg-[#071318] dark:border-white/10 p-5 shadow-1 transition-all duration-200 hover:-translate-y-1 hover:border-lagoon hover:shadow-2"
         >
-          <div className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 mb-3 group-hover:bg-lagoon group-hover:text-white transition-colors">
+          <div className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5] mb-3 group-hover:bg-lagoon group-hover:text-white transition-colors">
             <FileText size={20} />
           </div>
-          <h2 className="font-display text-base font-semibold text-ocean dark:text-cyan-200">
+          <h2 className="font-display text-base font-semibold text-ocean dark:text-[#c5ebe7]">
             Resorts &amp; Catalog
           </h2>
           <p className="text-xs text-muted mt-1">

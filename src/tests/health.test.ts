@@ -13,7 +13,7 @@ describe("GET /api/health", () => {
     expect(Object.keys(body).sort()).toEqual(["application", "environment", "status", "version"]);
     expect(body).toMatchObject({
       status: "ok",
-      application: "Maldives Explorer",
+      application: "Thari Ventures",
       environment: "local",
     });
 

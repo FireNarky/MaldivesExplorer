@@ -980,7 +980,7 @@ async function main() {
     create: {
       name: "Dr. Aminath Rasheed",
       slug: "dr-aminath-rasheed",
-      title: "Lead Marine Biologist & Maldives Explorer Curator",
+      title: "Lead Marine Biologist & Thari Ventures Curator",
       bio: "Born in Malé and holding a doctorate in Coral Reef Ecology, Dr. Rasheed has surveyed over 200 Maldivian atoll reefs and advises luxury eco-resorts on marine conservation.",
       yearsInTourism: 14,
       portraitMediaId: authorMediaId,
@@ -1246,7 +1246,7 @@ async function main() {
     data: [
       {
         moduleType: "HERO",
-        title: "Maldives Explorer",
+        title: "Thari Ventures",
         config: {
           text: "Discover hand-curated private islands, iconic overwater villas, and bespoke journeys across the Maldives.",
         },
@@ -1257,7 +1257,7 @@ async function main() {
       },
       {
         moduleType: "TRUST",
-        title: "Maldives Explorer Standards",
+        title: "Thari Ventures Standards",
         config: {
           text: "Direct resort coordination, transfer planning, and written quotations.",
         },

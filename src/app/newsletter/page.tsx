@@ -55,9 +55,9 @@ export default async function NewsletterPage({
     <div className="mx-auto max-w-4xl space-y-12 py-4 sm:py-8">
       {/* Editorial Header */}
       <div className="text-center space-y-4">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-mist/60 dark:bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400 backdrop-blur">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-mist/60 dark:bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-lagoon-ink dark:text-[#7ccdc6] backdrop-blur">
           <BookOpen size={14} className="text-coral" />
-          Maldives Explorer Editorial
+          Thari Ventures Editorial
         </span>
         <h1 className="text-3xl sm:text-5xl font-display font-medium text-ocean">
           The Private Island Gazette
@@ -73,9 +73,9 @@ export default async function NewsletterPage({
         {perks.map((perk) => (
           <div
             key={perk.title}
-            className="group rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-5 shadow-1 transition-all duration-300 hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/40 hover:shadow-2"
+            className="group rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-5 shadow-1 transition-all duration-300 hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-[#7ccdc6]/40 hover:shadow-2"
           >
-            <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 mb-3 transition-colors group-hover:bg-ocean group-hover:text-white">
+            <span className="flex size-10 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5] mb-3 transition-colors group-hover:bg-ocean group-hover:text-white">
               <perk.icon size={18} strokeWidth={1.75} />
             </span>
             <p className="font-display text-base font-semibold text-ocean mb-1">{perk.title}</p>
@@ -86,7 +86,7 @@ export default async function NewsletterPage({
 
       {/* Subscription Card */}
       <div className="relative overflow-hidden rounded-3xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-6 sm:p-10 shadow-2 backdrop-blur-xl">
-        <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-lagoon/15 dark:bg-cyan-500/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-24 -top-24 size-64 rounded-full bg-lagoon/15 dark:bg-[#14a8a2]/10 blur-3xl" />
 
         <div className="max-w-xl mx-auto space-y-6">
           <div className="text-center">
@@ -128,12 +128,12 @@ export default async function NewsletterPage({
         <div className="space-y-4">
           <div className="flex items-center justify-between border-b border-border-subtle pb-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
-              <BookOpen size={14} className="text-lagoon-ink dark:text-cyan-400" />
+              <BookOpen size={14} className="text-lagoon-ink dark:text-[#7ccdc6]" />
               Recent guides
             </span>
             <Link
               href="/guides"
-              className="text-xs font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline"
+              className="text-xs font-semibold text-lagoon-ink dark:text-[#7ccdc6] hover:underline"
             >
               View All Guides &rarr;
             </Link>
@@ -144,11 +144,11 @@ export default async function NewsletterPage({
               <Link
                 key={item.id}
                 href={item.href}
-                className="group rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-4 transition-all hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/40"
+                className="group rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-4 transition-all hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-[#7ccdc6]/40"
               >
                 {item.categoryName ? (
                   <div className="mb-2 text-[11px] text-muted">
-                    <span className="rounded-full bg-mist dark:bg-white/10 px-2 py-0.5 font-semibold text-lagoon-ink dark:text-cyan-300">
+                    <span className="rounded-full bg-mist dark:bg-white/10 px-2 py-0.5 font-semibold text-lagoon-ink dark:text-[#9adbd5]">
                       {item.categoryName}
                     </span>
                   </div>

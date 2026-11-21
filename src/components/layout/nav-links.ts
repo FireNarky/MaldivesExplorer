@@ -1,6 +1,6 @@
 export const primaryLinks = [
   { href: "/destinations", label: "Destinations" },
-  { href: "/map", label: "3D Map" },
+  { href: "/map", label: "Star Chart" },
   { href: "/resorts", label: "Resorts" },
   { href: "/experiences", label: "Experiences" },
   { href: "/offers", label: "Offers" },

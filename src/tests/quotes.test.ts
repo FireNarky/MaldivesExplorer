@@ -164,7 +164,7 @@ describe("quote document", () => {
     const pdf = new TextDecoder().decode(renderQuotePdf(lines));
     expect(pdf.startsWith("%PDF-1.4")).toBe(true);
     expect(pdf).toContain("ME-Q-000001");
-    expect(pdf).toContain("Maldives Explorer");
+    expect(pdf).toContain("Thari Ventures");
     expect(pdf).toContain("USD 100.00");
   });
 });

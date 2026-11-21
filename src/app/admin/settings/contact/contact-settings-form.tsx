@@ -117,7 +117,7 @@ export function ContactSettingsForm({ initialSettings }: { initialSettings: Cont
               type="text"
               value={whatsappMessage}
               onChange={(e) => setWhatsappMessage(e.target.value)}
-              placeholder="Hello Maldives Explorer..."
+              placeholder="Hello Thari Ventures..."
               className="min-h-11 w-full rounded-xl border border-border-subtle dark:border-white/15 bg-white dark:bg-white/5 px-4 text-sm text-ink dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
             <p className="text-[11px] text-muted">

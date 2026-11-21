@@ -317,10 +317,10 @@ export function PaletteSwitcher() {
             <div className="flex items-center gap-2">
               <Palette
                 size={18}
-                className="text-lagoon-ink dark:text-cyan-400"
+                className="text-lagoon-ink dark:text-[#7ccdc6]"
                 aria-hidden="true"
               />
-              <span className="text-sm font-bold text-ocean dark:text-cyan-300">
+              <span className="text-sm font-bold text-ocean dark:text-[#9adbd5]">
                 Theme &amp; Palettes
               </span>
             </div>
@@ -443,7 +443,7 @@ export function PaletteSwitcher() {
                   {isSelected ? (
                     <Check
                       size={16}
-                      className="text-lagoon-ink dark:text-cyan-400"
+                      className="text-lagoon-ink dark:text-[#7ccdc6]"
                       aria-hidden="true"
                     />
                   ) : null}
@@ -465,7 +465,7 @@ export function PaletteSwitcher() {
           onPointerDown={handlePointerDown}
           title="Drag to reposition theme float"
           aria-label="Drag to reposition theme switcher"
-          className="cursor-grab active:cursor-grabbing touch-none flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-muted hover:text-ink dark:hover:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95"
+          className="cursor-grab active:cursor-grabbing touch-none flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-muted hover:text-ink dark:hover:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95"
         >
           <GripVertical size={16} aria-hidden="true" />
         </button>
@@ -474,7 +474,7 @@ export function PaletteSwitcher() {
           type="button"
           onClick={handleToggleMode}
           title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
-          className="flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          className="flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
           aria-label="Toggle dark and light mode"
         >
           {isDark ? (
@@ -496,7 +496,7 @@ export function PaletteSwitcher() {
           }}
           aria-expanded={isOpen}
           aria-haspopup="dialog"
-          className="group flex min-h-11 items-center gap-2 rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 px-3.5 py-2.5 text-sm font-semibold text-ocean dark:text-cyan-300 shadow-2 backdrop-blur hover:border-ocean dark:hover:border-cyan-400 hover:bg-white dark:hover:bg-[#11232b] active:scale-95 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          className="group flex min-h-11 items-center gap-2 rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 px-3.5 py-2.5 text-sm font-semibold text-ocean dark:text-[#9adbd5] shadow-2 backdrop-blur hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           <span
             className="inline-block h-3.5 w-3.5 rounded-full shadow-sm ring-1 ring-black/10"

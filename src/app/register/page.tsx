@@ -13,7 +13,7 @@ import { publicMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = publicMetadata({
   title: "Create Account",
   description:
-    "Join Maldives Explorer to save itineraries, receive written resort quotes, and manage your trip enquiries.",
+    "Join Thari Ventures to save itineraries, receive written resort quotes, and manage your trip enquiries.",
   path: "/register",
 });
 
@@ -40,7 +40,7 @@ export default async function RegisterPage({
           <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-lagoon to-ocean text-white shadow-2 ring-4 ring-mist/50 dark:ring-ocean/40 transition-transform hover:scale-105">
             <Compass size={28} className="animate-spin-slow" />
           </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-mist/60 dark:bg-white/5 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-mist/60 dark:bg-white/5 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-lagoon-ink dark:text-[#7ccdc6]">
             <User size={13} className="text-coral" />
             New Member
           </span>
@@ -55,7 +55,7 @@ export default async function RegisterPage({
         {/* Glass Card */}
         <div className="relative overflow-hidden rounded-3xl border border-border-subtle bg-white/90 dark:bg-white/5 p-6 sm:p-8 shadow-2 backdrop-blur-xl">
           {/* Decorative blobs */}
-          <div className="pointer-events-none absolute -right-20 -top-20 size-48 rounded-full bg-lagoon/15 dark:bg-cyan-500/10 blur-3xl" />
+          <div className="pointer-events-none absolute -right-20 -top-20 size-48 rounded-full bg-lagoon/15 dark:bg-[#14a8a2]/10 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 -left-20 size-48 rounded-full bg-coral/15 dark:bg-coral/10 blur-3xl" />
 
           {/* Error */}
@@ -190,7 +190,7 @@ export default async function RegisterPage({
             Password &amp; Magic Link Sign-In
           </span>
           <span className="flex items-center gap-1.5">
-            <Waves size={14} className="text-lagoon-ink dark:text-cyan-400" />
+            <Waves size={14} className="text-lagoon-ink dark:text-[#7ccdc6]" />
             Saved Shortlists &amp; Plans
           </span>
           <span className="flex items-center gap-1.5">

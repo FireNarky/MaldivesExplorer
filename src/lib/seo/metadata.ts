@@ -11,8 +11,8 @@ type PublicMetadataInput = {
 
 export function publicMetadata(input: PublicMetadataInput): Metadata {
   const cleanTitle =
-    input.title.replace(/\s*[·|-]\s*Maldives Explorer\s*$/i, "").trim() || input.title;
-  const description = input.description.trim() || "Maldives Explorer";
+    input.title.replace(/\s*[·|-]\s*Thari Ventures\s*$/i, "").trim() || input.title;
+  const description = input.description.trim() || "Thari Ventures";
   const canonical = absoluteUrl(input.path);
   return {
     title: cleanTitle,
@@ -22,7 +22,7 @@ export function publicMetadata(input: PublicMetadataInput): Metadata {
       title: cleanTitle,
       description,
       url: canonical,
-      siteName: "Maldives Explorer",
+      siteName: "Thari Ventures",
       type: input.type ?? "website",
       images: input.image ? [{ url: absoluteUrl(input.image) }] : undefined,
     },

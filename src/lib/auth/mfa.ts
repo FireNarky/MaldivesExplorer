@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 import { Secret, TOTP } from "otpauth";
 
-const issuer = "Maldives Explorer";
+const issuer = "Thari Ventures";
 
 function encryptionKey(): Buffer {
   const secret = process.env.AUTH_SECRET;

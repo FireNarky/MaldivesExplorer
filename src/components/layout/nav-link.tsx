@@ -20,7 +20,7 @@ export function NavLink({
       href={href}
       aria-current={current ? "page" : undefined}
       className={cn(
-        "inline-flex min-h-11 items-center border-b-2 border-transparent text-base font-semibold text-ocean hover:border-border-subtle",
+        "inline-flex min-h-11 items-center border-b-2 border-transparent text-[0.95rem] font-medium text-ocean hover:border-border-subtle",
         current && "border-lagoon-ink",
         className,
       )}

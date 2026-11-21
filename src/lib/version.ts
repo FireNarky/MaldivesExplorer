@@ -1,4 +1,4 @@
 import packageJson from "../../package.json";
 
-export const applicationName = "Maldives Explorer";
+export const applicationName = "Thari Ventures";
 export const applicationVersion: string = packageJson.version;

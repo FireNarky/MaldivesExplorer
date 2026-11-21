@@ -13,10 +13,10 @@ export const metadata: Metadata = publicMetadata({
 });
 
 const descriptions: Record<string, string> = {
-  ACCOUNT: "Maldives Explorer may keep this account.",
-  ENQUIRY_CONTACT: "Maldives Explorer may contact me about a trip plan.",
+  ACCOUNT: "Thari Ventures may keep this account.",
+  ENQUIRY_CONTACT: "Thari Ventures may contact me about a trip plan.",
   ANALYTICS: "Search analytics may be stored for this account.",
-  MARKETING: "Maldives Explorer may send messages that are not about an open trip plan.",
+  MARKETING: "Thari Ventures may send messages that are not about an open trip plan.",
 };
 
 export default async function ConsentPage({

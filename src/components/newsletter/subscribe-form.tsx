@@ -19,7 +19,7 @@ export function SubscribeForm({
 }) {
   const key = randomUUID().replace(/-/g, "").slice(0, 24);
   const inputClass = inverted
-    ? "min-h-11 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-base text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-300"
+    ? "min-h-11 w-full rounded-xl border border-white/20 bg-white/10 px-4 text-base text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#9adbd5]"
     : "min-h-11 w-full rounded-xl border border-border bg-white dark:bg-[#0c1c24] dark:border-[#223d4d] px-4 text-base text-ink dark:text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-lagoon/30";
 
   return (
@@ -60,7 +60,7 @@ export function SubscribeForm({
           required
           className="size-6 min-w-6 rounded-md cursor-pointer accent-lagoon text-ocean focus:ring-2 focus:ring-lagoon/40"
         />
-        <span>I agree to receive the Maldives Explorer newsletter. I can unsubscribe later.</span>
+        <span>I agree to receive the Thari Ventures newsletter. I can unsubscribe later.</span>
       </label>
       <Button type="submit" variant={inverted ? "conversion" : "primary"} className="w-full sm:w-auto">
         Subscribe

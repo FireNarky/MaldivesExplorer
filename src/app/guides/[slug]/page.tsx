@@ -55,7 +55,7 @@ export default async function GuidePage({ params }: PageProps) {
     const authorName =
       guide.author.status === "PUBLISHED" && guide.author.name !== "Dr. Aminath Rasheed"
         ? guide.author.name
-        : "Maldives Explorer Editorial Team";
+        : "Thari Ventures Editorial Team";
     const topics = guide.tags.map((item) => item.tag.name);
     const stale = guide.staleAfter !== null && guide.staleAfter.getTime() < Date.now();
     return (

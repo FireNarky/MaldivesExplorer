@@ -77,9 +77,9 @@ export default async function PlanPage() {
           {plannerPerks.map((p) => (
             <div
               key={p.title}
-              className="rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-4 shadow-1 transition-all hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-cyan-400/40"
+              className="rounded-2xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 p-4 shadow-1 transition-all hover:-translate-y-1 hover:border-ocean/40 dark:hover:border-[#7ccdc6]/40"
             >
-              <span className="flex size-9 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-cyan-300 mb-2.5">
+              <span className="flex size-9 items-center justify-center rounded-xl bg-mist dark:bg-white/10 text-lagoon-ink dark:text-[#9adbd5] mb-2.5">
                 <p.icon size={17} strokeWidth={1.75} />
               </span>
               <p className="font-display text-xs font-semibold text-ocean mb-0.5">{p.title}</p>

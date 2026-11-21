@@ -27,8 +27,8 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin()),
   title: {
-    default: "Maldives Explorer · Curated Luxury Resorts & Islands",
-    template: "%s · Maldives Explorer",
+    default: "Thari Ventures · Curated Luxury Resorts & Islands",
+    template: "%s · Thari Ventures",
   },
   description: "Curated private island resorts, iconic overwater pool villas, and bespoke journeys across the Maldives.",
   icons: {
@@ -36,28 +36,28 @@ export const metadata: Metadata = {
       { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico" },
     ],
-    apple: "/favicon.svg",
+    apple: "/brand/favicon-192.png",
   },
   openGraph: {
-    siteName: "Maldives Explorer",
+    siteName: "Thari Ventures",
     type: "website",
-    title: "Maldives Explorer · Curated Luxury Resorts & Bespoke Island Journeys",
+    title: "Thari Ventures · Curated Luxury Resorts & Bespoke Island Journeys",
     description: "Discover hand-curated private islands, iconic overwater pool villas, and direct resort quotes across the Maldives.",
     url: "https://xplorer.itnvend.com",
     images: [
       {
-        url: "/images/og-maldives.jpg",
+        url: "/images/og-thari.png",
         width: 1200,
         height: 630,
-        alt: "Maldives Explorer Luxury Overwater Villa & Lagoon",
+        alt: "Thari Ventures - Follow your star",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Maldives Explorer · Curated Luxury Resorts",
+    title: "Thari Ventures · Curated Luxury Resorts",
     description: "Discover hand-curated private islands, iconic overwater pool villas, and bespoke journeys across the Maldives.",
-    images: ["/images/og-maldives.jpg"],
+    images: ["/images/og-thari.png"],
   },
   robots: { index: false, follow: false },
 };

@@ -64,7 +64,7 @@ export function ContactForm({
           <CheckCircle2 size={32} />
         </div>
         <div className="space-y-1">
-          <h2 className="font-display text-2xl sm:text-3xl text-ocean dark:text-cyan-200">
+          <h2 className="font-display text-2xl sm:text-3xl text-ocean dark:text-[#c5ebe7]">
             Enquiry Received
           </h2>
           <p className="text-sm text-muted dark:text-slate-300 max-w-md mx-auto">
@@ -75,7 +75,7 @@ export function ContactForm({
         {state.reference ? (
           <div className="inline-flex flex-col items-center justify-center rounded-2xl border border-border-subtle bg-sand/40 dark:bg-white/5 px-6 py-3">
             <span className="text-[11px] uppercase tracking-wider text-muted font-medium">Reference Code</span>
-            <span className="font-mono text-lg font-bold text-ocean dark:text-cyan-300 tracking-wider">
+            <span className="font-mono text-lg font-bold text-ocean dark:text-[#9adbd5] tracking-wider">
               {state.reference}
             </span>
           </div>
@@ -102,7 +102,7 @@ export function ContactForm({
   return (
     <div className="rounded-3xl border border-border-subtle bg-white dark:bg-[#071318] p-6 sm:p-10 shadow-1 max-w-2xl mx-auto">
       <div className="space-y-1.5 mb-7">
-        <h2 className="font-display text-2xl sm:text-3xl text-ocean dark:text-cyan-200 font-medium">
+        <h2 className="font-display text-2xl sm:text-3xl text-ocean dark:text-[#c5ebe7] font-medium">
           Send a Travel Enquiry
         </h2>
         <p className="text-sm text-muted dark:text-slate-400 font-light">
@@ -156,7 +156,7 @@ export function ContactForm({
                   onClick={() => setTopic(item)}
                   className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
                     isSelected
-                      ? "bg-ocean text-white dark:bg-cyan-400 dark:text-[#071318] shadow-sm font-semibold"
+                      ? "bg-ocean text-white dark:bg-[#7ccdc6] dark:text-[#071318] shadow-sm font-semibold"
                       : "border border-border-subtle bg-sand/30 dark:bg-white/5 text-ink dark:text-slate-300 hover:border-ocean/40"
                   }`}
                 >
@@ -277,7 +277,7 @@ export function ContactForm({
             />
             <span className="text-xs leading-relaxed text-muted dark:text-slate-300">
               I agree to the processing of my contact information to receive tailored quotations in accordance with the{" "}
-              <Link href="/privacy" className="text-ocean dark:text-cyan-400 underline font-medium hover:text-lagoon">
+              <Link href="/privacy" className="text-ocean dark:text-[#7ccdc6] underline font-medium hover:text-lagoon">
                 Privacy Policy
               </Link>
               . You may opt out at any time.

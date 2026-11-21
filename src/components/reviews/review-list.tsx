@@ -15,7 +15,7 @@ export function ReviewList({ reviews }: { reviews: PublicReview[] }) {
             <p>
               <Link
                 href={review.resortHref}
-                className="inline-flex min-h-11 items-center text-lagoon-ink dark:text-cyan-400 underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+                className="inline-flex min-h-11 items-center text-lagoon-ink dark:text-[#7ccdc6] underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
               >
                 {review.resortName}
               </Link>

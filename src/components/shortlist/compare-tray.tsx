@@ -50,7 +50,7 @@ export function CompareTray() {
       className="sticky bottom-0 z-20 border-t border-border-subtle bg-white/95 dark:bg-[#071318]/95 dark:border-white/15 backdrop-blur-md shadow-2"
     >
       <div className="mx-auto flex w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] flex-wrap items-center gap-4 px-4 py-3 lg:px-8 2xl:px-12 text-sm dark:text-white">
-        <p className="font-semibold text-ocean dark:text-cyan-300">
+        <p className="font-semibold text-ocean dark:text-[#9adbd5]">
           {ids.length} of {compareLimit} resorts
         </p>
         {ids.length >= compareLimit ? (
@@ -58,7 +58,7 @@ export function CompareTray() {
         ) : null}
         <Link
           href={`/compare?ids=${ids.join(",")}`}
-          className="inline-flex min-h-11 items-center font-semibold text-lagoon-ink dark:text-cyan-400 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          className="inline-flex min-h-11 items-center font-semibold text-lagoon-ink dark:text-[#7ccdc6] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
         >
           Compare resorts &rarr;
         </Link>

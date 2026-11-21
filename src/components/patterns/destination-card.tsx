@@ -25,7 +25,7 @@ const ATOLL_INSIGHTS: Record<string, { highlight: string; transfer: string; grad
   "north-male-atoll": {
     highlight: "Luxury Speedboat Corridor & Surf Breaks",
     transfer: "25–45m Speedboat",
-    gradient: "from-cyan-600/30 via-ocean/20 to-lagoon/40",
+    gradient: "from-[#0b7c79]/30 via-ocean/20 to-lagoon/40",
   },
   "south-male-atoll": {
     highlight: "Lagoon Sandbanks & Swift Transfer Access",
@@ -40,7 +40,7 @@ const ATOLL_INSIGHTS: Record<string, { highlight: string; transfer: string; grad
   "north-ari-atoll": {
     highlight: "Dramatic Underwater Pinnacles (Thilas) & Hammerheads",
     transfer: "25m Seaplane",
-    gradient: "from-lagoon/30 via-cyan-600/20 to-ocean/40",
+    gradient: "from-lagoon/30 via-[#0b7c79]/20 to-ocean/40",
   },
   "noonu-atoll": {
     highlight: "Ultra-Luxury Island Residences & Private Sandbars",
@@ -72,7 +72,7 @@ export function DestinationCard({ item }: { item: DestinationCardData }) {
   };
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 shadow-1 transition-all duration-300 hover:-translate-y-2 hover:border-ocean/50 dark:hover:border-cyan-400/50 hover:shadow-2">
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border-subtle bg-white dark:bg-white/5 dark:border-white/10 shadow-1 transition-all duration-300 hover:-translate-y-2 hover:border-ocean/50 dark:hover:border-[#7ccdc6]/50 hover:shadow-2">
       {/* Decorative Atoll Horizon Banner */}
       <div className={`relative h-28 overflow-hidden bg-gradient-to-br ${insight.gradient} p-5 text-white`}>
         <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]" />
@@ -107,7 +107,7 @@ export function DestinationCard({ item }: { item: DestinationCardData }) {
       {/* Card Content Body */}
       <div className="flex flex-1 flex-col p-6">
         <div className="mb-2">
-          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-lagoon-ink dark:text-cyan-400">
+          <span className="inline-block text-xs font-semibold uppercase tracking-wider text-lagoon-ink dark:text-[#7ccdc6]">
             {insight.highlight}
           </span>
           <h2 className="mt-1 font-display text-2xl text-ocean font-medium tracking-tight">
@@ -125,7 +125,7 @@ export function DestinationCard({ item }: { item: DestinationCardData }) {
         {item.resorts && item.resorts.length > 0 ? (
           <div className="mb-5 rounded-2xl bg-sand/60 dark:bg-white/5 p-3 text-xs">
             <span className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1.5 flex items-center gap-1">
-              <Hotel size={12} className="text-lagoon-ink dark:text-cyan-400" />
+              <Hotel size={12} className="text-lagoon-ink dark:text-[#7ccdc6]" />
               Featured Stays:
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -148,7 +148,7 @@ export function DestinationCard({ item }: { item: DestinationCardData }) {
 
         {/* Bottom CTA Row */}
         <div className="mt-auto flex items-center justify-between border-t border-border-subtle/80 pt-4 text-xs font-semibold">
-          <span className="flex items-center gap-1 text-lagoon-ink dark:text-cyan-400 group-hover:translate-x-1 transition-transform">
+          <span className="flex items-center gap-1 text-lagoon-ink dark:text-[#7ccdc6] group-hover:translate-x-1 transition-transform">
             Explore {item.name} &rarr;
           </span>
           <span className="text-muted font-normal">Curated Directory</span>

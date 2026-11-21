@@ -59,7 +59,7 @@ export function renderQuotePdf(lines: string[]): Uint8Array {
   for (let index = 0; index < wrapped.length; index += linesPerPage) {
     pages.push(wrapped.slice(index, index + linesPerPage));
   }
-  if (pages.length === 0) pages.push(["Maldives Explorer"]);
+  if (pages.length === 0) pages.push(["Thari Ventures"]);
 
   const encoder = new TextEncoder();
   const chunks: Uint8Array[] = [encoder.encode("%PDF-1.4\n")];

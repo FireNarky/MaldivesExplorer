@@ -7,7 +7,7 @@ import { currentNoticeVersion } from "@/modules/newsletter/service";
 export const metadata: Metadata = publicMetadata({
   title: "Terms of Service",
   description:
-    "Platform usage terms for browsing Maldives Explorer, submitting travel enquiries, and receiving consultant-prepared written quotations.",
+    "Platform usage terms for browsing Thari Ventures, submitting travel enquiries, and receiving consultant-prepared written quotations.",
   path: "/terms",
 });
 
@@ -21,16 +21,16 @@ export default async function TermsPage() {
       <PageHeader
         crumbs={crumbs}
         title="Terms of Service"
-        lede={`Notice version ${noticeVersion}. These terms describe how browsing, trip planning, enquiries, and written quotations operate on Maldives Explorer.`}
+        lede={`Notice version ${noticeVersion}. These terms describe how browsing, trip planning, enquiries, and written quotations operate on Thari Ventures.`}
       />
 
       <div className="grid gap-6 rounded-3xl border border-border-subtle bg-white dark:bg-[#071318] dark:border-white/10 p-6 sm:p-10 shadow-1 text-sm sm:text-base text-ink dark:text-slate-200 leading-relaxed">
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             1. Editorial Discovery and Trip Planning
           </h2>
           <p>
-            Maldives Explorer provides editorial information on Maldivian atolls, islands, resorts,
+            Thari Ventures provides editorial information on Maldivian atolls, islands, resorts,
             room categories, dining venues, experiences, promotional offers, and travel guides.
             Published descriptions, transfer durations, and seasonal notes are provided for trip
             planning and remain subject to verification at the time a written quotation is prepared.
@@ -38,21 +38,21 @@ export default async function TermsPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             2. Enquiries Are Not Confirmed Bookings
           </h2>
           <p>
             Submitting a trip plan via the{" "}
             <Link
               href="/plan"
-              className="font-semibold text-lagoon-ink dark:text-cyan-400 underline"
+              className="font-semibold text-lagoon-ink dark:text-[#7ccdc6] underline"
             >
               Trip Planner
             </Link>{" "}
             or an enquiry via the{" "}
             <Link
               href="/contact"
-              className="font-semibold text-lagoon-ink dark:text-cyan-400 underline"
+              className="font-semibold text-lagoon-ink dark:text-[#7ccdc6] underline"
             >
               Contact
             </Link>{" "}
@@ -62,7 +62,7 @@ export default async function TermsPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             3. Price on Request and Written Quotations
           </h2>
           <p>
@@ -78,7 +78,7 @@ export default async function TermsPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">
             4. Supplier Terms and Availability
           </h2>
           <p>
@@ -89,7 +89,7 @@ export default async function TermsPage() {
         </section>
 
         <section className="grid gap-2">
-          <h2 className="font-display text-xl text-ocean dark:text-cyan-300">5. Accounts</h2>
+          <h2 className="font-display text-xl text-ocean dark:text-[#9adbd5]">5. Accounts</h2>
           <p>
             If you create an account, please keep your sign-in credentials confidential and provide
             accurate contact and travel details in your enquiries.
@@ -98,7 +98,7 @@ export default async function TermsPage() {
             See also our{" "}
             <Link
               href="/privacy"
-              className="font-semibold text-lagoon-ink dark:text-cyan-400 underline"
+              className="font-semibold text-lagoon-ink dark:text-[#7ccdc6] underline"
             >
               Privacy Notice
             </Link>

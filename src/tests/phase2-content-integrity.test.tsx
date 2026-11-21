@@ -794,7 +794,7 @@ describe("Phase 2 — OAuth availability (F-05 OAuth)", () => {
     expect(text).not.toMatch(/Google|Facebook/);
     expect(text).not.toContain("being upgraded");
     expect(text).not.toContain("or sign in with email");
-    expect(screen.getByRole("button", { name: /Sign In to Maldives Explorer/ })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /Sign In to Thari Ventures/ })).toBeTruthy();
   });
 
   it("shows only the configured provider on the login form", () => {

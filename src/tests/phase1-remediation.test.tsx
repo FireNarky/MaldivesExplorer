@@ -378,9 +378,9 @@ describe("Phase 1 — Terms, Privacy, Reviews & Public Claims (F-02, F-03.1, F-0
     expect(text).not.toContain("Traveler Stories");
   });
 
-  it("prevents duplicate Maldives Explorer suffixes in page metadata titles", () => {
+  it("prevents duplicate Thari Ventures suffixes in page metadata titles", () => {
     const meta = publicMetadata({
-      title: "Sign In · Maldives Explorer",
+      title: "Sign In · Thari Ventures",
       description: "Sign in",
       path: "/login",
     });

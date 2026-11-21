@@ -167,7 +167,7 @@ export default async function ResortPage({ params }: PageProps) {
                       key={room.id}
                       className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
-                      <h3 className="text-ocean dark:text-cyan-300">{room.name}</h3>
+                      <h3 className="text-ocean dark:text-[#9adbd5]">{room.name}</h3>
                       {room.description ? (
                         <p className="text-ink dark:text-slate-200">{room.description}</p>
                       ) : null}
@@ -186,7 +186,7 @@ export default async function ResortPage({ params }: PageProps) {
                       key={venue.id}
                       className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
-                      <h3 className="text-ocean dark:text-cyan-300">{venue.name}</h3>
+                      <h3 className="text-ocean dark:text-[#9adbd5]">{venue.name}</h3>
                       {venue.description ? (
                         <p className="text-ink dark:text-slate-200">{venue.description}</p>
                       ) : null}
@@ -210,7 +210,7 @@ export default async function ResortPage({ params }: PageProps) {
                       key={transfer.id}
                       className="grid content-start gap-2 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-4 shadow-1 lg:p-6"
                     >
-                      <h3 className="text-ocean dark:text-cyan-300">{transfer.label}</h3>
+                      <h3 className="text-ocean dark:text-[#9adbd5]">{transfer.label}</h3>
                       <p className="text-ink dark:text-slate-200">{transfer.transferType.label}</p>
                       {transfer.durationMinutes !== null ? (
                         <p className="text-sm text-muted">
@@ -248,7 +248,7 @@ export default async function ResortPage({ params }: PageProps) {
                 {resort.reefSummary ? <p>{resort.reefSummary}</p> : null}
                 {resort.diveCenterSummary ? (
                   <div className="grid gap-1">
-                    <h3 className="text-ocean dark:text-cyan-300">Dive centre</h3>
+                    <h3 className="text-ocean dark:text-[#9adbd5]">Dive centre</h3>
                     <p>{resort.diveCenterSummary}</p>
                   </div>
                 ) : null}
@@ -294,7 +294,7 @@ export default async function ResortPage({ params }: PageProps) {
             className="order-first lg:order-last lg:col-span-4 lg:sticky lg:top-24 lg:self-start"
           >
             <div className="grid gap-4 rounded-2xl border border-border-subtle bg-white dark:bg-[#0d1e27] dark:border-[#1a3442] p-6 shadow-2">
-              <h2 className="text-2xl text-ocean dark:text-cyan-300">Plan a stay here</h2>
+              <h2 className="text-2xl text-ocean dark:text-[#9adbd5]">Plan a stay here</h2>
               <PriceDisclosure />
               <Button asChild variant="conversion">
                 <Link href="/plan">

@@ -128,7 +128,7 @@ export function websiteSearchData(origin: string): Record<string, unknown> {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Maldives Explorer",
+    name: "Thari Ventures",
     url: origin,
     potentialAction: {
       "@type": "SearchAction",

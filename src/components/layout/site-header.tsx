@@ -42,11 +42,13 @@ export async function SiteHeader() {
     ...(session?.user?.staff ? [{ href: "/admin", label: "Staff" }] : []),
   ];
   return (
-    <header className="sticky top-0 z-10 border-b border-border-subtle bg-sand/95 backdrop-blur">
+    <header className="sticky top-0 z-10 border-b border-border-subtle/70 bg-sand/85 backdrop-blur-xl backdrop-saturate-150">
       <div className="relative mx-auto flex min-h-16 w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] items-center gap-2 sm:gap-4 px-4 lg:gap-8 lg:px-8 2xl:px-12">
-        <Link href="/" className="flex shrink-0 items-baseline gap-2 py-2 font-display text-lg sm:text-xl text-ocean">
-          <span aria-hidden="true" className="size-2.5 sm:size-3 rounded-full bg-lagoon" />
-          Maldives Explorer
+        <Link href="/" aria-label="Thari Ventures home" className="flex shrink-0 items-center py-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logo-horizontal.svg" alt="Thari Ventures" className="h-9 w-auto sm:h-11 dark:hidden" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/logo-horizontal-reversed.svg" alt="" aria-hidden="true" className="hidden h-9 w-auto sm:h-11 dark:block" />
         </Link>
         <nav aria-label="Primary" className="hidden items-center gap-5 xl:gap-7 lg:flex">
           {primaryLinks.map((link) => {
@@ -56,7 +58,7 @@ export async function SiteHeader() {
                 {Icon ? (
                   <Icon
                     size={16}
-                    className="text-lagoon-ink/70 group-hover:text-lagoon-ink dark:text-cyan-400/70 dark:group-hover:text-cyan-300 transition-colors"
+                    className="text-lagoon-ink/70 group-hover:text-lagoon-ink dark:text-[#7ccdc6]/70 dark:group-hover:text-[#9adbd5] transition-colors"
                     aria-hidden="true"
                   />
                 ) : null}
@@ -104,9 +106,8 @@ export async function SiteHeader() {
                 Sign in
               </NavLink>
             )}
-            <Button asChild variant="conversion">
+            <Button asChild variant="primary" size="sm" className="ml-1">
               <Link href="/plan">
-                <Compass aria-hidden="true" size={20} strokeWidth={1.75} />
                 Plan my trip
               </Link>
             </Button>
@@ -114,7 +115,7 @@ export async function SiteHeader() {
           <Link
             href="/wishlist"
             aria-label="Saved list"
-            className="lg:hidden inline-flex size-11 items-center justify-center rounded-xl border border-border-subtle bg-white dark:bg-white/10 dark:border-white/15 text-ink dark:text-white active:scale-95 transition-transform shadow-sm"
+            className="lg:hidden inline-flex size-11 items-center justify-center rounded-full text-ink dark:text-white active:scale-95 transition-transform"
           >
             <Bookmark aria-hidden="true" size={19} strokeWidth={1.75} />
           </Link>
