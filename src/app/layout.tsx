@@ -82,7 +82,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <SiteHeader />
         <main
           id="main"
-          className="mx-auto w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] flex-1 px-4 py-8 pb-12 lg:px-8 2xl:px-12"
+          className="mx-auto w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] flex-1 px-4 py-8 pb-20 lg:px-8 lg:pb-28 2xl:px-12"
         >
           {children}
         </main>

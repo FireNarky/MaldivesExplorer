@@ -130,6 +130,7 @@ export function PaletteSwitcher() {
   const [activePalette, setActivePalette] = useState<PaletteId>("ocean");
   const [mode, setMode] = useState<ThemeMode>("system");
   const [isOpen, setIsOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [customPos, setCustomPos] = useState<{ x: number; y: number } | null>(null);
 
@@ -459,58 +460,80 @@ export function PaletteSwitcher() {
         </div>
       ) : null}
 
-      <div className="flex items-center gap-1.5">
+      {isMinimized ? (
         <button
           type="button"
-          onPointerDown={handlePointerDown}
-          title="Drag to reposition theme float"
-          aria-label="Drag to reposition theme switcher"
-          className="cursor-grab active:cursor-grabbing touch-none flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-muted hover:text-ink dark:hover:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95"
+          onClick={() => setIsMinimized(false)}
+          title="Open Theme & Palette Switcher"
+          aria-label="Open Theme & Palette Switcher"
+          className="flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ocean dark:text-[#7ccdc6] shadow-2 backdrop-blur transition hover:scale-110 active:scale-95"
         >
-          <GripVertical size={16} aria-hidden="true" />
+          <Palette size={18} />
         </button>
+      ) : (
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onPointerDown={handlePointerDown}
+            title="Drag to reposition theme float"
+            aria-label="Drag to reposition theme switcher"
+            className="cursor-grab active:cursor-grabbing touch-none flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-muted hover:text-ink dark:hover:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95"
+          >
+            <GripVertical size={16} aria-hidden="true" />
+          </button>
 
-        <button
-          type="button"
-          onClick={handleToggleMode}
-          title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
-          className="flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-          aria-label="Toggle dark and light mode"
-        >
-          {isDark ? (
-            <Sun
-              size={17}
-              className="text-amber-400 rotate-0 transition-transform hover:rotate-45"
+          <button
+            type="button"
+            onClick={handleToggleMode}
+            title={`Switch to ${isDark ? "Light" : "Dark"} mode`}
+            className="flex size-11 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-ink dark:text-white shadow-2 backdrop-blur transition hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+            aria-label="Toggle dark and light mode"
+          >
+            {isDark ? (
+              <Sun
+                size={17}
+                className="text-amber-400 rotate-0 transition-transform hover:rotate-45"
+              />
+            ) : (
+              <Moon size={17} className="text-slate-700 -rotate-12 transition-transform" />
+            )}
+          </button>
+
+          <button
+            ref={openButtonRef}
+            type="button"
+            onClick={() => {
+              if (isDraggingRef.current) return;
+              setIsOpen(!isOpen);
+            }}
+            aria-expanded={isOpen}
+            aria-haspopup="dialog"
+            className="group flex min-h-11 items-center gap-2 rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 px-3.5 py-2.5 text-sm font-semibold text-ocean dark:text-[#9adbd5] shadow-2 backdrop-blur hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+          >
+            <span
+              className="inline-block h-3.5 w-3.5 rounded-full shadow-sm ring-1 ring-black/10"
+              style={{ backgroundColor: isDark ? current.darkAccent : current.accent }}
             />
-          ) : (
-            <Moon size={17} className="text-slate-700 -rotate-12 transition-transform" />
-          )}
-        </button>
+            <span className="hidden sm:inline">{current.name}</span>
+            <span className="text-xs text-muted font-normal">Theme</span>
+            <Palette
+              size={15}
+              className="text-lagoon-ink transition-transform group-hover:rotate-12"
+              aria-hidden="true"
+            />
+          </button>
 
-        <button
-          ref={openButtonRef}
-          type="button"
-          onClick={() => {
-            if (isDraggingRef.current) return;
-            setIsOpen(!isOpen);
-          }}
-          aria-expanded={isOpen}
-          aria-haspopup="dialog"
-          className="group flex min-h-11 items-center gap-2 rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 px-3.5 py-2.5 text-sm font-semibold text-ocean dark:text-[#9adbd5] shadow-2 backdrop-blur hover:border-ocean dark:hover:border-[#7ccdc6] hover:bg-white dark:hover:bg-[#11232b] active:scale-95 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-        >
-          <span
-            className="inline-block h-3.5 w-3.5 rounded-full shadow-sm ring-1 ring-black/10"
-            style={{ backgroundColor: isDark ? current.darkAccent : current.accent }}
-          />
-          <span className="hidden sm:inline">{current.name}</span>
-          <span className="text-xs text-muted font-normal">Theme</span>
-          <Palette
-            size={15}
-            className="text-lagoon-ink transition-transform group-hover:rotate-12"
-            aria-hidden="true"
-          />
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={() => setIsMinimized(true)}
+            title="Minimize theme float"
+            aria-label="Minimize theme float"
+            className="flex size-8 items-center justify-center rounded-full border border-border/80 dark:border-white/20 bg-white/95 dark:bg-[#0c1a20]/95 text-muted hover:text-ink dark:hover:text-white shadow-2 backdrop-blur transition hover:bg-mist dark:hover:bg-[#11232b] active:scale-95 text-xs"
+          >
+            <X size={13} />
+          </button>
+        </div>
+      )}
     </aside>
   );
 }

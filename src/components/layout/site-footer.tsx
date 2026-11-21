@@ -41,7 +41,7 @@ const columns = [
 export async function SiteFooter() {
   const noticeVersion = await currentNoticeVersion().catch(() => "2026-10-10");
   return (
-    <footer className="surface-inverse mt-16 bg-[#0A2342] dark:bg-[#050f1d] text-white dark:border-t dark:border-white/10 pb-20 lg:pb-0">
+    <footer className="surface-inverse mt-16 bg-[#0A2342] dark:bg-[#050f1d] text-white dark:border-t dark:border-white/10 pb-24 lg:pb-20">
       <div className="mx-auto grid w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] gap-10 px-4 py-12 lg:grid-cols-12 lg:px-8 lg:py-16 2xl:px-12">
         <div className="grid content-start gap-4 lg:col-span-5">
           {/* eslint-disable-next-line @next/next/no-img-element */}

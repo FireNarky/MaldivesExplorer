@@ -12,16 +12,16 @@ export async function AnalyticsConsent() {
     >
       <form
         action={setAnalyticsConsent}
-        className="mx-auto grid w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] gap-3 px-4 py-4 lg:px-8 2xl:px-12"
+        className="mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between w-full max-w-[90rem] 2xl:max-w-[105rem] 3xl:max-w-[115rem] gap-4 px-4 py-4 lg:px-8 2xl:px-12 lg:pl-64"
       >
-        <p className="text-ink dark:text-slate-100">
+        <p className="text-ink dark:text-slate-100 text-sm">
           Search analytics stays off until you allow it.
         </p>
-        <div className="flex flex-wrap gap-3">
-          <Button type="submit" name="choice" value="granted">
+        <div className="flex flex-wrap gap-3 shrink-0">
+          <Button type="submit" name="choice" value="granted" size="sm">
             Allow search analytics
           </Button>
-          <Button type="submit" name="choice" value="denied" variant="secondary">
+          <Button type="submit" name="choice" value="denied" variant="secondary" size="sm">
             Decline
           </Button>
         </div>

@@ -26,13 +26,13 @@ const IMAGES: ImageSeed[] = [
   },
   {
     key: "soneva-fushi-jungle.jpg",
-    url: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80",
+    url: "https://images.unsplash.com/photo-1595184979141-090792f6b578?w=1200&q=80",
     altText: "Barefoot luxury beachfront villa immersed in dense tropical canopy at Soneva Fushi",
     caption: "Private beach reserve nestled in tropical jungle at Soneva Fushi",
   },
   {
     key: "cheval-blanc-villa.jpg",
-    url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80",
+    url: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1200&q=80",
     altText: "Architectural masterpiece overwater suite at Cheval Blanc Randheli",
     caption: "High-ceiling ocean pavilion at Cheval Blanc Randheli",
   },
@@ -68,21 +68,27 @@ const IMAGES: ImageSeed[] = [
   },
   {
     key: "manta-hanifaru.jpg",
-    url: "https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1200&q=80",
+    url: "https://images.unsplash.com/photo-1706957776397-d5ba3576277a?w=1200&q=80",
     altText: "Manta rays gliding gracefully through turquoise water in Hanifaru Bay",
     caption: "Gentle giant reef mantas feeding in UNESCO Biosphere Hanifaru Bay",
   },
   {
     key: "whale-shark-safari.jpg",
-    url: "https://images.unsplash.com/photo-1560275619-4662e36fa65c?w=1200&q=80",
+    url: "https://images.unsplash.com/photo-1540202404-b2979d19ed37?w=1200&q=80",
     altText: "Majestic whale shark swimming in crystal clear open ocean waters of Ari Atoll",
     caption: "Year-round whale shark encounters in South Ari Marine Protected Area",
   },
   {
     key: "sunset-dolphin-cruise.jpg",
-    url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&q=80",
-    altText: "Golden sunset over calm Indian Ocean with traditional Maldivian wooden dhoni boat",
-    caption: "Evening dolphin cruise on a handcrafted wooden dhoni",
+    url: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=1200&q=80",
+    altText: "Pristine white sandbank and private dining surrounded by turquoise Indian Ocean",
+    caption: "Private deserted sandbank breakfast with chilled champagne and butler service",
+  },
+  {
+    key: "maldives-seaplane.jpg",
+    url: "https://images.unsplash.com/photo-1675248751912-7ef58491976d?w=1200&q=80",
+    altText: "Red and white De Havilland Twin Otter seaplane resting on turquoise lagoon water",
+    caption: "Trans Maldivian Airways seaplane transfer across the atolls",
   },
   {
     key: "author-aminath.jpg",
@@ -335,6 +341,15 @@ async function main() {
         "A tropical jewel island encircled by one of the finest, most biodiverse house reefs in the world.",
       description:
         "Baros has welcomed travelers since 1973, perfecting authentic Maldivian hospitality with lush vegetation and spectacular marine biology.",
+    },
+    {
+      name: "Dhidhoofinolhu Island",
+      slug: "dhidhoofinolhu-island",
+      atollSlug: "ari-atoll",
+      summary:
+        "A breathtaking natural 4-kilometer island with powdery sandbanks in South Ari Marine Protected Area.",
+      description:
+        "Dhidhoofinolhu is home to LUX* South Ari Atoll, perfectly placed for year-round whale shark encounters, manta ray snorkeling, and diving 50 world-class sites.",
     },
   ];
 
@@ -718,6 +733,62 @@ async function main() {
         },
       ],
     },
+    {
+      name: "LUX* South Ari Atoll",
+      slug: "lux-south-ari-atoll",
+      islandSlug: "dhidhoofinolhu-island",
+      summary:
+        "Top-rated luxury island resort in South Ari Marine Protected Area, celebrated for year-round whale shark encounters, 4km powdery beaches, and vibrant culinary scene.",
+      description:
+        "Located in the premier whale shark territory of the Maldives, LUX* South Ari Atoll features 193 pavilions and villas perched along 4 kilometers of white sand beaches and over turquoise lagoons. Home to a dedicated Marine Biology Center, 8 restaurants, 5 bars, and world-class scuba diving across 50 surrounding dive sites.",
+      editorialPositioning:
+        "The undisputed frontrunner for whale shark encounters and vibrant barefoot luxury in the Maldives.",
+      priceBandId: luxuryBand.id,
+      popularityRank: 5,
+      starCategory: 5,
+      hasHouseReef: true,
+      reefSummary:
+        "Situated inside the South Ari Marine Protected Area (SAMPA), offering direct access to resident juvenile whale sharks, manta ray cleaning stations, and dramatic undersea pinnacles.",
+      diveCenterSummary:
+        "PADI 5-Star dive center offering daily private marine biologist charters for whale shark and manta ray snorkeling.",
+      checkInNotes:
+        "A breathtaking 25-minute scenic TMA seaplane flight south from Velana International Airport (MLE).",
+      leadImageKey: "whale-shark-safari.jpg",
+      rooms: [
+        {
+          name: "Romantic Pool Water Villa",
+          slug: "romantic-pool-water-villa",
+          description:
+            "Overwater sanctuary with private plunge pool, suspended catamaran nets over turquoise water, and direct lagoon access.",
+          maxAdults: 2,
+          sizeSqm: 110,
+          categoryId: waterVillaCat.id,
+        },
+        {
+          name: "Beach Pavilion with Private Pool",
+          slug: "beach-pavilion-private-pool",
+          description:
+            "Nestled under coconut palms directly on powdery white sand with private plunge pool and outdoor garden shower.",
+          maxAdults: 2,
+          sizeSqm: 130,
+          categoryId: beachVillaCat.id,
+        },
+      ],
+      dining: [
+        {
+          name: "Umami",
+          cuisine: "Modern Japanese & Teppanyaki",
+          description:
+            "Overwater Japanese dining featuring fresh sashimi, robata grill, and sake sommelier pairings over the coral reef.",
+        },
+        {
+          name: "East Market",
+          cuisine: "Southeast Asian Night Market",
+          description:
+            "Bustling overwater marketplace serving authentic Thai, Vietnamese, and Chinese culinary specialties cooked live.",
+        },
+      ],
+    },
   ];
 
   const resortRecords = new Map<string, string>();
@@ -895,7 +966,7 @@ async function main() {
       seasonality: "Year-round (Optimal conditions December to May)",
       suitability: "All levels of snorkelers.",
       leadImageKey: "whale-shark-safari.jpg",
-      resortSlug: "baros-maldives",
+      resortSlug: "lux-south-ari-atoll",
     },
     {
       name: "Castaway Sandbank Champagne Breakfast",
@@ -1021,7 +1092,7 @@ async function main() {
         "A practical guide to travel times, luggage restrictions, night flights, and scenic views across the atolls.",
       bodyPlain:
         "Maldives transfers operate under distinct rhythms. Speedboats operate around the clock in North and South Malé Atolls regardless of darkness. In contrast, De Havilland Twin Otter seaplanes fly strictly during daylight hours (typically 6:00 AM to 4:00 PM). If your international flight arrives in Malé after 3:30 PM, you will need either a resort reachable by speedboat, a domestic flight plus speedboat, or an overnight stay in Malé or Hulhumalé.",
-      leadImageKey: "soneva-jani-slide.jpg",
+      leadImageKey: "maldives-seaplane.jpg",
     },
   ];
 
@@ -1154,6 +1225,28 @@ async function main() {
       fromPrice: 2200,
       minNights: 7,
       terms: "Combinable with Virtuoso amenities. Blackout dates apply over festive periods.",
+    },
+    {
+      resortSlug: "lux-south-ari-atoll",
+      title: "Whale Shark Marine Safari & Seaplane Escape",
+      slug: "lux-south-ari-whale-shark-escape",
+      summary:
+        "Stay 5 nights in a Romantic Pool Water Villa and receive complimentary return scenic seaplane flights and a private guided whale shark safari charter.",
+      currency: "USD",
+      fromPrice: 1950,
+      minNights: 5,
+      terms: "Guided by resident marine biologist. Valid year-round.",
+    },
+    {
+      resortSlug: "hurawalhi-island-resort",
+      title: "5.8 Undersea Dining & Sunset Dolphin Cruise",
+      slug: "hurawalhi-undersea-dining-privilege",
+      summary:
+        "Book 4 nights or more in an Ocean Villa with Pool to receive a complimentary 5-course lunch at 5.8 Undersea Restaurant and evening champagne yacht cruise.",
+      currency: "USD",
+      fromPrice: 1680,
+      minNights: 4,
+      terms: "Adults-only resort (15+). Includes sparkling wine welcome.",
     },
   ];
 

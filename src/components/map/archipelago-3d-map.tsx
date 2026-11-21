@@ -156,6 +156,22 @@ export const RESORTS_DATA: MapResort[] = [
     tag: "World-Class House Reef",
     color: "#fb923c",
   },
+  {
+    id: "lux-south-ari-atoll",
+    name: "LUX* South Ari Atoll",
+    slug: "lux-south-ari-atoll",
+    atoll: "Ari Atoll",
+    lat: 3.4939,
+    lng: 72.8833,
+    transferType: "Seaplane",
+    transferDuration: "25 min TMA Seaplane",
+    highlights: ["Whale Shark Marine Protected Area", "4km Powdery White Beaches", "50+ Dive Sites"],
+    vibe: "Vibrant Barefoot Marine Sanctuary",
+    summary: "Perched along 4km of pristine white beaches in the premier whale shark sanctuary of the Maldives.",
+    tag: "Whale Shark Sanctuary",
+    color: "#f59e0b",
+    featured: true,
+  },
 ];
 
 /**
@@ -291,6 +307,7 @@ export function Archipelago3DMap({
       return;
     }
     void import("maplibre-gl").then((maplibregl) => {
+      maplibregl.config.WORKER_URL = "/maplibre-gl-worker.mjs";
       if (mapInstanceRef.current !== map) return;
       const isPlane = resort.transferType === "Seaplane";
       const from: [number, number] = [MLE_AIRPORT.lng, MLE_AIRPORT.lat];
@@ -488,6 +505,7 @@ export function Archipelago3DMap({
 
     async function initMap() {
       const maplibregl = await import("maplibre-gl");
+      maplibregl.config.WORKER_URL = "/maplibre-gl-worker.mjs";
 
       if (!isSubscribed || !mapContainerRef.current) return;
 
