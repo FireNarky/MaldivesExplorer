@@ -289,7 +289,7 @@ export default async function ContactPage() {
         <div className="lg:col-span-7">
           <ContactForm
             noticeVersion={noticeVersion}
-            whatsappNumber={settings.whatsappNumber}
+            whatsappNumber={active.whatsapp ? settings.whatsappNumber : undefined}
             whatsappMessage={settings.whatsappMessage}
           />
         </div>

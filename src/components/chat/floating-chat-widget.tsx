@@ -80,9 +80,9 @@ export function FloatingChatWidget({ settings }: { settings: ContactSettings }) 
                 type="button"
                 onClick={() => setIsOpen(false)}
                 aria-label="Close concierge chat"
-                className="rounded-full p-1 text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
+                className="inline-flex size-11 items-center justify-center rounded-full text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
               >
-                <X size={18} />
+                <X size={18} aria-hidden="true" />
               </button>
             </div>
             <p id={titleId} className="mt-1 font-display text-lg font-medium text-white">

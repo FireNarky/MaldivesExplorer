@@ -6,4 +6,6 @@ test-results
 blob-report
 package-lock.json
 Documentation
+docs
 next-env.d.ts
+tsconfig.tsbuildinfo

@@ -309,13 +309,21 @@ async function main(): Promise<void> {
     logStage("Applying migrations and seeds...");
     await runSubprocess(process.execPath, [prismaCli, "migrate", "deploy"], childProcessEnv);
     await runSubprocess(process.execPath, [tsxCli, "prisma/seed.ts"], childProcessEnv);
-    await runSubprocess(process.execPath, [tsxCli, "scripts/prepare-browser-staff.ts"], childProcessEnv);
+    await runSubprocess(
+      process.execPath,
+      [tsxCli, "scripts/prepare-browser-staff.ts"],
+      childProcessEnv,
+    );
     await runSubprocess(
       process.execPath,
       [tsxCli, "scripts/prepare-browser-discovery.ts"],
       childProcessEnv,
     );
-    await runSubprocess(process.execPath, [tsxCli, "scripts/seed-rich-catalog.ts"], childProcessEnv);
+    await runSubprocess(
+      process.execPath,
+      [tsxCli, "scripts/seed-rich-catalog.ts"],
+      childProcessEnv,
+    );
   }
 
   const generatedPath = writeGeneratedEnvFile(root, childEnv);

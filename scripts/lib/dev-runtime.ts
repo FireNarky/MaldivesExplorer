@@ -30,7 +30,18 @@ const SENSITIVE_ENV_KEYS = new Set([
  * Never uses a developer home directory or machine-specific absolute path.
  */
 export function resolveRepoRoot(fromUrl = import.meta.url): string {
-  return path.resolve(path.dirname(fileURLToPath(fromUrl)), "..", "..");
+  try {
+    return path.resolve(path.dirname(fileURLToPath(fromUrl)), "..", "..");
+  } catch (error) {
+    if (process.platform === "win32" && fromUrl.startsWith("file:///")) {
+      const parsed = new URL(fromUrl);
+      const posixPath = decodeURIComponent(parsed.pathname);
+      if (posixPath.startsWith("/") && !/^\/[a-zA-Z]:/.test(posixPath)) {
+        return path.resolve(path.posix.dirname(posixPath), "..", "..");
+      }
+    }
+    throw error;
+  }
 }
 
 export function resolvePostgresDataDir(root: string): string {
@@ -69,7 +80,10 @@ export function resolveTeamBoardDir(root: string, source: EnvSource = {}): strin
 }
 
 export function isLoopbackHostname(hostname: string): boolean {
-  const host = hostname.trim().toLowerCase().replace(/^\[|\]$/g, "");
+  const host = hostname
+    .trim()
+    .toLowerCase()
+    .replace(/^\[|\]$/g, "");
   return host === "localhost" || host === "127.0.0.1" || host === "::1" || host === "0.0.0.0";
 }
 
@@ -231,7 +245,9 @@ export function generatedEnvFileLines(childEnv: EnvSource): string[] {
 export function writeGeneratedEnvFile(root: string, childEnv: EnvSource): string {
   const generatedPath = resolveGeneratedEnvPath(root);
   mkdirSync(path.dirname(generatedPath), { recursive: true });
-  writeFileSync(generatedPath, `${generatedEnvFileLines(childEnv).join("\n")}\n`, { encoding: "utf8" });
+  writeFileSync(generatedPath, `${generatedEnvFileLines(childEnv).join("\n")}\n`, {
+    encoding: "utf8",
+  });
   try {
     chmodSync(generatedPath, 0o600);
   } catch {

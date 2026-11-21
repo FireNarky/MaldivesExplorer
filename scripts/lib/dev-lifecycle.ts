@@ -90,7 +90,11 @@ export function assertPortFree(port: number, label: string, host = "127.0.0.1"):
   });
 }
 
-export function isPortListening(port: number, host = "127.0.0.1", timeoutMs = 250): Promise<boolean> {
+export function isPortListening(
+  port: number,
+  host = "127.0.0.1",
+  timeoutMs = 250,
+): Promise<boolean> {
   return new Promise((resolve) => {
     const socket = createConnection({ port, host });
     const finish = (value: boolean) => {

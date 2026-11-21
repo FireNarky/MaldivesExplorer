@@ -7,6 +7,7 @@ import { ErrorState } from "@/components/ui/error-state";
 import { logError } from "@/lib/observability/log";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { db } from "@/lib/db";
+import { listPublishedCollectionItems } from "@/modules/discovery";
 import { publishedPublic } from "@/modules/discovery/visibility";
 
 export const metadata: Metadata = publicMetadata({
@@ -18,13 +19,26 @@ export const metadata: Metadata = publicMetadata({
 
 export default async function CollectionsPage() {
   try {
-    const collections = await db.collection.findMany({
+    const rawCollections = await db.collection.findMany({
       where: publishedPublic(),
       orderBy: { title: "asc" },
-      include: {
-        items: true,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        summary: true,
       },
     });
+
+    const collections = await Promise.all(
+      rawCollections.map(async (col) => {
+        const items = await listPublishedCollectionItems(col.id);
+        return {
+          ...col,
+          itemCount: items.length,
+        };
+      }),
+    );
 
     return (
       <div className="grid gap-10">
@@ -51,7 +65,7 @@ export default async function CollectionsPage() {
                       <FolderHeart size={20} aria-hidden="true" />
                     </span>
                     <span className="text-xs font-semibold text-muted dark:text-slate-300 bg-sand dark:bg-white/10 px-3 py-1 rounded-full border border-border-subtle/50 dark:border-white/10">
-                      {col.items.length} curated {col.items.length === 1 ? "resort" : "resorts"}
+                      {col.itemCount} curated {col.itemCount === 1 ? "item" : "items"}
                     </span>
                   </div>
 
