@@ -2,11 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Plane, Compass, Sparkles, MapPin } from "lucide-react";
 import { Breadcrumbs } from "@/components/discovery/breadcrumbs";
-import {
-  Archipelago3DMap,
-  RESORTS_DATA,
-  type MapResort,
-} from "@/components/map/archipelago-3d-map";
+import { Archipelago3DMap } from "@/components/map/archipelago-3d-map";
+import { RESORTS_DATA, type MapResort } from "@/components/map/resorts-data";
 import { publicMetadata } from "@/lib/seo/metadata";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
