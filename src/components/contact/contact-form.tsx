@@ -82,7 +82,8 @@ export function ContactForm({
         ) : null}
 
         <p className="text-xs text-muted dark:text-slate-400 flex items-center justify-center gap-1.5 pt-2">
-          <Clock size={13} /> Written response delivered to {email} within 2 business hours.
+          <Clock size={13} /> Our team will review your request and send a written response to{" "}
+          {email}.
         </p>
 
         <div className="pt-3">

@@ -126,7 +126,7 @@ export default async function ExperiencePage({ params }: PageProps) {
                   </p>
                 </div>
               ) : null}
-              {experience.seasonality ? (
+              {seasonVisible && experience.seasonality ? (
                 <div>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-muted block mb-1">
                     Optimal Season

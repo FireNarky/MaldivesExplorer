@@ -15,51 +15,42 @@ export type DestinationCardData = {
   transferType?: string;
 };
 
-// Curated atoll intelligence mapping for rich traveler insights
-const ATOLL_INSIGHTS: Record<string, { highlight: string; transfer: string; gradient: string }> = {
+// Curated atoll intelligence mapping for rich traveler insights (no unverified transfer durations per D-013)
+const ATOLL_INSIGHTS: Record<string, { highlight: string; gradient: string }> = {
   "baa-atoll": {
     highlight: "UNESCO Biosphere & Hanifaru Bay Manta Rays",
-    transfer: "30m Seaplane",
     gradient: "from-teal-600/30 via-lagoon/20 to-ocean/40",
   },
   "north-male-atoll": {
     highlight: "Luxury Speedboat Corridor & Surf Breaks",
-    transfer: "25–45m Speedboat",
     gradient: "from-[#0b7c79]/30 via-ocean/20 to-lagoon/40",
   },
   "south-male-atoll": {
     highlight: "Lagoon Sandbanks & Swift Transfer Access",
-    transfer: "30–45m Speedboat",
     gradient: "from-blue-600/30 via-lagoon/20 to-ocean/40",
   },
   "south-ari-atoll": {
     highlight: "Year-Round Whale Shark Marine Protected Area",
-    transfer: "25m Seaplane",
     gradient: "from-emerald-600/30 via-teal/20 to-ocean/40",
   },
   "north-ari-atoll": {
     highlight: "Dramatic Underwater Pinnacles (Thilas) & Hammerheads",
-    transfer: "25m Seaplane",
     gradient: "from-lagoon/30 via-[#0b7c79]/20 to-ocean/40",
   },
   "noonu-atoll": {
     highlight: "Ultra-Luxury Island Residences & Private Sandbars",
-    transfer: "45m Seaplane",
     gradient: "from-indigo-600/30 via-lagoon/20 to-ocean/40",
   },
   "raa-atoll": {
     highlight: "Pristine Deep Ocean Channels & Untouched Reefs",
-    transfer: "45m Seaplane",
     gradient: "from-sky-600/30 via-lagoon/20 to-ocean/40",
   },
   "lhaviyani-atoll": {
     highlight: "World-Class Underwater Dining & Shipwreck Diving",
-    transfer: "40m Seaplane",
     gradient: "from-teal-600/30 via-cyan/20 to-ocean/40",
   },
   "dhaalu-atoll": {
     highlight: "Remote Surfing Passes & Coral Gardens",
-    transfer: "40m Domestic / Seaplane",
     gradient: "from-blue-700/30 via-lagoon/20 to-ocean/40",
   },
 };
@@ -67,7 +58,6 @@ const ATOLL_INSIGHTS: Record<string, { highlight: string; transfer: string; grad
 export function DestinationCard({ item }: { item: DestinationCardData }) {
   const insight = ATOLL_INSIGHTS[item.slug] ?? {
     highlight: item.highlight ?? "Tropical Coral Atoll & Lagoons",
-    transfer: item.transferType ?? "Seaplane / Speedboat",
     gradient: "from-lagoon/25 via-ocean/15 to-[#062936]/40",
   };
 
@@ -83,10 +73,17 @@ export function DestinationCard({ item }: { item: DestinationCardData }) {
             Atoll Geography
           </span>
 
-          <span className="inline-flex items-center gap-1 rounded-full bg-white/15 dark:bg-black/30 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md">
-            <Plane size={12} />
-            {insight.transfer}
-          </span>
+          {item.transferType ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 dark:bg-black/30 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md">
+              <Plane size={12} aria-hidden="true" />
+              {item.transferType}
+            </span>
+          ) : typeof item.resortCount === "number" && item.resortCount > 0 ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 dark:bg-black/30 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-md">
+              <Hotel size={12} aria-hidden="true" />
+              {item.resortCount} {item.resortCount === 1 ? "Resort" : "Resorts"}
+            </span>
+          ) : null}
         </div>
 
         <div className="absolute bottom-3 left-5 right-5 flex items-center justify-between text-xs text-slate-200">
